@@ -1638,7 +1638,7 @@ document.addEventListener('keydown', (e)=>{
 // PWA
 if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', ()=>{
-        navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+        navigator.serviceWorker.register('sw.js').catch(()=>{});
     });
 }
 
