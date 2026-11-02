@@ -396,6 +396,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .preview-mode-bar{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:10px 16px;text-align:center;font-size:12.5px;font-weight:900;z-index:99997;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(245,158,11,.35)}
 .preview-locked{position:relative;opacity:.55;pointer-events:none}
 .preview-locked::after{content:'🔒 للمعاينة فقط';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:6px 12px;border-radius:10px;font-size:11px;font-weight:900;pointer-events:none;z-index:100}
+.admin-link-item{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(220,38,38,.05))!important;border:1px solid rgba(239,68,68,.25)!important;margin-top:8px}
 @media(min-width:640px){.market-grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
@@ -425,12 +426,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <div class="install-banner-title">📱 ثبّت تطبيق مشوارك</div>
             <div class="install-banner-sub">افتحه بضغطة واحدة من الشاشة</div>
         </div>
-        <button class="install-banner-btn" onclick="installPWA()">
-            <i class="fas fa-download"></i> ثبّت
-        </button>
-        <button class="install-banner-close" onclick="closeInstallBanner()">
-            <i class="fas fa-times"></i>
-        </button>
+        <button class="install-banner-btn" onclick="installPWA()"><i class="fas fa-download"></i> ثبّت</button>
+        <button class="install-banner-close" onclick="closeInstallBanner()"><i class="fas fa-times"></i></button>
     </div>
 </div>
 
@@ -499,7 +496,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 <!-- MAIN APP -->
 <div id="appSection" style="display:none">
 
-    <!-- PREVIEW MODE BAR -->
     <div class="preview-mode-bar" id="previewModeBar" style="display:none">
         <i class="fas fa-eye"></i> وضع المعاينة — في انتظار موافقة الأدمن
         <button onclick="exitPreviewMode()" style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;margin-right:auto">خروج</button>
@@ -574,12 +570,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">📦</div><div style="font-size:22px;font-weight:900">طلباتي</div></div></div>
         </div>
         <div class="sub-tabs" style="margin-top:15px">
-            <button class="sub-tab active" id="orderTab-active" onclick="switchOrderTab('active')">
-                <i class="fas fa-clock"></i> الحالية
-            </button>
-            <button class="sub-tab" id="orderTab-history" onclick="switchOrderTab('history')">
-                <i class="fas fa-history"></i> السجل
-            </button>
+            <button class="sub-tab active" id="orderTab-active" onclick="switchOrderTab('active')"><i class="fas fa-clock"></i> الحالية</button>
+            <button class="sub-tab" id="orderTab-history" onclick="switchOrderTab('history')"><i class="fas fa-history"></i> السجل</button>
         </div>
         <div id="ordersContainer"></div>
     </div>
@@ -841,6 +833,20 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </div>
 </div>
 
+<div class="sheet-overlay" id="forceLogoutScreenOverlay"></div>
+<div class="center-modal" id="forceLogoutScreen" style="max-width:440px">
+    <div class="center-modal-body" style="text-align:center;padding:40px 24px">
+        <div style="width:90px;height:90px;border-radius:30px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;font-size:42px;color:#fff;margin:0 auto 20px;box-shadow:0 15px 40px rgba(239,68,68,.35);animation:pulseDotYellow 1.5s infinite">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:10px">🔴 تم إنهاء الجلسة</div>
+        <div style="font-size:13.5px;color:var(--text-soft);line-height:1.8;margin-bottom:24px" id="forceLogoutMsg">تم إنهاء الجلسة من الإدارة</div>
+        <button class="btn-main" onclick="handleForceLogoutConfirm()" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+            <i class="fas fa-redo"></i> تسجيل دخول من جديد
+        </button>
+    </div>
+</div>
+
 <div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMessage">رسالة</span></div><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
@@ -876,6 +882,12 @@ let waitingTimerInterval = null;
 let waitingStartTime = null;
 let isPreviewMode = false;
 let previewCheckInterval = null;
+
+let forceLogoutListener = null;
+let suspensionListener = null;
+let notificationsListener = null;
+let isSuspended = false;
+let customerDataListener = null;
 
 let serviceVisibilityListener = null;
 let customServicesListener = null;
@@ -926,6 +938,10 @@ function cleanAllListeners(){
     if(marketCategoriesListener && userArea){ db.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); marketCategoriesListener = null; }
     if(marketProductsListener && userArea){ db.ref(`market_products/${userArea}`).off('value', marketProductsListener); marketProductsListener = null; }
     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
+    if(forceLogoutListener && userPhone){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
+    if(suspensionListener && userPhone){ db.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
+    if(notificationsListener && userPhone){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
+    if(customerDataListener && userPhone){ db.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
     db.ref('areas').off();
     db.ref('reward_settings').off();
     db.ref('settings/support/whatsapp').off();
@@ -1050,6 +1066,13 @@ setTimeout(()=>{
                 }
             });
         }
+        db.ref('blacklist/' + userPhone.replace(/\D/g,'')).once('value').then(s=>{
+            if(s.exists()){
+                localStorage.clear();
+                showToast('🚫 الرقم ده محظور','error');
+                setTimeout(()=>location.reload(), 1500);
+            }
+        });
         startApp();
     } else {
         showLoginScreen();
@@ -1082,7 +1105,156 @@ function startApp(){
     listenToCustomServices();
     listenToShops();
     listenToShippingSettings();
+    listenToForceLogout();
+    listenToSuspensionStatus();
+    listenToUserNotifications();
+    listenToCustomerDataChanges();
     setTimeout(processInviteReward, 2000);
+}
+
+function listenToForceLogout(){
+    if(!userPhone) return;
+    if(forceLogoutListener){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); }
+    let lastForceLogoutAt = Number(localStorage.getItem('last_force_logout') || 0);
+    forceLogoutListener = db.ref('customers/'+userPhone).on('value', snap=>{
+        const c = snap.val();
+        if(c && c.forceLogout === true){
+            const msg = c.forceLogoutMessage || 'تم إنهاء الجلسة من الإدارة';
+            const stamp = c.forceLogoutAt || 0;
+            if(stamp && stamp > lastForceLogoutAt){
+                lastForceLogoutAt = stamp;
+                localStorage.setItem('last_force_logout', stamp);
+                $id('forceLogoutMsg').innerText = msg;
+                $id('forceLogoutScreen').classList.add('show');
+                $id('forceLogoutScreenOverlay').classList.add('show');
+            }
+        }
+    });
+}
+
+function handleForceLogoutConfirm(){
+    localStorage.clear();
+    sessionStorage.clear();
+    location.reload();
+}
+
+function listenToSuspensionStatus(){
+    if(!userPhone) return;
+    if(suspensionListener){ db.ref('customers/'+userPhone).off('value', suspensionListener); }
+    suspensionListener = db.ref('customers/'+userPhone).on('value', snap=>{
+        const c = snap.val();
+        isSuspended = (c && c.isSuspended === true);
+        if(isSuspended){
+            showSuspensionBanner();
+        } else {
+            hideSuspensionBanner();
+        }
+    });
+}
+
+function showSuspensionBanner(){
+    let banner = $id('suspensionBanner');
+    if(banner) return;
+    banner = document.createElement('div');
+    banner.id = 'suspensionBanner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:12px 16px;text-align:center;font-size:13px;font-weight:900;z-index:99998;box-shadow:0 4px 15px rgba(245,158,11,.4);display:flex;align-items:center;justify-content:center;gap:8px';
+    banner.innerHTML = '<i class="fas fa-pause-circle"></i> حسابك معلق مؤقتاً — مش هتقدر تعمل طلبات لحد ما الإدارة تفك التعليق';
+    document.body.appendChild(banner);
+    document.body.style.paddingTop = '50px';
+}
+
+function hideSuspensionBanner(){
+    const banner = $id('suspensionBanner');
+    if(banner) banner.remove();
+    document.body.style.paddingTop = '';
+}
+
+function listenToUserNotifications(){
+    if(!userPhone) return;
+    if(notificationsListener){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); }
+    notificationsListener = db.ref('user_notifications/'+userPhone).on('value', snap=>{
+        snap.forEach(c=>{
+            const n = c.val();
+            if(n && !n.read){
+                showNotificationPopup(n, c.key);
+                db.ref('user_notifications/'+userPhone+'/'+c.key+'/read').set(true);
+            }
+        });
+    });
+}
+
+function listenToCustomerDataChanges(){
+    if(!userPhone) return;
+    if(customerDataListener){ db.ref('customers/'+userPhone).off('value', customerDataListener); }
+    customerDataListener = db.ref('customers/'+userPhone).on('value', snap=>{
+        const c = snap.val();
+        if(!c) return;
+        if(c.name && c.name !== userName){
+            userName = c.name;
+            localStorage.setItem('user_name', userName);
+            if($id('displayName')) $id('displayName').innerText = userName;
+            if($id('userAvatar')) $id('userAvatar').innerText = userName.charAt(0).toUpperCase();
+        }
+        if(c.area && c.area !== userArea){
+            const oldArea = userArea;
+            userArea = c.area;
+            localStorage.setItem('user_area', userArea);
+            if($id('displayArea')) $id('displayArea').innerText = userArea;
+            if(oldArea !== userArea){
+                resetMarketData();
+                syncPricing();
+                listenToServiceVisibility();
+                listenToCustomServices();
+                listenToShops();
+                listenToShippingSettings();
+                loadRewardSettings();
+            }
+        }
+        if(c.address && c.address !== userAddress){
+            userAddress = c.address;
+            localStorage.setItem('user_address', userAddress);
+        }
+    });
+}
+
+function showNotificationPopup(notif, notifId){
+    const colors = {
+        info: { bg:'#06b6d4', icon:'fa-info-circle' },
+        success: { bg:'#10b981', icon:'fa-check-circle' },
+        warning: { bg:'#f59e0b', icon:'fa-exclamation-triangle' },
+        error: { bg:'#ef4444', icon:'fa-times-circle' }
+    };
+    const c = colors[notif.type] || colors.info;
+    const popup = document.createElement('div');
+    popup.style.cssText = `position:fixed;top:80px;left:20px;right:20px;max-width:400px;margin:auto;background:${c.bg};color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2);z-index:99999;transform:translateY(-150%);transition:transform .4s`;
+    popup.innerHTML = `
+        <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">
+                <i class="fas ${c.icon}"></i>
+            </div>
+            <div style="flex:1">
+                <div style="font-size:14px;font-weight:900;margin-bottom:4px">${notif.title}</div>
+                <div style="font-size:12.5px;line-height:1.6;opacity:.95">${notif.body}</div>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.2);border:none;color:#fff;cursor:pointer;font-size:12px;flex-shrink:0">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+    setTimeout(()=>popup.style.transform = 'translateY(0)', 100);
+    setTimeout(()=>{
+        popup.style.transform = 'translateY(-150%)';
+        setTimeout(()=>popup.remove(), 500);
+    }, 8000);
+}
+
+function checkSuspensionBeforeOrder(){
+    if(isSuspended){
+        showToast('⏸️ حسابك معلق — مش هتقدر تعمل طلب','error');
+        return true;
+    }
+    return false;
 }
 
 function validateRegistrationData(){
@@ -1374,6 +1546,10 @@ function pickArea(area){
         listenToShops();
         listenToShippingSettings();
         loadRewardSettings();
+        listenToForceLogout();
+        listenToSuspensionStatus();
+        listenToUserNotifications();
+        listenToCustomerDataChanges();
         showToast('✅ تم تغيير المنطقة', 'success');
     }
 }
@@ -1952,6 +2128,7 @@ function getPickedAddress(prefix){
 
 function openCustomService(id){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const s = customServicesCache.find(x=>x.id===id); if(!s) return;
     const icon = $id('sheetIcon'), title = $id('sheetTitle'), sub = $id('sheetSub'), body = $id('sheetBody');
     icon.style.background = `linear-gradient(135deg,${s.color1||'#8b5cf6'},${s.color2||'#7c3aed'})`;
@@ -1963,6 +2140,7 @@ function openCustomService(id){
 }
 function submitCustomService(id){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const s = customServicesCache.find(x=>x.id===id); if(!s) return;
     const item = ($id('csItem')||{}).value?.trim() || '';
     const address = getPickedAddress('customsvc');
@@ -1982,6 +2160,7 @@ function submitCustomService(id){
     closeSheet();
 }function openService(service){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     if(service === 'market'){ openMarket(); return; }
     const icon = $id('sheetIcon'), title = $id('sheetTitle'), sub = $id('sheetSub'), body = $id('sheetBody');
     uploadedRxBase64 = ''; uploadedRxName = '';
@@ -2114,6 +2293,7 @@ function handleListKeydown(e, ta){
 }
 function submitMishwar(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const to = ($id('svcDestVal')||{}).value || '';
     const destName = ($id('svcDestName')||{}).value || '';
     const address = getPickedAddress('mishwar');
@@ -2133,6 +2313,7 @@ function submitMishwar(){
 }
 function submitPharma(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const details = ($id('svcDetails')||{}).value?.trim() || '';
     const address = getPickedAddress('pharma');
     if(!details || !address){ showToast('اكمل البيانات','error'); return; }
@@ -2153,6 +2334,7 @@ function submitPharma(){
 }
 function submitService(service){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const details = ($id('svcDetails')||{}).value?.trim() || '';
     const address = getPickedAddress(service === 'vegetables' ? 'veg' : 'market');
     if(!details || !address){ showToast('اكمل البيانات','error'); return; }
@@ -2172,6 +2354,7 @@ function submitService(service){
 }
 function submitCustom(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const item = ($id('customItem')||{}).value?.trim() || '';
     const address = getPickedAddress('custom');
     if(!item){ showToast('اكتب اسم الحاجة','error'); return; }
@@ -2191,6 +2374,7 @@ function submitCustom(){
 }
 function submitShipping(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     if(!shippingEnabled){ showToast('خدمة الشحن متوقفة','error'); return; }
     const fromName = ($id('shipFromName')||{}).value?.trim() || '';
     const fromPhone = ($id('shipFromPhone')||{}).value?.trim() || '';
@@ -2319,6 +2503,7 @@ function renderShippingPage(){
 function logout(){
     showConfirm('تسجيل الخروج','هتخرج؟',()=>{
         cleanAllListeners();
+        hideSuspensionBanner();
         localStorage.removeItem('user_name');
         localStorage.removeItem('user_phone');
         localStorage.removeItem('user_area');
@@ -2330,6 +2515,7 @@ function logout(){
 
 function redeemReward(type){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     if(!rewardsEnabled){ showToast('نظام المكافآت متوقف','error'); return; }
     let cost = type === 'delivery' ? (currentRewardSettings.discountCost||100) : (currentRewardSettings.tripDiscountCost||50);
     if(userPoints < cost){ showToast(`محتاج ${cost} نقطة`,'error'); return; }
@@ -2385,6 +2571,7 @@ function removeGlobalDiscount(){
 }
 function redeemFakka(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     if(!rewardsEnabled){ showToast('نظام المكافآت متوقف','error'); return; }
     const cost = currentRewardSettings.fakkaCost || 150;
     if(userPoints < cost){ showToast(`محتاج ${cost} نقطة`,'error'); return; }
@@ -2522,6 +2709,7 @@ let currentMarketCategory = 'all', marketSearchQuery = '';
 let marketInitialized = false;
 function openMarket(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     if(!currentAreaSettings.market){ showToast('خدمة الماركت غير متاحة','error'); return; }
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
@@ -2653,6 +2841,7 @@ function renderCartSheet(){
 }
 function submitMarketOrder(){
     if(previewBlockedAction()) return;
+    if(checkSuspensionBeforeOrder()) return;
     const ids = Object.keys(marketCart);
     if(ids.length === 0){ showToast('السلة فاضية','error'); return; }
     const address = getPickedAddress('market');
