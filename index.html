@@ -457,10 +457,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             </button>
             <i class="fas fa-map-marker-alt" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none"></i>
         </div>
-        <div class="inp-wrap">
-            <input type="text" id="uAddressInput" placeholder="🏠 عنوانك بالتفصيل (الشارع، رقم العمارة، علامة مميزة)">
-            <i class="fas fa-home"></i>
-        </div>
         <div class="inp-wrap" id="inviteField" style="display:none">
             <input type="text" id="inviteCodeInput" placeholder="🎁 كود دعوة صاحبك (اختياري)" style="text-transform:uppercase">
             <i class="fas fa-gift"></i>
@@ -1099,6 +1095,7 @@ setTimeout(()=>{
 
 function showLoginScreen(){ const l=$id('loginSection'); if(l){ l.style.display='flex'; window.scrollTo(0,0); } }
 
+// ✅ مراقبة الموافقة التلقائية — محدّثة لتستجيب لأي تغيير في الوقت الفعلي
 function listenToAutoApprovalSettings(){
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); }
     autoApprovalSettingsListener = db.ref('admin_settings/auto_approval').on('value', snap=>{
@@ -1123,12 +1120,10 @@ function listenToAutoApprovalSettings(){
             const isWaitingVisible = waitingSection && waitingSection.style.display === 'flex';
             
             if(isWaitingVisible){
-                // نجيب بيانات التسجيل من localStorage لو currentRegistrationId مش موجود
                 if(!currentRegistrationId){
                     const pendingId = localStorage.getItem('pending_registration_id');
                     if(pendingId) currentRegistrationId = pendingId;
                 }
-                
                 if(currentRegistrationId){
                     db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
                         const r = s.val();
@@ -1136,26 +1131,21 @@ function listenToAutoApprovalSettings(){
                             openWaitingScreen(r.phone, r.requestedAt);
                         }
                     });
-                } else {
-                    // مفيش registration ID — نعيد رسم بالشكل الافتراضي
-                    if($id('timerValue') && AUTO_APPROVAL_ENABLED){
-                        // نحدث الـ timer الجاري
-                        if(waitingTimerInterval) clearInterval(waitingTimerInterval);
-                        startWaitingTimer();
-                    }
+                } else if($id('timerValue') && AUTO_APPROVAL_ENABLED){
+                    if(waitingTimerInterval) clearInterval(waitingTimerInterval);
+                    startWaitingTimer();
                 }
             }
         }
     });
 }
+
 function refreshWaitingScreen(){
-    // 🔧 نحاول نجيب ID من localStorage لو مش موجود
     if(!currentRegistrationId){
         const pendingId = localStorage.getItem('pending_registration_id');
         if(pendingId) currentRegistrationId = pendingId;
     }
     if(!currentRegistrationId) return;
-    
     db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
         const r = s.val();
         if(r && r.status === 'pending'){
@@ -1340,16 +1330,15 @@ function checkSuspensionBeforeOrder(){
     return false;
 }
 
+// 🔧 العنوان اتشال من التسجيل — الزبون هيضيفه من جوه التطبيق
 function validateRegistrationData(){
     const n = ($id('uNameInput')||{}).value?.trim() || '';
     const p = ($id('uPhoneInput')||{}).value?.trim() || '';
-    const addr = ($id('uAddressInput')||{}).value?.trim() || '';
     const inv = ($id('inviteCodeInput')||{}).value?.trim().toUpperCase() || '';
     if(!n){ showToast('اكتب اسمك','error'); return null; }
     if(!p || p.length<11 || !/^01[0-9]{9}$/.test(p)){ showToast('رقم الموبايل لازم 11 رقم','error'); return null; }
     if(!selectedArea){ showToast('اختر منطقتك','error'); return null; }
-    if(!addr || addr.length < 5){ showToast('اكتب عنوانك بالتفصيل (5 أحرف على الأقل)','error'); return null; }
-    return { name:n, phone:p, inviteCode:inv, area:selectedArea, address:addr };
+    return { name:n, phone:p, inviteCode:inv, area:selectedArea, address:'' };
 }
 function submitRegistration(){
     const data = validateRegistrationData();
@@ -1418,7 +1407,7 @@ function createNewRegistration(data){
         name: data.name,
         phone: data.phone,
         area: data.area,
-        address: data.address,
+        address: '',  // 🔧 العنوان فاضي — الزبون هيضيفه من جوه التطبيق
         inviteCode: data.inviteCode || '',
         status: 'pending', requestedAt: now,
         whatsappSent: true,
@@ -1432,7 +1421,8 @@ function createNewRegistration(data){
             openWaitingScreen(data.phone, now);
             const adminPhone = supportWhatsapp.replace(/\D/g,'');
             const finalAdminPhone = adminPhone.startsWith('0') ? '2'+adminPhone : adminPhone;
-            const message = `🔔 *طلب تسجيل جديد في مشوارك*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${data.name}\n📱 *الرقم:* ${data.phone}\n📍 *المنطقة:* ${data.area}\n🏠 *العنوان:* ${data.address}\n${data.inviteCode ? `🎁 *كود الدعوة:* ${data.inviteCode}` : ''}\n⏰ *الوقت:* ${new Date(now).toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━━━━\n✅ برجاء الموافقة على الطلب 🙏`;
+            // 🔧 رسالة الواتساب بدون عنوان
+            const message = `🔔 *طلب تسجيل جديد في مشوارك*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${data.name}\n📱 *الرقم:* ${data.phone}\n📍 *المنطقة:* ${data.area}\n${data.inviteCode ? `🎁 *كود الدعوة:* ${data.inviteCode}` : ''}\n⏰ *الوقت:* ${new Date(now).toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━━━━\n✅ برجاء الموافقة على الطلب 🙏`;
             const waUrl = `https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`;
             setTimeout(()=>{ window.open(waUrl, '_blank'); showToast('📱 تم فتح الواتساب', 'success'); }, 1000);
         })
@@ -1448,10 +1438,7 @@ function openWaitingScreen(phone, startTime){
     $id('waitingSection').style.display = 'flex';
     $id('appSection').style.display = 'none';
     
-    // 🔧 حفظ startTime في مكان دائم
     waitingStartTime = startTime || waitingStartTime || Date.now();
-    
-    // 🔧 لو في timer شغال، وقفه قبل إعادة الرسم
     if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
 
     if(!AUTO_APPROVAL_ENABLED){
@@ -1479,8 +1466,6 @@ function openWaitingScreen(phone, startTime){
             </div>
             <button class="waiting-cancel" onclick="cancelRegistration()"><i class="fas fa-times"></i> إلغاء الطلب</button>
         `;
-        waitingStartTime = startTime || Date.now();
-        if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
         listenToRegistrationStatus();
         return;
     }
@@ -1515,7 +1500,6 @@ function openWaitingScreen(phone, startTime){
         </div>
         <button class="waiting-cancel" onclick="cancelRegistration()"><i class="fas fa-times"></i> إلغاء الطلب</button>
     `;
-    waitingStartTime = startTime || Date.now();
     startWaitingTimer();
     listenToRegistrationStatus();
 }
@@ -1526,7 +1510,6 @@ function startWaitingTimer(){
     const circumference = 2 * Math.PI * 75;
     
     function updateTimer(){
-        // 🔧 نقرأ القيمة الحالية كل مرة (مش نسخة ثابتة)
         const totalSeconds = WAITING_TIME_MINUTES * 60;
         const elapsed = Math.floor((Date.now() - waitingStartTime) / 1000);
         const remaining = Math.max(0, totalSeconds - elapsed);
@@ -1551,7 +1534,7 @@ function reopenWhatsapp(){
         db.ref('pending_registrations/' + currentRegistrationId).once('value').then(snap => {
             const r = snap.val();
             if(!r){ showToast('❌ مش لاقي بيانات', 'error'); return; }
-            const message = `🔔 *طلب تسجيل جديد*\n👤 ${r.name}\n📱 ${r.phone}\n📍 ${r.area}\n🏠 ${r.address||'-'}\n⏰ ${new Date(r.requestedAt).toLocaleString('ar-EG')}\n✅ برجاء الموافقة 🙏`;
+            const message = `🔔 *طلب تسجيل جديد*\n👤 ${r.name}\n📱 ${r.phone}\n📍 ${r.area}\n⏰ ${new Date(r.requestedAt).toLocaleString('ar-EG')}\n✅ برجاء الموافقة 🙏`;
             window.open(`https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`, '_blank');
             showToast('📱 تم فتح الواتساب', 'success');
         });
@@ -2230,7 +2213,7 @@ function renderAddressPicker(prefix){
                 </button>
             </div>
             <input type="text" id="${prefix}_addressInput" value="${hasAddr?addr:''}" placeholder="اكتب العنوان هنا...">
-            ${hasAddr?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-info-circle"></i> عنوانك المحفوظ: ${addr}</div>`:''}
+            ${hasAddr?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-info-circle"></i> عنوانك المحفوظ: ${addr}</div>`:`<div style="font-size:10.5px;color:#dc2626;margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-exclamation-circle"></i> محتاج تضيف عنوانك من الإعدادات عشان تستخدم "مكاني"</div>`}
         </div>
     `;
 }
