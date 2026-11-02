@@ -223,13 +223,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .order-price{font-size:18px;font-weight:900;color:var(--success)}
 .order-price::after{content:' ج';font-size:12px;color:var(--text-muted);font-weight:700}
 .btn-cancel-order{width:100%;margin-top:12px;padding:11px;border-radius:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#dc2626;font-weight:900;font-size:12px;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
-.driver-info-box{background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(16,185,129,.06));border:1.5px solid rgba(6,182,212,.35);border-radius:14px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
-.driver-info-box-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#06b6d4,#10b981);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
-.driver-info-box-text{flex:1}
-.driver-info-box-name{font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px}
-.driver-info-box-phone{font-size:12px;color:#0891b2;font-weight:700;direction:ltr;text-align:right}
-.driver-info-box-action{margin-top:6px}
-.driver-call-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border-radius:10px;font-size:11px;font-weight:900;text-decoration:none}
 .empty{text-align:center;padding:60px 30px;color:var(--text-muted)}
 .empty i{font-size:60px;color:rgba(139,92,246,.25);margin-bottom:15px;display:block}
 .empty p{font-size:13px;line-height:1.8}
@@ -291,11 +284,28 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .invite-code-text{font-size:24px;font-weight:900;color:#0891b2;letter-spacing:5px;font-family:'Courier New',monospace}
 .invite-code-label{font-size:10.5px;color:var(--text-muted);margin-top:4px}
 .info-card{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(6,182,212,.04));border:1px solid rgba(139,92,246,.2);border-radius:16px;padding:14px 16px;font-size:12px;color:var(--text-soft);line-height:1.7;margin-bottom:14px}
-.profile-card{margin:0 20px 20px;background:linear-gradient(160deg,rgba(139,92,246,.12),rgba(6,182,212,.06));border:1px solid rgba(139,92,246,.3);border-radius:24px;padding:24px;text-align:center}
+.profile-card{margin:0 20px 20px;background:linear-gradient(160deg,rgba(139,92,246,.12),rgba(6,182,212,.06));border:1px solid rgba(139,92,246,.3);border-radius:24px;padding:24px 24px 28px;text-align:center}
 .profile-avatar{width:80px;height:80px;border-radius:26px;background:linear-gradient(135deg,var(--primary),var(--pink));display:flex;align-items:center;justify-content:center;font-size:34px;color:#fff;font-weight:900;margin:0 auto 14px;border:3px solid #fff;box-shadow:0 10px 25px rgba(139,92,246,.3)}
 .profile-name{font-size:20px;font-weight:900;color:var(--text)}
 .profile-phone{font-size:12.5px;color:var(--text-muted);margin-top:4px;direction:ltr}
 .profile-area{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#fff;border:1px solid var(--border);border-radius:20px;font-size:12px;color:#b45309;font-weight:700;margin-top:12px}
+.profile-btn-row{margin-top:16px;display:flex;justify-content:center;width:100%}
+.profile-action-btn{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+    color:#fff; border:none; border-radius:14px;
+    padding:12px 24px; font-size:14px; font-weight:900;
+    font-family:'Cairo',sans-serif; cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    box-shadow:0 6px 15px rgba(245,158,11,.35);
+    min-width:180px;
+    width:180px;
+    height:46px;
+    justify-content:center;
+}
+.profile-action-btn.green{
+    background:linear-gradient(135deg,#10b981,#059669);
+    box-shadow:0 6px 15px rgba(16,185,129,.35);
+}
 .profile-list{margin:0 20px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm)}
 .profile-list-item{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;border-bottom:1px solid var(--border);background:none;border-left:none;border-right:none;border-top:none;width:100%;color:inherit;text-align:right;font-size:13.5px;font-weight:700;font-family:'Cairo',sans-serif;transition:.2s}
 .profile-list-item:active{background:var(--bg-soft)}
@@ -507,7 +517,16 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
                         <span id="displayName">اسمك</span>
                         <span class="points-badge-big" id="headerPointsBadge" onclick="switchPage('rewards')"><i class="fas fa-coins"></i> <span id="headerPointsDisplay">0</span> <small>نقطة</small></span>
                     </div>
-                    <div class="user-location-line"><i class="fas fa-map-marker-alt"></i><span id="displayArea">منطقتك</span></div>
+                    <div class="user-location-line" style="display:flex;align-items:center;justify-content:flex-start;gap:34px;flex-wrap:wrap">
+    <span style="display:flex;align-items:center;gap:5px">
+        <i class="fas fa-map-marker-alt" style="color:var(--warning);font-size:10px"></i>
+        <span id="displayArea">منطقتك</span>
+    </span>
+    <button onclick="openAddressEditor()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:12.5px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(16,185,129,.3);flex-shrink:0">
+        <i class="fas fa-home"></i>
+        <span>تعديل</span>
+    </button>
+</div>
                 </div>
                 <button class="settings-icon" onclick="openSettings()"><i class="fas fa-cog"></i></button>
             </div>
@@ -634,25 +653,21 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <div class="profile-phone" id="profilePhone">01xxxxxxxxx</div>
             <div class="profile-area"><i class="fas fa-map-marker-alt"></i><span id="profileArea">منطقتك</span></div>
             
-            <!-- ✅ النقاط (قابلة للضغط للذهاب لصفحة المكافآت) -->
-            <div style="margin-top:14px;display:flex;justify-content:center">
-                <button onclick="switchPage('rewards')" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:14px;padding:10px 22px;font-size:14px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 6px 15px rgba(245,158,11,.35)">
+            <!-- زرار النقاط -->
+            <div class="profile-btn-row">
+                <button onclick="switchPage('rewards')" class="profile-action-btn">
                     <i class="fas fa-coins"></i>
                     <span><span id="profilePointsDisplay">0</span> نقطة</span>
                 </button>
             </div>
             
-            <!-- ✅ العنوان تحت النقاط مباشرة — الزر والتعديل داخل الكارت -->
-            <div style="margin-top:14px;background:rgba(255,255,255,.9);border:1.5px solid rgba(139,92,246,.35);border-radius:16px;padding:14px;font-size:12px;color:var(--text-soft);line-height:1.6;text-align:right;box-shadow:0 4px 12px rgba(139,92,246,.08)">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                    <div style="font-size:11px;color:var(--text-muted);font-weight:700;display:flex;align-items:center;gap:5px">
-                        <i class="fas fa-home" style="color:#10b981"></i> عنوانك المحفوظ
-                    </div>
-                    <button onclick="openAddressEditor()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:10px;padding:6px 14px;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(16,185,129,.35)">
-                        <i class="fas fa-edit"></i> تعديل
-                    </button>
-                </div>
-                <div id="profileAddress" style="font-weight:700;color:var(--text);font-size:13px;line-height:1.6;min-height:20px">-</div>
+            <!-- زرار تعديل العنوان -->
+            <div class="profile-btn-row" style="margin-top:12px">
+                <button onclick="openAddressEditor()" class="profile-action-btn green">
+                    <i class="fas fa-home"></i>
+                    <span>تعديل العنوان</span>
+                    
+                </button>
             </div>
         </div>
         <div class="profile-list">
@@ -1198,6 +1213,14 @@ function startApp(){
     listenToUserNotifications();
     listenToCustomerDataChanges();
     setTimeout(processInviteReward, 2000);
+    if(!userAddress && userPhone){
+        db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
+            if(s.exists()){
+                userAddress = s.val();
+                localStorage.setItem('user_address', userAddress);
+            }
+        });
+    }
 }
 
 function listenToForceLogout(){
@@ -1291,17 +1314,23 @@ function listenToCustomerDataChanges(){
     customerDataListener = db.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(!c) return;
+        
         if(c.name && c.name !== userName){
             userName = c.name;
             localStorage.setItem('user_name', userName);
             if($id('displayName')) $id('displayName').innerText = userName;
+            if($id('profileName')) $id('profileName').innerText = userName;
             if($id('userAvatar')) $id('userAvatar').innerText = userName.charAt(0).toUpperCase();
+            if($id('profileAvatar')) $id('profileAvatar').innerText = userName.charAt(0).toUpperCase();
         }
+        
         if(c.area && c.area !== userArea){
             const oldArea = userArea;
             userArea = c.area;
             localStorage.setItem('user_area', userArea);
             if($id('displayArea')) $id('displayArea').innerText = userArea;
+            if($id('profileArea')) $id('profileArea').innerText = userArea;
+            if($id('settingsAreaName')) $id('settingsAreaName').innerText = userArea;
             if(oldArea !== userArea){
                 resetMarketData();
                 syncPricing();
@@ -1312,10 +1341,11 @@ function listenToCustomerDataChanges(){
                 loadRewardSettings();
             }
         }
+        
         if(c.address !== undefined && c.address !== userAddress){
             userAddress = c.address || '';
             localStorage.setItem('user_address', userAddress);
-            if($id('profileAddress')) $id('profileAddress').innerText = userAddress || '-';
+            if($id('settingsAddressName')) $id('settingsAddressName').innerText = userAddress || 'غير محدد';
         }
     });
 }
@@ -1683,8 +1713,14 @@ function pickArea(area){
     if(userPhone && userName && area !== userArea){
         userArea = area;
         localStorage.setItem('user_area', area);
-        $id('displayArea').innerText = area;
-        $id('profileArea').innerText = area;
+        
+        if($id('displayArea')) $id('displayArea').innerText = area;
+        if($id('profileArea')) $id('profileArea').innerText = area;
+        if($id('settingsAreaName')) $id('settingsAreaName').innerText = area;
+        
+        db.ref(`customers/${userPhone}/area`).set(area).catch(()=>{});
+        db.ref(`approved_users/${userPhone}/area`).set(area).catch(()=>{});
+        
         resetMarketData();
         cleanAllListeners();
         syncPricing();
@@ -1932,6 +1968,7 @@ function loadUserPoints(){
         userPoints = s.val() || 0;
         if($id('userPointsDisplay')) $id('userPointsDisplay').innerText = userPoints;
         if($id('headerPointsDisplay')) $id('headerPointsDisplay').innerText = userPoints;
+        if($id('headerPointsDisplay2')) $id('headerPointsDisplay2').innerText = userPoints;
         if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
     });
@@ -2100,14 +2137,28 @@ function switchPage(page){
     if(page === 'shipping') loadShippingPage();
     if(page === 'rewards'){ if(!isPreviewMode){ loadUserPoints(); checkChallengeProgress(); } }
     if(page === 'profile'){
-        $id('profileAvatar').innerText = userName.charAt(0).toUpperCase();
-        $id('profileName').innerText = userName;
-        $id('profilePhone').innerText = userPhone;
-        $id('profileArea').innerText = userArea;
-        $id('profilePointsDisplay').innerText = userPoints;
+        if($id('profileAvatar')) $id('profileAvatar').innerText = userName.charAt(0).toUpperCase();
+        if($id('profileName')) $id('profileName').innerText = userName;
+        if($id('profilePhone')) $id('profilePhone').innerText = userPhone;
+        if($id('profileArea')) $id('profileArea').innerText = userArea;
+        if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
-        const addrEl = $id('profileAddress');
-        if(addrEl) addrEl.innerText = userAddress || '-';
+        
+        if(userPhone){
+            db.ref(`customers/${userPhone}`).once('value').then(s=>{
+                const c = s.val();
+                if(c){
+                    if(c.name && c.name !== userName){
+                        userName = c.name;
+                        if($id('profileName')) $id('profileName').innerText = userName;
+                    }
+                    if(c.area && c.area !== userArea){
+                        userArea = c.area;
+                        if($id('profileArea')) $id('profileArea').innerText = userArea;
+                    }
+                }
+            });
+        }
     }
 }
 function switchSubTab(tab){
@@ -2847,7 +2898,6 @@ function saveMyAddress(){
         db.ref(`approved_users/${userPhone}/address`).set(userAddress),
         db.ref(`customers/${userPhone}/address`).set(userAddress)
     ]).then(()=>{
-        if($id('profileAddress')) $id('profileAddress').innerText = userAddress;
         showToast('✅ تم حفظ العنوان', 'success');
         setTimeout(()=>closeSheet(), 800);
     }).catch(err=>{
