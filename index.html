@@ -633,13 +633,30 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <div class="profile-name" id="profileName">اسمك</div>
             <div class="profile-phone" id="profilePhone">01xxxxxxxxx</div>
             <div class="profile-area"><i class="fas fa-map-marker-alt"></i><span id="profileArea">منطقتك</span></div>
-            <div style="margin-top:10px;background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:10px 14px;font-size:12px;color:var(--text-soft);line-height:1.6;text-align:right">
-                <div style="font-size:10.5px;color:var(--text-muted);margin-bottom:3px"><i class="fas fa-home"></i> عنوانك المحفوظ</div>
-                <div id="profileAddress" style="font-weight:700;color:var(--text)">-</div>
+            
+            <!-- ✅ النقاط (قابلة للضغط للذهاب لصفحة المكافآت) -->
+            <div style="margin-top:14px;display:flex;justify-content:center">
+                <button onclick="switchPage('rewards')" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:14px;padding:10px 22px;font-size:14px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 6px 15px rgba(245,158,11,.35)">
+                    <i class="fas fa-coins"></i>
+                    <span><span id="profilePointsDisplay">0</span> نقطة</span>
+                </button>
+            </div>
+            
+            <!-- ✅ العنوان تحت النقاط مباشرة — الزر والتعديل داخل الكارت -->
+            <div style="margin-top:14px;background:rgba(255,255,255,.9);border:1.5px solid rgba(139,92,246,.35);border-radius:16px;padding:14px;font-size:12px;color:var(--text-soft);line-height:1.6;text-align:right;box-shadow:0 4px 12px rgba(139,92,246,.08)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                    <div style="font-size:11px;color:var(--text-muted);font-weight:700;display:flex;align-items:center;gap:5px">
+                        <i class="fas fa-home" style="color:#10b981"></i> عنوانك المحفوظ
+                    </div>
+                    <button onclick="openAddressEditor()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:10px;padding:6px 14px;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(16,185,129,.35)">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                </div>
+                <div id="profileAddress" style="font-weight:700;color:var(--text);font-size:13px;line-height:1.6;min-height:20px">-</div>
             </div>
         </div>
         <div class="profile-list">
-            <button class="profile-list-item" onclick="switchPage('rewards')"><div class="pli-icon" style="background:linear-gradient(135deg,var(--warning),#d97706)"><i class="fas fa-gift"></i></div><div class="pli-text">رصيد نقاطي<small><span id="profilePointsDisplay">0</span> نقطة</small></div><i class="fas fa-chevron-left"></i></button>
+            <button class="profile-list-item" onclick="switchPage('rewards')"><div class="pli-icon" style="background:linear-gradient(135deg,var(--warning),#d97706)"><i class="fas fa-gift"></i></div><div class="pli-text">رصيد نقاطي<small><span id="profilePointsDisplay2">0</span> نقطة</small></div><i class="fas fa-chevron-left"></i></button>
             <button class="profile-list-item" onclick="switchPage('orders')"><div class="pli-icon" style="background:linear-gradient(135deg,var(--primary),var(--primary-dark))"><i class="fas fa-receipt"></i></div><div class="pli-text">طلباتي</div><i class="fas fa-chevron-left"></i></button>
             <button class="profile-list-item" onclick="switchPage('shipping')"><div class="pli-icon" style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)"><i class="fas fa-shipping-fast"></i></div><div class="pli-text">طلبات الشحن</div><i class="fas fa-chevron-left"></i></button>
             <button class="profile-list-item" onclick="openWhatsappSupport()"><div class="pli-icon" style="background:linear-gradient(135deg,#25D366,#128C7E)"><i class="fab fa-whatsapp"></i></div><div class="pli-text">مساعدة ودعم</div><i class="fas fa-chevron-left"></i></button>
@@ -1095,14 +1112,13 @@ setTimeout(()=>{
 
 function showLoginScreen(){ const l=$id('loginSection'); if(l){ l.style.display='flex'; window.scrollTo(0,0); } }
 
-// ✅ مراقبة الموافقة التلقائية — محدّثة لتستجيب لأي تغيير في الوقت الفعلي
 function listenToAutoApprovalSettings(){
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); }
     autoApprovalSettingsListener = db.ref('admin_settings/auto_approval').on('value', snap=>{
         const data = snap.val();
         const oldMinutes = WAITING_TIME_MINUTES;
         const oldEnabled = AUTO_APPROVAL_ENABLED;
-        
+
         if(data){
             AUTO_APPROVAL_ENABLED = data.enabled === true;
             WAITING_TIME_MINUTES = Number(data.minutes) || 5;
@@ -1110,15 +1126,14 @@ function listenToAutoApprovalSettings(){
             AUTO_APPROVAL_ENABLED = true;
             WAITING_TIME_MINUTES = 5;
         }
-        
+
         console.log('⚙️ إعدادات الموافقة التلقائية:', { enabled: AUTO_APPROVAL_ENABLED, minutes: WAITING_TIME_MINUTES });
-        
-        // 🔧 لو القيمة اتغيرت فعلاً، نعيد رسم شاشة الانتظار
+
         if(oldMinutes !== WAITING_TIME_MINUTES || oldEnabled !== AUTO_APPROVAL_ENABLED){
             console.log('🔄 تغيير في الإعدادات — إعادة رسم شاشة الانتظار');
             const waitingSection = $id('waitingSection');
             const isWaitingVisible = waitingSection && waitingSection.style.display === 'flex';
-            
+
             if(isWaitingVisible){
                 if(!currentRegistrationId){
                     const pendingId = localStorage.getItem('pending_registration_id');
@@ -1197,6 +1212,16 @@ function listenToForceLogout(){
             if(stamp && stamp > lastForceLogoutAt){
                 lastForceLogoutAt = stamp;
                 localStorage.setItem('last_force_logout', stamp);
+                
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_phone');
+                localStorage.removeItem('user_area');
+                localStorage.removeItem('user_address');
+                localStorage.removeItem('pending_registration_id');
+                
+                try { cleanAllListeners(); } catch(e){}
+                try { hideSuspensionBanner(); } catch(e){}
+                
                 $id('forceLogoutMsg').innerText = msg;
                 $id('forceLogoutScreen').classList.add('show');
                 $id('forceLogoutScreenOverlay').classList.add('show');
@@ -1206,9 +1231,13 @@ function listenToForceLogout(){
 }
 
 function handleForceLogoutConfirm(){
-    localStorage.clear();
+    localStorage.removeItem('user_name');
+    localStorage.removeItem('user_phone');
+    localStorage.removeItem('user_area');
+    localStorage.removeItem('user_address');
+    localStorage.removeItem('pending_registration_id');
     sessionStorage.clear();
-    location.reload();
+    window.location.href = window.location.pathname + '?logout=' + Date.now();
 }
 
 function listenToSuspensionStatus(){
@@ -1283,9 +1312,10 @@ function listenToCustomerDataChanges(){
                 loadRewardSettings();
             }
         }
-        if(c.address && c.address !== userAddress){
-            userAddress = c.address;
+        if(c.address !== undefined && c.address !== userAddress){
+            userAddress = c.address || '';
             localStorage.setItem('user_address', userAddress);
+            if($id('profileAddress')) $id('profileAddress').innerText = userAddress || '-';
         }
     });
 }
@@ -1330,7 +1360,6 @@ function checkSuspensionBeforeOrder(){
     return false;
 }
 
-// 🔧 العنوان اتشال من التسجيل — الزبون هيضيفه من جوه التطبيق
 function validateRegistrationData(){
     const n = ($id('uNameInput')||{}).value?.trim() || '';
     const p = ($id('uPhoneInput')||{}).value?.trim() || '';
@@ -1407,7 +1436,7 @@ function createNewRegistration(data){
         name: data.name,
         phone: data.phone,
         area: data.area,
-        address: '',  // 🔧 العنوان فاضي — الزبون هيضيفه من جوه التطبيق
+        address: '',
         inviteCode: data.inviteCode || '',
         status: 'pending', requestedAt: now,
         whatsappSent: true,
@@ -1421,7 +1450,6 @@ function createNewRegistration(data){
             openWaitingScreen(data.phone, now);
             const adminPhone = supportWhatsapp.replace(/\D/g,'');
             const finalAdminPhone = adminPhone.startsWith('0') ? '2'+adminPhone : adminPhone;
-            // 🔧 رسالة الواتساب بدون عنوان
             const message = `🔔 *طلب تسجيل جديد في مشوارك*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${data.name}\n📱 *الرقم:* ${data.phone}\n📍 *المنطقة:* ${data.area}\n${data.inviteCode ? `🎁 *كود الدعوة:* ${data.inviteCode}` : ''}\n⏰ *الوقت:* ${new Date(now).toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━━━━\n✅ برجاء الموافقة على الطلب 🙏`;
             const waUrl = `https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`;
             setTimeout(()=>{ window.open(waUrl, '_blank'); showToast('📱 تم فتح الواتساب', 'success'); }, 1000);
@@ -1437,7 +1465,7 @@ function openWaitingScreen(phone, startTime){
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'flex';
     $id('appSection').style.display = 'none';
-    
+
     waitingStartTime = startTime || waitingStartTime || Date.now();
     if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
 
@@ -1506,9 +1534,7 @@ function openWaitingScreen(phone, startTime){
 function startWaitingTimer(){
     if(waitingTimerInterval) clearInterval(waitingTimerInterval);
     if(!AUTO_APPROVAL_ENABLED) return;
-    
     const circumference = 2 * Math.PI * 75;
-    
     function updateTimer(){
         const totalSeconds = WAITING_TIME_MINUTES * 60;
         const elapsed = Math.floor((Date.now() - waitingStartTime) / 1000);
@@ -1534,7 +1560,7 @@ function reopenWhatsapp(){
         db.ref('pending_registrations/' + currentRegistrationId).once('value').then(snap => {
             const r = snap.val();
             if(!r){ showToast('❌ مش لاقي بيانات', 'error'); return; }
-            const message = `🔔 *طلب تسجيل جديد*\n👤 ${r.name}\n📱 ${r.phone}\n📍 ${r.area}\n⏰ ${new Date(r.requestedAt).toLocaleString('ar-EG')}\n✅ برجاء الموافقة 🙏`;
+            const message = `🔔 *طلب تسجيل جديد*\n👤 ${r.name}\n📱 ${r.phone}\n📍 ${r.area||'-'}\n⏰ ${new Date(r.requestedAt).toLocaleString('ar-EG')}\n✅ برجاء الموافقة 🙏`;
             window.open(`https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`, '_blank');
             showToast('📱 تم فتح الواتساب', 'success');
         });
@@ -1622,6 +1648,11 @@ function loginUser(data){
             if(userAddress) db.ref(`customers/${userPhone}/address`).set(userAddress);
         }
     });
+    db.ref(`customers/${userPhone}`).update({
+        forceLogout: false,
+        forceLogoutAt: 0,
+        forceLogoutMessage: ''
+    }).catch(()=>{});
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'none';
     showToast('✅ أهلاً بيك!', 'success');
@@ -1902,6 +1933,7 @@ function loadUserPoints(){
         if($id('userPointsDisplay')) $id('userPointsDisplay').innerText = userPoints;
         if($id('headerPointsDisplay')) $id('headerPointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
+        if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
     });
 }
 
@@ -2073,8 +2105,9 @@ function switchPage(page){
         $id('profilePhone').innerText = userPhone;
         $id('profileArea').innerText = userArea;
         $id('profilePointsDisplay').innerText = userPoints;
+        if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
         const addrEl = $id('profileAddress');
-        if(addrEl) addrEl.innerText = userAddress || 'غير محدد';
+        if(addrEl) addrEl.innerText = userAddress || '-';
     }
 }
 function switchSubTab(tab){
@@ -2213,7 +2246,7 @@ function renderAddressPicker(prefix){
                 </button>
             </div>
             <input type="text" id="${prefix}_addressInput" value="${hasAddr?addr:''}" placeholder="اكتب العنوان هنا...">
-            ${hasAddr?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-info-circle"></i> عنوانك المحفوظ: ${addr}</div>`:`<div style="font-size:10.5px;color:#dc2626;margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-exclamation-circle"></i> محتاج تضيف عنوانك من الإعدادات عشان تستخدم "مكاني"</div>`}
+            ${hasAddr?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-info-circle"></i> عنوانك المحفوظ: ${addr}</div>`:`<div style="font-size:10.5px;color:#dc2626;margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-exclamation-circle"></i> محتاج تضيف عنوانك من البروفايل عشان تستخدم "مكاني"</div>`}
         </div>
     `;
 }
@@ -2640,6 +2673,14 @@ function redeemReward(type){
             const clean = userPhone.replace(/\D/g,'');
             userPoints -= cost;
             db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+                db.ref(`rewards_history/${clean}`).push({
+                    type: 'delivery',
+                    typeName: 'توصيل مجاني',
+                    cost: cost,
+                    pointsBefore: userPoints + cost,
+                    pointsAfter: userPoints,
+                    usedAt: Date.now()
+                });
                 loadUserPoints();
                 lastDeductedDeliveryPoints = cost;
                 hasActiveCoupon = true;
@@ -2655,6 +2696,15 @@ function redeemReward(type){
             const clean = userPhone.replace(/\D/g,'');
             userPoints -= cost;
             db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+                db.ref(`rewards_history/${clean}`).push({
+                    type: 'discount',
+                    typeName: 'خصم مالي',
+                    cost: cost,
+                    discountValue: val,
+                    pointsBefore: userPoints + cost,
+                    pointsAfter: userPoints,
+                    usedAt: Date.now()
+                });
                 loadUserPoints();
                 lastDeductedPoints = cost;
                 appliedGlobalDiscountValue = val;
@@ -2730,6 +2780,16 @@ function confirmNetworkSelection(){
         userPoints -= cost;
         db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
             db.ref(`reward_settings/${userArea}/${nodeName}/${randomId}`).remove();
+            db.ref(`rewards_history/${clean}`).push({
+                type: 'fakka',
+                typeName: `كارت فكة ${netName}`,
+                network: netName,
+                cardCode: card.code,
+                cost: cost,
+                pointsBefore: userPoints + cost,
+                pointsAfter: userPoints,
+                usedAt: Date.now()
+            });
             loadUserPoints();
             closeNetwork();
             currentCardCode = card.code;
@@ -2787,6 +2847,7 @@ function saveMyAddress(){
         db.ref(`approved_users/${userPhone}/address`).set(userAddress),
         db.ref(`customers/${userPhone}/address`).set(userAddress)
     ]).then(()=>{
+        if($id('profileAddress')) $id('profileAddress').innerText = userAddress;
         showToast('✅ تم حفظ العنوان', 'success');
         setTimeout(()=>closeSheet(), 800);
     }).catch(err=>{
