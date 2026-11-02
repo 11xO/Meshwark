@@ -396,7 +396,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .preview-mode-bar{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:10px 16px;text-align:center;font-size:12.5px;font-weight:900;z-index:99997;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(245,158,11,.35)}
 .preview-locked{position:relative;opacity:.55;pointer-events:none}
 .preview-locked::after{content:'🔒 للمعاينة فقط';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:6px 12px;border-radius:10px;font-size:11px;font-weight:900;pointer-events:none;z-index:100}
-.admin-link-item{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(220,38,38,.05))!important;border:1px solid rgba(239,68,68,.25)!important;margin-top:8px}
 @media(min-width:640px){.market-grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
@@ -860,7 +859,8 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const WALLET_NUMBER = "01115699940";
-const WAITING_TIME_MINUTES = 5;
+let WAITING_TIME_MINUTES = 5;
+let AUTO_APPROVAL_ENABLED = true;
 
 let userName, userPhone, userArea, userAddress = '', userPoints = 0;
 let currentRewardSettings = { active:true, pointsPerOrder:10, discountCost:100, tripDiscountCost:50, directDiscountValue:20, fakkaCost:150, doublePointsActive:false, challengeActive:true, challengeTarget:5, challengeReward:100, inviteActive:true, inviteReward:50, showFakka:true, showFakkaButton:true };
@@ -888,6 +888,7 @@ let suspensionListener = null;
 let notificationsListener = null;
 let isSuspended = false;
 let customerDataListener = null;
+let autoApprovalSettingsListener = null;
 
 let serviceVisibilityListener = null;
 let customServicesListener = null;
@@ -942,6 +943,7 @@ function cleanAllListeners(){
     if(suspensionListener && userPhone){ db.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
     if(notificationsListener && userPhone){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
     if(customerDataListener && userPhone){ db.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
+    if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
     db.ref('areas').off();
     db.ref('reward_settings').off();
     db.ref('settings/support/whatsapp').off();
@@ -1051,6 +1053,7 @@ setTimeout(()=>{
     const sp = $id('splashScreen');
     if(sp) sp.classList.add('hide');
     checkWorkHours();
+    listenToAutoApprovalSettings();
     const sN = localStorage.getItem('user_name');
     const sP = localStorage.getItem('user_phone');
     const sA = localStorage.getItem('user_area');
@@ -1075,16 +1078,96 @@ setTimeout(()=>{
         });
         startApp();
     } else {
-        showLoginScreen();
+        const pendingId = localStorage.getItem('pending_registration_id');
+        if(pendingId){
+            currentRegistrationId = pendingId;
+            db.ref('pending_registrations/'+pendingId).once('value').then(s=>{
+                const r = s.val();
+                if(r && r.status === 'pending'){
+                    openWaitingScreen(r.phone, r.requestedAt);
+                } else {
+                    localStorage.removeItem('pending_registration_id');
+                    showLoginScreen();
+                }
+            }).catch(()=>showLoginScreen());
+        } else {
+            showLoginScreen();
+        }
         setTimeout(()=>{ if(sp) sp.style.display='none'; },600);
     }
 }, 2200);
 
 function showLoginScreen(){ const l=$id('loginSection'); if(l){ l.style.display='flex'; window.scrollTo(0,0); } }
 
+function listenToAutoApprovalSettings(){
+    if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); }
+    autoApprovalSettingsListener = db.ref('admin_settings/auto_approval').on('value', snap=>{
+        const data = snap.val();
+        const oldMinutes = WAITING_TIME_MINUTES;
+        const oldEnabled = AUTO_APPROVAL_ENABLED;
+        
+        if(data){
+            AUTO_APPROVAL_ENABLED = data.enabled === true;
+            WAITING_TIME_MINUTES = Number(data.minutes) || 5;
+        } else {
+            AUTO_APPROVAL_ENABLED = true;
+            WAITING_TIME_MINUTES = 5;
+        }
+        
+        console.log('⚙️ إعدادات الموافقة التلقائية:', { enabled: AUTO_APPROVAL_ENABLED, minutes: WAITING_TIME_MINUTES });
+        
+        // 🔧 لو القيمة اتغيرت فعلاً، نعيد رسم شاشة الانتظار
+        if(oldMinutes !== WAITING_TIME_MINUTES || oldEnabled !== AUTO_APPROVAL_ENABLED){
+            console.log('🔄 تغيير في الإعدادات — إعادة رسم شاشة الانتظار');
+            const waitingSection = $id('waitingSection');
+            const isWaitingVisible = waitingSection && waitingSection.style.display === 'flex';
+            
+            if(isWaitingVisible){
+                // نجيب بيانات التسجيل من localStorage لو currentRegistrationId مش موجود
+                if(!currentRegistrationId){
+                    const pendingId = localStorage.getItem('pending_registration_id');
+                    if(pendingId) currentRegistrationId = pendingId;
+                }
+                
+                if(currentRegistrationId){
+                    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+                        const r = s.val();
+                        if(r && r.status === 'pending'){
+                            openWaitingScreen(r.phone, r.requestedAt);
+                        }
+                    });
+                } else {
+                    // مفيش registration ID — نعيد رسم بالشكل الافتراضي
+                    if($id('timerValue') && AUTO_APPROVAL_ENABLED){
+                        // نحدث الـ timer الجاري
+                        if(waitingTimerInterval) clearInterval(waitingTimerInterval);
+                        startWaitingTimer();
+                    }
+                }
+            }
+        }
+    });
+}
+function refreshWaitingScreen(){
+    // 🔧 نحاول نجيب ID من localStorage لو مش موجود
+    if(!currentRegistrationId){
+        const pendingId = localStorage.getItem('pending_registration_id');
+        if(pendingId) currentRegistrationId = pendingId;
+    }
+    if(!currentRegistrationId) return;
+    
+    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+        const r = s.val();
+        if(r && r.status === 'pending'){
+            openWaitingScreen(r.phone, r.requestedAt);
+        }
+    });
+}
+
 function startApp(){
     cleanAllListeners();
     checkWorkHours();
+    listenToAutoApprovalSettings();
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'none';
     $id('appSection').style.display = 'block';
@@ -1293,11 +1376,18 @@ function submitRegistration(){
                 });
                 if(existingId && existingStatus === 'pending'){
                     const elapsed = Date.now() - (existingData.requestedAt||0);
-                    if((elapsed/60000) < WAITING_TIME_MINUTES){
+                    const waitMs = (WAITING_TIME_MINUTES || 5) * 60 * 1000;
+                    if(AUTO_APPROVAL_ENABLED && (elapsed < waitMs)){
                         currentRegistrationId = existingId;
                         if(btn) restoreButton(btn);
                         openWaitingScreen(existingData.phone, existingData.requestedAt);
                         showToast('عندك طلب معلق بالفعل','info');
+                        return;
+                    } else if(!AUTO_APPROVAL_ENABLED){
+                        currentRegistrationId = existingId;
+                        if(btn) restoreButton(btn);
+                        openWaitingScreen(existingData.phone, existingData.requestedAt);
+                        showToast('عندك طلب معلق — في انتظار موافقة الأدمن','info');
                         return;
                     } else {
                         db.ref('pending_registrations/'+existingId).update({status:'expired'});
@@ -1352,10 +1442,49 @@ function createNewRegistration(data){
             showToast('❌ فشل حفظ الطلب','error');
         });
 }
+
 function openWaitingScreen(phone, startTime){
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'flex';
     $id('appSection').style.display = 'none';
+    
+    // 🔧 حفظ startTime في مكان دائم
+    waitingStartTime = startTime || waitingStartTime || Date.now();
+    
+    // 🔧 لو في timer شغال، وقفه قبل إعادة الرسم
+    if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
+
+    if(!AUTO_APPROVAL_ENABLED){
+        $id('waitingCardContent').innerHTML = `
+            <div class="waiting-status-badge" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.4);color:#2563eb">
+                <span class="pulse-dot" style="background:#2563eb"></span> في انتظار المراجعة اليدوية
+            </div>
+            <div style="width:120px;height:120px;border-radius:36px;background:linear-gradient(135deg,#3b82f6,#2563eb);display:flex;align-items:center;justify-content:center;font-size:56px;color:#fff;margin:20px auto;box-shadow:0 15px 40px rgba(59,130,246,.35);animation:approvedIconBounce 2s infinite">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="waiting-title">⏳ جاري المراجعة</div>
+            <div class="waiting-desc">طلبك وصل لفريقنا<br><b style="color:#2563eb">هيتم التواصل معاك قريباً</b></div>
+            <div class="whatsapp-sent-card">
+                <div class="whatsapp-sent-icon"><i class="fab fa-whatsapp"></i></div>
+                <div class="whatsapp-sent-text">
+                    <div class="whatsapp-sent-title"><span class="check-mark"><i class="fas fa-check"></i></span> تم فتح الواتساب</div>
+                    <div class="whatsapp-sent-sub">ابعت الرسالة الجاهزة للأدمن</div>
+                </div>
+            </div>
+            <button class="reopen-whatsapp-btn" onclick="reopenWhatsapp()"><i class="fab fa-whatsapp"></i><span>افتح الواتساب تاني</span></button>
+            <button class="preview-enter-btn" onclick="enterPreviewMode()"><i class="fas fa-eye"></i> شوف التطبيق (معاينة فقط)</button>
+            <div class="waiting-note-new">
+                <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
+                <div><b>💡 نصيحة</b> لو بعت الرسالة، الموافقة هتكون أسرع بكثير</div>
+            </div>
+            <button class="waiting-cancel" onclick="cancelRegistration()"><i class="fas fa-times"></i> إلغاء الطلب</button>
+        `;
+        waitingStartTime = startTime || Date.now();
+        if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
+        listenToRegistrationStatus();
+        return;
+    }
+
     $id('waitingCardContent').innerHTML = `
         <div class="waiting-status-badge"><span class="pulse-dot"></span> جاري المراجعة الآن...</div>
         <div class="waiting-circle-wrap">
@@ -1392,9 +1521,13 @@ function openWaitingScreen(phone, startTime){
 }
 function startWaitingTimer(){
     if(waitingTimerInterval) clearInterval(waitingTimerInterval);
-    const totalSeconds = WAITING_TIME_MINUTES * 60;
+    if(!AUTO_APPROVAL_ENABLED) return;
+    
     const circumference = 2 * Math.PI * 75;
+    
     function updateTimer(){
+        // 🔧 نقرأ القيمة الحالية كل مرة (مش نسخة ثابتة)
+        const totalSeconds = WAITING_TIME_MINUTES * 60;
         const elapsed = Math.floor((Date.now() - waitingStartTime) / 1000);
         const remaining = Math.max(0, totalSeconds - elapsed);
         const mins = Math.floor(remaining / 60);
@@ -1403,7 +1536,7 @@ function startWaitingTimer(){
         if(tv) tv.innerText = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
         const progress = $id('progressCircle');
         if(progress){
-            const percent = remaining / totalSeconds;
+            const percent = Math.min(1, remaining / totalSeconds);
             progress.style.strokeDashoffset = circumference * (1 - percent);
         }
         if(remaining <= 0){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
