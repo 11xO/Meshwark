@@ -87,8 +87,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .btn-whatsapp{width:100%;padding:18px;border:none;border-radius:16px;font-size:15.5px;font-weight:900;color:#fff;cursor:pointer;font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#25D366,#128C7E);box-shadow:0 10px 25px rgba(37,211,102,.35);display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;transition:.2s}
 .btn-whatsapp:active{transform:scale(.98)}
 .btn-whatsapp i{font-size:22px}
-.login-security{text-align:center;font-size:11px;color:var(--text-dim);margin-top:18px;line-height:1.8}
-.waiting-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;background:var(--bg-main)}
+.login-security{text-align:center;font-size:11px;color:var(--text-dim);margin-top:18px;line-height:1.8}.waiting-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;background:var(--bg-main)}
 .waiting-card{position:relative;width:100%;max-width:440px;background:var(--card);border:1.5px solid var(--border);border-radius:32px;padding:35px 24px 28px;box-shadow:0 20px 50px rgba(0,0,0,.08)}
 .waiting-circle-wrap{position:relative;width:170px;height:170px;margin:0 auto 22px}
 .waiting-circle-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
@@ -410,7 +409,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head><body>
-
 <!-- SPLASH -->
 <div class="splash" id="splashScreen">
     <img src="./logo.png" alt="مشوارك" class="splash-logo">
@@ -666,7 +664,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
                 <button onclick="openAddressEditor()" class="profile-action-btn green">
                     <i class="fas fa-home"></i>
                     <span>تعديل العنوان</span>
-                    
                 </button>
             </div>
         </div>
@@ -874,9 +871,13 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </div>
 </div>
 
-<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMessage">رسالة</span></div><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMessage">رسالة</span></div>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
+// ═══════════════════════════════════════════════════════════════
+// 🟢 Firebase الأول (family-4ff2a) - الطلبات والإعدادات
+// ═══════════════════════════════════════════════════════════════
 const firebaseConfig = {
     apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4",
     authDomain: "family-4ff2a.firebaseapp.com",
@@ -885,6 +886,36 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+// ═══════════════════════════════════════════════════════════════
+// 🔵 Firebase التاني (meshwark-f8b0a) - العملاء والمنتجات
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig2 = {
+    apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac",
+    authDomain: "meshwark-f8b0a.firebaseapp.com",
+    databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com",
+    projectId: "meshwark-f8b0a",
+    storageBucket: "meshwark-f8b0a.firebasestorage.app",
+    messagingSenderId: "85412350921",
+    appId: "1:85412350921:web:5a654ccb3753dc1153b618"
+};
+const app2 = firebase.initializeApp(firebaseConfig2, "secondary");
+const db2 = firebase.database(app2);
+
+// ═══════════════════════════════════════════════════════════════
+// 🟣 Firebase التالت (meshwark2) - النقاط والتسجيلات
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig3 = {
+    apiKey: "AIzaSyDNeFKaTiyDzSU_emOtEyLFA3f2J7uhHiE",
+    authDomain: "meshwark2.firebaseapp.com",
+    databaseURL: "https://meshwark2-default-rtdb.firebaseio.com",
+    projectId: "meshwark2",
+    storageBucket: "meshwark2.firebasestorage.app",
+    messagingSenderId: "954116788968",
+    appId: "1:954116788968:web:399fe497edca7cb47cef5d"
+};
+const app3 = firebase.initializeApp(firebaseConfig3, "third");
+const db3 = firebase.database(app3);
 
 const WALLET_NUMBER = "01115699940";
 let WAITING_TIME_MINUTES = 5;
@@ -952,28 +983,28 @@ function showPageLoader(id, msg){
 function cleanAllListeners(){
     if(workHoursListener){ db.ref('settings/work_hours').off('value', workHoursListener); workHoursListener = null; }
     if(registrationStatusListener && currentRegistrationId){
-        db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
+        db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
         registrationStatusListener = null;
     }
     if(serviceVisibilityListener){ db.ref(`settings/${userArea}`).off('value', serviceVisibilityListener); serviceVisibilityListener = null; }
     if(customServicesListener){ db.ref(`custom_services/${userArea}`).off('value', customServicesListener); customServicesListener = null; }
     if(shopsListener){ db.ref(`shops/${userArea}`).off('value', shopsListener); shopsListener = null; }
     if(shippingSettingsListener){ db.ref(`settings/${userArea}`).off('value', shippingSettingsListener); shippingSettingsListener = null; }
-    if(userPointsListener && userPhone){ db.ref(`users_points/${userPhone.replace(/\D/g,'')}`).off('value', userPointsListener); userPointsListener = null; }
-    if(rewardSettingsListener && userArea){ db.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); rewardSettingsListener = null; }
-    if(challengeListener && userPhone){ db.ref(`users_challenges/${userPhone.replace(/\D/g,'')}`).off(); challengeListener = null; }
+    if(userPointsListener && userPhone){ db3.ref(`users_points/${userPhone.replace(/\D/g,'')}`).off('value', userPointsListener); userPointsListener = null; }
+    if(rewardSettingsListener && userArea){ db3.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); rewardSettingsListener = null; }
+    if(challengeListener && userPhone){ db3.ref(`users_challenges/${userPhone.replace(/\D/g,'')}`).off(); challengeListener = null; }
     if(ordersListener){ db.ref('orders').off('value', ordersListener); ordersListener = null; }
     if(activeOrderListener){ db.ref('orders').off('value', activeOrderListener); activeOrderListener = null; }
-    if(marketCategoriesListener && userArea){ db.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); marketCategoriesListener = null; }
-    if(marketProductsListener && userArea){ db.ref(`market_products/${userArea}`).off('value', marketProductsListener); marketProductsListener = null; }
+    if(marketCategoriesListener && userArea){ db2.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); marketCategoriesListener = null; }
+    if(marketProductsListener && userArea){ db2.ref(`market_products/${userArea}`).off('value', marketProductsListener); marketProductsListener = null; }
     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
-    if(forceLogoutListener && userPhone){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
-    if(suspensionListener && userPhone){ db.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
-    if(notificationsListener && userPhone){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
-    if(customerDataListener && userPhone){ db.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
+    if(forceLogoutListener && userPhone){ db3.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
+    if(suspensionListener && userPhone){ db3.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
+    if(notificationsListener && userPhone){ db3.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
+    if(customerDataListener && userPhone){ db2.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
     db.ref('areas').off();
-    db.ref('reward_settings').off();
+    db3.ref('reward_settings').off();
     db.ref('settings/support/whatsapp').off();
     if(userArea){
         db.ref(`pricing/${userArea}`).off();
@@ -982,7 +1013,6 @@ function cleanAllListeners(){
     ordersInitialLoaded = false;
     marketInitialized = false;
 }
-
 window.addEventListener('online', ()=>{ const b=$id('offlineBanner'); if(b) b.classList.remove('show'); showToast('✅ رجع الاتصال','success'); });
 window.addEventListener('offline', ()=>{ const b=$id('offlineBanner'); if(b) b.classList.add('show'); showToast('⚠️ انقطع الاتصال','error'); });
 
@@ -1090,14 +1120,14 @@ setTimeout(()=>{
         userName = sN; userPhone = sP; userArea = sA;
         userAddress = sAddr || '';
         if(!userAddress && userPhone){
-            db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
+            db2.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
                 if(s.exists()){
                     userAddress = s.val();
                     localStorage.setItem('user_address', userAddress);
                 }
             });
         }
-        db.ref('blacklist/' + userPhone.replace(/\D/g,'')).once('value').then(s=>{
+        db3.ref('blacklist/' + userPhone.replace(/\D/g,'')).once('value').then(s=>{
             if(s.exists()){
                 localStorage.clear();
                 showToast('🚫 الرقم ده محظور','error');
@@ -1109,7 +1139,7 @@ setTimeout(()=>{
         const pendingId = localStorage.getItem('pending_registration_id');
         if(pendingId){
             currentRegistrationId = pendingId;
-            db.ref('pending_registrations/'+pendingId).once('value').then(s=>{
+            db3.ref('pending_registrations/'+pendingId).once('value').then(s=>{
                 const r = s.val();
                 if(r && r.status === 'pending'){
                     openWaitingScreen(r.phone, r.requestedAt);
@@ -1142,10 +1172,7 @@ function listenToAutoApprovalSettings(){
             WAITING_TIME_MINUTES = 5;
         }
 
-        console.log('⚙️ إعدادات الموافقة التلقائية:', { enabled: AUTO_APPROVAL_ENABLED, minutes: WAITING_TIME_MINUTES });
-
         if(oldMinutes !== WAITING_TIME_MINUTES || oldEnabled !== AUTO_APPROVAL_ENABLED){
-            console.log('🔄 تغيير في الإعدادات — إعادة رسم شاشة الانتظار');
             const waitingSection = $id('waitingSection');
             const isWaitingVisible = waitingSection && waitingSection.style.display === 'flex';
 
@@ -1155,7 +1182,7 @@ function listenToAutoApprovalSettings(){
                     if(pendingId) currentRegistrationId = pendingId;
                 }
                 if(currentRegistrationId){
-                    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+                    db3.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
                         const r = s.val();
                         if(r && r.status === 'pending'){
                             openWaitingScreen(r.phone, r.requestedAt);
@@ -1176,7 +1203,7 @@ function refreshWaitingScreen(){
         if(pendingId) currentRegistrationId = pendingId;
     }
     if(!currentRegistrationId) return;
-    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+    db3.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
         const r = s.val();
         if(r && r.status === 'pending'){
             openWaitingScreen(r.phone, r.requestedAt);
@@ -1214,7 +1241,7 @@ function startApp(){
     listenToCustomerDataChanges();
     setTimeout(processInviteReward, 2000);
     if(!userAddress && userPhone){
-        db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
+        db2.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
             if(s.exists()){
                 userAddress = s.val();
                 localStorage.setItem('user_address', userAddress);
@@ -1225,9 +1252,9 @@ function startApp(){
 
 function listenToForceLogout(){
     if(!userPhone) return;
-    if(forceLogoutListener){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); }
+    if(forceLogoutListener){ db3.ref('customers/'+userPhone).off('value', forceLogoutListener); }
     let lastForceLogoutAt = Number(localStorage.getItem('last_force_logout') || 0);
-    forceLogoutListener = db.ref('customers/'+userPhone).on('value', snap=>{
+    forceLogoutListener = db3.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(c && c.forceLogout === true){
             const msg = c.forceLogoutMessage || 'تم إنهاء الجلسة من الإدارة';
@@ -1265,8 +1292,8 @@ function handleForceLogoutConfirm(){
 
 function listenToSuspensionStatus(){
     if(!userPhone) return;
-    if(suspensionListener){ db.ref('customers/'+userPhone).off('value', suspensionListener); }
-    suspensionListener = db.ref('customers/'+userPhone).on('value', snap=>{
+    if(suspensionListener){ db3.ref('customers/'+userPhone).off('value', suspensionListener); }
+    suspensionListener = db3.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         isSuspended = (c && c.isSuspended === true);
         if(isSuspended){
@@ -1296,13 +1323,13 @@ function hideSuspensionBanner(){
 
 function listenToUserNotifications(){
     if(!userPhone) return;
-    if(notificationsListener){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); }
-    notificationsListener = db.ref('user_notifications/'+userPhone).on('value', snap=>{
+    if(notificationsListener){ db3.ref('user_notifications/'+userPhone).off('value', notificationsListener); }
+    notificationsListener = db3.ref('user_notifications/'+userPhone).on('value', snap=>{
         snap.forEach(c=>{
             const n = c.val();
             if(n && !n.read){
                 showNotificationPopup(n, c.key);
-                db.ref('user_notifications/'+userPhone+'/'+c.key+'/read').set(true);
+                db3.ref('user_notifications/'+userPhone+'/'+c.key+'/read').set(true);
             }
         });
     });
@@ -1310,8 +1337,8 @@ function listenToUserNotifications(){
 
 function listenToCustomerDataChanges(){
     if(!userPhone) return;
-    if(customerDataListener){ db.ref('customers/'+userPhone).off('value', customerDataListener); }
-    customerDataListener = db.ref('customers/'+userPhone).on('value', snap=>{
+    if(customerDataListener){ db2.ref('customers/'+userPhone).off('value', customerDataListener); }
+    customerDataListener = db2.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(!c) return;
         
@@ -1405,13 +1432,13 @@ function submitRegistration(){
     const btn = $id('whatsappRegisterBtn');
     if(btn) setButtonLoading(btn, 'جاري التسجيل...');
     const clean = data.phone.replace(/\D/g,'');
-    db.ref('blacklist/' + clean).once('value').then(blackSnap => {
+    db3.ref('blacklist/' + clean).once('value').then(blackSnap => {
         if(blackSnap.exists()){
             if(btn) restoreButton(btn);
             showToast('🚫 الرقم ده محظور','error');
             return;
         }
-        db.ref('pending_registrations').orderByChild('phone').equalTo(data.phone).once('value')
+        db3.ref('pending_registrations').orderByChild('phone').equalTo(data.phone).once('value')
             .then(snap=>{
                 let existingId = null, existingStatus = null, existingData = null;
                 snap.forEach(c=>{
@@ -1438,7 +1465,7 @@ function submitRegistration(){
                         showToast('عندك طلب معلق — في انتظار موافقة الأدمن','info');
                         return;
                     } else {
-                        db.ref('pending_registrations/'+existingId).update({status:'expired'});
+                        db3.ref('pending_registrations/'+existingId).update({status:'expired'});
                     }
                 }
                 if(existingId && existingStatus === 'approved'){
@@ -1472,7 +1499,7 @@ function createNewRegistration(data){
         whatsappSent: true,
         deviceInfo: navigator.userAgent.substring(0,100)
     };
-    db.ref('pending_registrations').push(registrationData)
+    db3.ref('pending_registrations').push(registrationData)
         .then(ref=>{
             currentRegistrationId = ref.key;
             if(btn) restoreButton(btn);
@@ -1587,7 +1614,7 @@ function reopenWhatsapp(){
     const adminPhone = supportWhatsapp.replace(/\D/g,'');
     const finalAdminPhone = adminPhone.startsWith('0') ? '2'+adminPhone : adminPhone;
     if(currentRegistrationId){
-        db.ref('pending_registrations/' + currentRegistrationId).once('value').then(snap => {
+        db3.ref('pending_registrations/' + currentRegistrationId).once('value').then(snap => {
             const r = snap.val();
             if(!r){ showToast('❌ مش لاقي بيانات', 'error'); return; }
             const message = `🔔 *طلب تسجيل جديد*\n👤 ${r.name}\n📱 ${r.phone}\n📍 ${r.area||'-'}\n⏰ ${new Date(r.requestedAt).toLocaleString('ar-EG')}\n✅ برجاء الموافقة 🙏`;
@@ -1600,10 +1627,10 @@ function reopenWhatsapp(){
 }
 function listenToRegistrationStatus(){
     if(registrationStatusListener && currentRegistrationId){
-        db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
+        db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
     }
     if(!currentRegistrationId) return;
-    registrationStatusListener = db.ref('pending_registrations/'+currentRegistrationId).on('value', snap=>{
+    registrationStatusListener = db3.ref('pending_registrations/'+currentRegistrationId).on('value', snap=>{
         const r = snap.val(); if(!r) return;
         if(r.status === 'approved'){
             if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
@@ -1642,14 +1669,14 @@ function showExpiredScreen(){
 }
 function cancelRegistration(){
     showConfirm('إلغاء التسجيل','متأكد؟',()=>{
-        if(currentRegistrationId){ db.ref('pending_registrations/'+currentRegistrationId).update({status:'cancelled'}); }
-        if(registrationStatusListener && currentRegistrationId){ db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
+        if(currentRegistrationId){ db3.ref('pending_registrations/'+currentRegistrationId).update({status:'cancelled'}); }
+        if(registrationStatusListener && currentRegistrationId){ db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
         if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
         backToRegistration();
     });
 }
 function backToRegistration(){
-    if(registrationStatusListener && currentRegistrationId){ db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
+    if(registrationStatusListener && currentRegistrationId){ db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
     registrationStatusListener = null;
     currentRegistrationId = null;
     waitingStartTime = null;
@@ -1670,15 +1697,15 @@ function loginUser(data){
     localStorage.setItem('user_address', userAddress);
     localStorage.removeItem('pending_registration_id');
     if(data.inviteCode && currentRewardSettings.inviteActive !== false){ handleInviteCode(data.inviteCode); }
-    db.ref(`approved_users/${userPhone}`).update({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), lastLogin:Date.now() });
-    db.ref(`customers/${userPhone}`).once('value').then(snap=>{
+    db2.ref(`approved_users/${userPhone}`).update({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), lastLogin:Date.now() });
+    db2.ref(`customers/${userPhone}`).once('value').then(snap=>{
         if(!snap.exists()){
-            db.ref(`customers/${userPhone}`).set({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), points:0 });
+            db2.ref(`customers/${userPhone}`).set({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), points:0 });
         } else {
-            if(userAddress) db.ref(`customers/${userPhone}/address`).set(userAddress);
+            if(userAddress) db2.ref(`customers/${userPhone}/address`).set(userAddress);
         }
     });
-    db.ref(`customers/${userPhone}`).update({
+    db2.ref(`customers/${userPhone}`).update({
         forceLogout: false,
         forceLogoutAt: 0,
         forceLogoutMessage: ''
@@ -1718,8 +1745,8 @@ function pickArea(area){
         if($id('profileArea')) $id('profileArea').innerText = area;
         if($id('settingsAreaName')) $id('settingsAreaName').innerText = area;
         
-        db.ref(`customers/${userPhone}/area`).set(area).catch(()=>{});
-        db.ref(`approved_users/${userPhone}/area`).set(area).catch(()=>{});
+        db2.ref(`customers/${userPhone}/area`).set(area).catch(()=>{});
+        db2.ref(`approved_users/${userPhone}/area`).set(area).catch(()=>{});
         
         resetMarketData();
         cleanAllListeners();
@@ -1802,7 +1829,7 @@ db.ref('areas').on('value', snap=>{
         if(name) cachedAreas.push(name);
     });
 });
-db.ref('reward_settings').on('value', snap=>{
+db3.ref('reward_settings').on('value', snap=>{
     let inviteActive = true;
     snap.forEach(a=>{
         const r = a.val();
@@ -1852,7 +1879,7 @@ function enterPreviewMode(){
     if(currentRegistrationId){
         if(previewCheckInterval) clearInterval(previewCheckInterval);
         previewCheckInterval = setInterval(()=>{
-            db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+            db3.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
                 const r = s.val();
                 if(r && r.status === 'approved'){
                     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
@@ -1887,12 +1914,12 @@ function previewBlockedAction(){
 
 function handleInviteCode(code){
     const clean = userPhone.replace(/\D/g,'');
-    db.ref(`users_invites/${clean}`).once('value').then(s=>{
+    db3.ref(`users_invites/${clean}`).once('value').then(s=>{
         if(s.exists()) return;
-        db.ref(`invite_codes/${code}`).once('value').then(s2=>{
+        db3.ref(`invite_codes/${code}`).once('value').then(s2=>{
             const inviter = s2.val();
             if(inviter && inviter !== clean){
-                db.ref(`users_invites/${clean}`).set({ code, inviter, usedAt:Date.now(), rewarded:false });
+                db3.ref(`users_invites/${clean}`).set({ code, inviter, usedAt:Date.now(), rewarded:false });
             }
         });
     });
@@ -1900,13 +1927,13 @@ function handleInviteCode(code){
 function processInviteReward(){
     if(!rewardsEnabled || currentRewardSettings.inviteActive === false) return;
     const clean = userPhone.replace(/\D/g,'');
-    db.ref(`users_invites/${clean}`).once('value').then(s=>{
+    db3.ref(`users_invites/${clean}`).once('value').then(s=>{
         const d = s.val();
         if(d && !d.rewarded){
             const reward = currentRewardSettings.inviteReward || 50;
-            db.ref(`users_points/${clean}`).transaction(c=>(c||0)+reward);
-            db.ref(`users_points/${d.inviter}`).transaction(c=>(c||0)+reward);
-            db.ref(`users_invites/${clean}/rewarded`).set(true);
+            db3.ref(`users_points/${clean}`).transaction(c=>(c||0)+reward);
+            db3.ref(`users_points/${d.inviter}`).transaction(c=>(c||0)+reward);
+            db3.ref(`users_invites/${clean}/rewarded`).set(true);
             setTimeout(()=>{ fireConfetti(); showToast(`🎉 كسبت ${reward} نقطة!`, 'success'); }, 1500);
         }
     });
@@ -1914,12 +1941,12 @@ function processInviteReward(){
 function generateMyInviteCode(){
     if(!userPhone) return;
     const clean = userPhone.replace(/\D/g,'');
-    db.ref(`my_invite_codes/${clean}`).once('value').then(s=>{
+    db3.ref(`my_invite_codes/${clean}`).once('value').then(s=>{
         let code = s.val();
         if(!code){
             code = 'MISH' + clean.slice(-4);
-            db.ref(`my_invite_codes/${clean}`).set(code);
-            db.ref(`invite_codes/${code}`).set(clean);
+            db3.ref(`my_invite_codes/${clean}`).set(code);
+            db3.ref(`invite_codes/${code}`).set(clean);
         }
         $id('myInviteCode').innerText = code;
     });
@@ -1938,9 +1965,9 @@ function getWeekKey(){
 function checkChallengeProgress(){
     if(!userPhone) return;
     const clean = userPhone.replace(/\D/g,'');
-    if(challengeListener){ db.ref(`users_challenges/${clean}`).off(); challengeListener = null; }
+    if(challengeListener){ db3.ref(`users_challenges/${clean}`).off(); challengeListener = null; }
     const wk = getWeekKey();
-    challengeListener = db.ref(`users_challenges/${clean}/${wk}`).on('value', s=>{
+    challengeListener = db3.ref(`users_challenges/${clean}/${wk}`).on('value', s=>{
         const d = s.val() || { ordersCount:0, completed:false };
         currentWeekOrders = d.ordersCount;
         challengeCompletedThisWeek = d.completed;
@@ -1957,14 +1984,14 @@ function incrementChallenge(){
     if(currentRewardSettings.challengeActive === false || challengeCompletedThisWeek) return;
     const clean = userPhone.replace(/\D/g,'');
     const wk = getWeekKey();
-    db.ref(`users_challenges/${clean}/${wk}/ordersCount`).transaction(c=>(c||0)+1);
+    db3.ref(`users_challenges/${clean}/${wk}/ordersCount`).transaction(c=>(c||0)+1);
 }
 
 function loadUserPoints(){
     if(!userPhone) return;
     const clean = userPhone.replace(/\D/g,'');
-    if(userPointsListener){ db.ref(`users_points/${clean}`).off('value', userPointsListener); }
-    userPointsListener = db.ref(`users_points/${clean}`).on('value', s=>{
+    if(userPointsListener){ db3.ref(`users_points/${clean}`).off('value', userPointsListener); }
+    userPointsListener = db3.ref(`users_points/${clean}`).on('value', s=>{
         userPoints = s.val() || 0;
         if($id('userPointsDisplay')) $id('userPointsDisplay').innerText = userPoints;
         if($id('headerPointsDisplay')) $id('headerPointsDisplay').innerText = userPoints;
@@ -1976,8 +2003,8 @@ function loadUserPoints(){
 
 function loadRewardSettings(){
     if(!userArea) return;
-    if(rewardSettingsListener){ db.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); }
-    rewardSettingsListener = db.ref(`reward_settings/${userArea}`).on('value', s=>{
+    if(rewardSettingsListener){ db3.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); }
+    rewardSettingsListener = db3.ref(`reward_settings/${userArea}`).on('value', s=>{
         const r = s.val(); if(!r) return;
         currentRewardSettings = { ...currentRewardSettings, ...r };
         rewardsEnabled = (r.active !== false);
@@ -2145,7 +2172,7 @@ function switchPage(page){
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
         
         if(userPhone){
-            db.ref(`customers/${userPhone}`).once('value').then(s=>{
+            db2.ref(`customers/${userPhone}`).once('value').then(s=>{
                 const c = s.val();
                 if(c){
                     if(c.name && c.name !== userName){
@@ -2268,7 +2295,7 @@ function cancelOrder(id){
             if(!o) return;
             if(o.pointsEarned && rewardsEnabled){
                 const clean = userPhone.replace(/\D/g,'');
-                db.ref(`users_points/${clean}`).transaction(c => Math.max(0,(c||0) - o.pointsEarned));
+                db3.ref(`users_points/${clean}`).transaction(c => Math.max(0,(c||0) - o.pointsEarned));
             }
             db.ref(`orders/${id}`).update({
                 status: 'cancelled',
@@ -2358,7 +2385,8 @@ function submitCustomService(id){
     }
     saveOrder({ type:s.name||'خدمة مخصصة', orderType:'custom', details:`المكان: ${s.name}<br>الحاجة: ${item}`, from:userArea, to:address, price:priceVal, originalPrice:priceVal, deliveryFee:priceVal, commission:(priceVal*delegateCommission)/100, status:'ready_for_driver', hasImages:false }, discountInfo);
     closeSheet();
-}function openService(service){
+}
+function openService(service){
     if(previewBlockedAction()) return;
     if(checkSuspensionBeforeOrder()) return;
     if(service === 'market'){ openMarket(); return; }
@@ -2613,7 +2641,7 @@ function submitShipping(){
     }).then(()=>{
         const clean = userPhone.replace(/\D/g,'');
         if(rewardsEnabled && pointsEarned > 0){
-            db.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
+            db3.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
             if(currentRewardSettings.challengeActive !== false) incrementChallenge();
         }
         $id('successMessage').innerHTML = `✅ تم إنشاء شحنتك!<br><br><div style="background:rgba(14,165,233,.1);border:1px dashed #0ea5e9;border-radius:12px;padding:12px"><div style="font-size:11px;color:#0369a1;margin-bottom:4px">كود التتبع:</div><div style="font-size:18px;font-weight:900;color:#0891b2;letter-spacing:2px">${trackCode}</div></div>`;
@@ -2641,7 +2669,7 @@ function saveOrder(data, discountInfo){
     }).then(()=>{
         const clean = userPhone.replace(/\D/g,'');
         if(rewardsEnabled && pointsEarned > 0){
-            db.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
+            db3.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
             if(currentRewardSettings.challengeActive !== false) incrementChallenge();
             $id('successMessage').innerText = `تم إرسال طلبك، وكسبت ${pointsEarned} نقطة! 🎁`;
         } else {
@@ -2723,8 +2751,8 @@ function redeemReward(type){
         showConfirm('توصيل مجاني 🛵', `خصم ${cost} نقطة`, ()=>{
             const clean = userPhone.replace(/\D/g,'');
             userPoints -= cost;
-            db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
-                db.ref(`rewards_history/${clean}`).push({
+            db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+                db3.ref(`rewards_history/${clean}`).push({
                     type: 'delivery',
                     typeName: 'توصيل مجاني',
                     cost: cost,
@@ -2746,8 +2774,8 @@ function redeemReward(type){
         showConfirm('خصم مالي 🏷️', `خصم ${cost} نقطة`, ()=>{
             const clean = userPhone.replace(/\D/g,'');
             userPoints -= cost;
-            db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
-                db.ref(`rewards_history/${clean}`).push({
+            db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+                db3.ref(`rewards_history/${clean}`).push({
                     type: 'discount',
                     typeName: 'خصم مالي',
                     cost: cost,
@@ -2772,7 +2800,7 @@ function removeCoupon(){
     if(lastDeductedDeliveryPoints > 0){
         const clean = userPhone.replace(/\D/g,'');
         userPoints += lastDeductedDeliveryPoints;
-        db.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedDeliveryPoints = 0; });
+        db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedDeliveryPoints = 0; });
     }
     hasActiveCoupon = false;
     $id('activeCouponBanner').classList.remove('show');
@@ -2781,7 +2809,7 @@ function removeGlobalDiscount(){
     if(lastDeductedPoints > 0){
         const clean = userPhone.replace(/\D/g,'');
         userPoints += lastDeductedPoints;
-        db.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedPoints = 0; });
+        db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedPoints = 0; });
     }
     appliedGlobalDiscountValue = 0;
     $id('activeDiscountBanner').classList.remove('show');
@@ -2820,7 +2848,7 @@ function confirmNetworkSelection(){
     const cost = currentRewardSettings.fakkaCost || 150;
     const netName = network === 'vodafone' ? 'فودافون' : 'اتصالات';
     const nodeName = network === 'vodafone' ? 'fakka_cards_vodafone' : 'fakka_cards_etisalat';
-    db.ref(`reward_settings/${userArea}/${nodeName}`).once('value').then(s=>{
+    db3.ref(`reward_settings/${userArea}/${nodeName}`).once('value').then(s=>{
         const cards = s.val() || {};
         const ids = Object.keys(cards);
         if(ids.length === 0){ showToast(`مفيش كروت ${netName}`,'error'); return; }
@@ -2829,9 +2857,9 @@ function confirmNetworkSelection(){
         if(!card || !card.code){ showToast('خطأ','error'); return; }
         const clean = userPhone.replace(/\D/g,'');
         userPoints -= cost;
-        db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
-            db.ref(`reward_settings/${userArea}/${nodeName}/${randomId}`).remove();
-            db.ref(`rewards_history/${clean}`).push({
+        db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+            db3.ref(`reward_settings/${userArea}/${nodeName}/${randomId}`).remove();
+            db3.ref(`rewards_history/${clean}`).push({
                 type: 'fakka',
                 typeName: `كارت فكة ${netName}`,
                 network: netName,
@@ -2895,8 +2923,8 @@ function saveMyAddress(){
     userAddress = newAddr;
     localStorage.setItem('user_address', userAddress);
     Promise.all([
-        db.ref(`approved_users/${userPhone}/address`).set(userAddress),
-        db.ref(`customers/${userPhone}/address`).set(userAddress)
+        db2.ref(`approved_users/${userPhone}/address`).set(userAddress),
+        db2.ref(`customers/${userPhone}/address`).set(userAddress)
     ]).then(()=>{
         showToast('✅ تم حفظ العنوان', 'success');
         setTimeout(()=>closeSheet(), 800);
@@ -2948,8 +2976,8 @@ function openMarket(){
 function closeMarket(){ switchPage('home'); }
 function loadMarketCategories(){
     if(!userArea) return;
-    if(marketCategoriesListener){ db.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); }
-    marketCategoriesListener = db.ref(`market_categories/${userArea}`).on('value', snap=>{
+    if(marketCategoriesListener){ db2.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); }
+    marketCategoriesListener = db2.ref(`market_categories/${userArea}`).on('value', snap=>{
         marketCategories = [];
         snap.forEach(c=>{ const d = c.val(); if(!d || d.active === false) return; marketCategories.push({ id:c.key, ...d }); });
         marketCategories.sort((a,b)=>(a.order||999)-(b.order||999));
@@ -2973,8 +3001,8 @@ function selectMarketCategory(catId){
 }
 function loadMarketProducts(){
     if(!userArea) return;
-    if(marketProductsListener){ db.ref(`market_products/${userArea}`).off('value', marketProductsListener); }
-    marketProductsListener = db.ref(`market_products/${userArea}`).on('value', snap=>{
+    if(marketProductsListener){ db2.ref(`market_products/${userArea}`).off('value', marketProductsListener); }
+    marketProductsListener = db2.ref(`market_products/${userArea}`).on('value', snap=>{
         marketProducts = [];
         snap.forEach(c=>{ const d = c.val(); if(!d || !d.name || d.active === false) return; marketProducts.push({ id:c.key, ...d }); });
         marketProducts.sort((a,b)=>(a.order||9999)-(b.order||9999));
