@@ -2258,6 +2258,17 @@ function renderOrderCard(o){
     else if(o.status === 'active'){ st = 'active'; stText = 'في الطريق'; }
     else if(o.status === 'completed'){ st = 'done'; stText = 'تم التسليم'; }
     else if(o.status === 'cancelled'){ st = 'pending'; stText = 'ملغي'; }
+    // ✅ نعرض رقم السائق بس لو الطلب جاري (مش في انتظار، ولا مكتمل، ولا ملغي)
+let driverPhoneHtml = '';
+if(o.status === 'active' && o.driverPhone){
+    driverPhoneHtml = `<div class="order-details" style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);margin-top:8px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+            <i class="fas fa-phone" style="color:#059669;font-size:14px"></i>
+            <span style="color:var(--text-soft);font-weight:700">رقم الكابتن:</span>
+            <a href="tel:${o.driverPhone}" style="color:#059669;font-weight:900;font-size:14px;text-decoration:none;direction:ltr">${o.driverPhone}</a>
+        </div>
+    </div>`;
+}
     let oa = '#8b5cf6';
     let iconHtml = '<i class="fas fa-box"></i>';
     if(o.type === 'مشوار'){ oa = '#8b5cf6'; iconHtml = '<img src="./tuktuk.png" style="width:160%;height:160%;object-fit:cover;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">'; }
@@ -2281,6 +2292,7 @@ function renderOrderCard(o){
             <span class="order-status-badge status-${st}">${stText}</span>
         </div>
         <div class="order-details">${o.details||o.to||''}</div>
+${driverPhoneHtml}
         <div class="order-footer">
             <span></span>
             <span class="order-price">${o.price||0}</span>
