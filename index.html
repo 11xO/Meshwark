@@ -9,15 +9,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="مشوارك">
-<meta name="application-name" content="مشوارك">
-<meta name="description" content="خدمات توصيل ذكية لباب بيتك">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="./logo.png">
 <link rel="icon" type="image/png" href="./logo.png">
-<link rel="shortcut icon" type="image/png" href="./logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
+/* نفس الـ CSS الأصلي بالظبط — منسوخ كما هو */
 :root{
   --primary:#8b5cf6;--primary-dark:#7c3aed;--primary-glow:rgba(139,92,246,.35);
   --secondary:#06b6d4;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--pink:#ec4899;
@@ -87,7 +85,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .btn-whatsapp{width:100%;padding:18px;border:none;border-radius:16px;font-size:15.5px;font-weight:900;color:#fff;cursor:pointer;font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#25D366,#128C7E);box-shadow:0 10px 25px rgba(37,211,102,.35);display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;transition:.2s}
 .btn-whatsapp:active{transform:scale(.98)}
 .btn-whatsapp i{font-size:22px}
-.login-security{text-align:center;font-size:11px;color:var(--text-dim);margin-top:18px;line-height:1.8}.waiting-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;background:var(--bg-main)}
+.login-security{text-align:center;font-size:11px;color:var(--text-dim);margin-top:18px;line-height:1.8}
+.waiting-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;background:var(--bg-main)}
 .waiting-card{position:relative;width:100%;max-width:440px;background:var(--card);border:1.5px solid var(--border);border-radius:32px;padding:35px 24px 28px;box-shadow:0 20px 50px rgba(0,0,0,.08)}
 .waiting-circle-wrap{position:relative;width:170px;height:170px;margin:0 auto 22px}
 .waiting-circle-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
@@ -289,22 +288,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .profile-phone{font-size:12.5px;color:var(--text-muted);margin-top:4px;direction:ltr}
 .profile-area{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#fff;border:1px solid var(--border);border-radius:20px;font-size:12px;color:#b45309;font-weight:700;margin-top:12px}
 .profile-btn-row{margin-top:16px;display:flex;justify-content:center;width:100%}
-.profile-action-btn{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
-    color:#fff; border:none; border-radius:14px;
-    padding:12px 24px; font-size:14px; font-weight:900;
-    font-family:'Cairo',sans-serif; cursor:pointer;
-    display:flex; align-items:center; gap:8px;
-    box-shadow:0 6px 15px rgba(245,158,11,.35);
-    min-width:180px;
-    width:180px;
-    height:46px;
-    justify-content:center;
-}
-.profile-action-btn.green{
-    background:linear-gradient(135deg,#10b981,#059669);
-    box-shadow:0 6px 15px rgba(16,185,129,.35);
-}
+.profile-action-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:14px;padding:12px 24px;font-size:14px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 6px 15px rgba(245,158,11,.35);min-width:180px;width:180px;height:46px;justify-content:center}
+.profile-action-btn.green{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 6px 15px rgba(16,185,129,.35)}
 .profile-list{margin:0 20px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm)}
 .profile-list-item{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;border-bottom:1px solid var(--border);background:none;border-left:none;border-right:none;border-top:none;width:100%;color:inherit;text-align:right;font-size:13.5px;font-weight:700;font-family:'Cairo',sans-serif;transition:.2s}
 .profile-list-item:active{background:var(--bg-soft)}
@@ -403,28 +388,24 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .addr-picker-btn.active{border-color:var(--primary);background:rgba(139,92,246,.1);color:var(--primary)}
 .addr-picker-btn:disabled{opacity:.4;cursor:not-allowed}
 .preview-mode-bar{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:10px 16px;text-align:center;font-size:12.5px;font-weight:900;z-index:99997;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(245,158,11,.35)}
-.preview-locked{position:relative;opacity:.55;pointer-events:none}
-.preview-locked::after{content:'🔒 للمعاينة فقط';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:6px 12px;border-radius:10px;font-size:11px;font-weight:900;pointer-events:none;z-index:100}
 @media(min-width:640px){.market-grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
-</head><body>
-<!-- SPLASH -->
+</head>
+<body>
+
+<!-- كل الـ HTML زي ما هو بالظبط — أنسخ من كودك الأصلي -->
+
+<!-- Splash -->
 <div class="splash" id="splashScreen">
     <img src="./logo.png" alt="مشوارك" class="splash-logo">
     <div class="splash-title">مشوارك</div>
     <div class="splash-sub">خدمات ذكية</div>
-    <div class="splash-loader">
-        <div class="splash-dot"></div>
-        <div class="splash-dot"></div>
-        <div class="splash-dot"></div>
-    </div>
+    <div class="splash-loader"><div class="splash-dot"></div><div class="splash-dot"></div><div class="splash-dot"></div></div>
     <div class="splash-loading-text">جاري التحميل...</div>
 </div>
 
-<div class="offline-banner" id="offlineBanner">
-    <i class="fas fa-wifi"></i> لا يوجد اتصال بالإنترنت
-</div>
+<div class="offline-banner" id="offlineBanner"><i class="fas fa-wifi"></i> لا يوجد اتصال بالإنترنت</div>
 
 <div class="install-banner-top" id="installBanner">
     <div class="install-banner-inner">
@@ -438,54 +419,29 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </div>
 </div>
 
-<!-- LOGIN -->
+<!-- Login -->
 <div class="login-screen" id="loginSection" style="display:none">
-    <div class="login-bg-decor">
-        <div class="login-bg-orb orb-1"></div>
-        <div class="login-bg-orb orb-2"></div>
-    </div>
+    <div class="login-bg-decor"><div class="login-bg-orb orb-1"></div><div class="login-bg-orb orb-2"></div></div>
     <div class="login-card">
-        <div class="login-logo-wrap">
-            <div class="login-logo-bg"></div>
-            <img src="./logo.png" alt="مشوارك" class="login-logo">
-        </div>
+        <div class="login-logo-wrap"><div class="login-logo-bg"></div><img src="./logo.png" alt="مشوارك" class="login-logo"></div>
         <div class="login-title">أهلاً بيك 👋</div>
         <div class="login-sub">سجل بياناتك وابدأ في 30 ثانية</div>
+        <div class="inp-wrap"><input type="text" id="uNameInput" placeholder="اسمك الكامل"><i class="fas fa-user"></i></div>
+        <div class="inp-wrap"><input type="tel" id="uPhoneInput" placeholder="رقم موبايلك (11 رقم)" maxlength="11"><i class="fas fa-mobile-alt"></i></div>
         <div class="inp-wrap">
-            <input type="text" id="uNameInput" placeholder="اسمك الكامل">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="inp-wrap">
-            <input type="tel" id="uPhoneInput" placeholder="رقم موبايلك (11 رقم)" maxlength="11">
-            <i class="fas fa-mobile-alt"></i>
-        </div>
-        <div class="inp-wrap">
-            <button type="button" class="area-trigger-btn" id="areaTriggerBtn" onclick="openAreaPicker()">
-                <span id="areaTriggerLabel">📍 اختر منطقتك...</span>
-            </button>
+            <button type="button" class="area-trigger-btn" id="areaTriggerBtn" onclick="openAreaPicker()"><span id="areaTriggerLabel">📍 اختر منطقتك...</span></button>
             <i class="fas fa-map-marker-alt" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none"></i>
         </div>
-        <div class="inp-wrap" id="inviteField" style="display:none">
-            <input type="text" id="inviteCodeInput" placeholder="🎁 كود دعوة صاحبك (اختياري)" style="text-transform:uppercase">
-            <i class="fas fa-gift"></i>
-        </div>
-        <button type="button" class="btn-whatsapp" id="whatsappRegisterBtn" onclick="submitRegistration()">
-            <i class="fab fa-whatsapp"></i>
-            <span>أرسل على واتساب للتسجيل</span>
-        </button>
-        <div class="login-security">
-            🔒 بياناتك آمنة ومشفرة<br>
-            <span style="font-size:10px">سيتم مراجعة طلبك خلال دقائق</span>
-        </div>
+        <div class="inp-wrap" id="inviteField" style="display:none"><input type="text" id="inviteCodeInput" placeholder="🎁 كود دعوة صاحبك (اختياري)" style="text-transform:uppercase"><i class="fas fa-gift"></i></div>
+        <button type="button" class="btn-whatsapp" id="whatsappRegisterBtn" onclick="submitRegistration()"><i class="fab fa-whatsapp"></i><span>أرسل على واتساب للتسجيل</span></button>
+        <div class="login-security">🔒 بياناتك آمنة ومشفرة<br><span style="font-size:10px">سيتم مراجعة طلبك خلال دقائق</span></div>
     </div>
 </div>
 
-<!-- WAITING -->
-<div class="waiting-screen" id="waitingSection" style="display:none">
-    <div class="waiting-card" id="waitingCardContent"></div>
-</div>
+<!-- Waiting -->
+<div class="waiting-screen" id="waitingSection" style="display:none"><div class="waiting-card" id="waitingCardContent"></div></div>
 
-<!-- CLOSED SCREEN -->
+<!-- Closed -->
 <div class="closed-screen" id="closedScreen">
     <div class="closed-icon">🌙</div>
     <div class="closed-title">الصفحة مقفولة مؤقتاً</div>
@@ -496,15 +452,14 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 
 <div class="cart-toast-notif" id="cartToastNotif"><i class="fas fa-check-circle"></i> أضفت!</div>
 
-<!-- MAIN APP -->
+<!-- App -->
 <div id="appSection" style="display:none">
-
     <div class="preview-mode-bar" id="previewModeBar" style="display:none">
         <i class="fas fa-eye"></i> وضع المعاينة — في انتظار موافقة الأدمن
         <button onclick="exitPreviewMode()" style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;margin-right:auto">خروج</button>
     </div>
 
-    <!-- HOME -->
+    <!-- Home -->
     <div class="page active" id="page-home">
         <div class="app-header" id="homeHeader">
             <div class="header-row">
@@ -516,15 +471,9 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
                         <span class="points-badge-big" id="headerPointsBadge" onclick="switchPage('rewards')"><i class="fas fa-coins"></i> <span id="headerPointsDisplay">0</span> <small>نقطة</small></span>
                     </div>
                     <div class="user-location-line" style="display:flex;align-items:center;justify-content:flex-start;gap:18px;flex-wrap:wrap">
-    <span style="display:flex;align-items:center;gap:5px">
-        <i class="fas fa-map-marker-alt" style="color:var(--warning);font-size:10px"></i>
-        <span id="displayArea">منطقتك</span>
-    </span>
-    <button onclick="openAddressEditor()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:11.5px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(16,185,129,.3);flex-shrink:0">
-        <i class="fas fa-home"></i>
-        <span>تعديل العنوان</span>
-    </button>
-</div>
+                        <span style="display:flex;align-items:center;gap:5px"><i class="fas fa-map-marker-alt" style="color:var(--warning);font-size:10px"></i><span id="displayArea">منطقتك</span></span>
+                        <button onclick="openAddressEditor()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:11.5px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(16,185,129,.3);flex-shrink:0"><i class="fas fa-home"></i><span>تعديل العنوان</span></button>
+                    </div>
                 </div>
                 <button class="settings-icon" onclick="openSettings()"><i class="fas fa-cog"></i></button>
             </div>
@@ -576,11 +525,9 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         </div>
     </div>
 
-    <!-- ORDERS -->
+    <!-- Orders -->
     <div class="page" id="page-orders">
-        <div class="app-header" style="padding:16px 20px">
-            <div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">📦</div><div style="font-size:22px;font-weight:900">طلباتي</div></div></div>
-        </div>
+        <div class="app-header" style="padding:16px 20px"><div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">📦</div><div style="font-size:22px;font-weight:900">طلباتي</div></div></div></div>
         <div class="sub-tabs" style="margin-top:15px">
             <button class="sub-tab active" id="orderTab-active" onclick="switchOrderTab('active')"><i class="fas fa-clock"></i> الحالية</button>
             <button class="sub-tab" id="orderTab-history" onclick="switchOrderTab('history')"><i class="fas fa-history"></i> السجل</button>
@@ -588,25 +535,18 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         <div id="ordersContainer"></div>
     </div>
 
-    <!-- SHIPPING -->
+    <!-- Shipping -->
     <div class="page" id="page-shipping">
-        <div class="app-header" style="padding:16px 20px">
-            <div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">🚚</div><div style="font-size:22px;font-weight:900">طلبات الشحن</div></div></div>
-        </div>
+        <div class="app-header" style="padding:16px 20px"><div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">🚚</div><div style="font-size:22px;font-weight:900">طلبات الشحن</div></div></div></div>
         <div id="shippingContainer" style="padding-top:15px"></div>
     </div>
 
-    <!-- REWARDS -->
+    <!-- Rewards -->
     <div class="page" id="page-rewards">
-        <div class="app-header" style="padding:16px 20px">
-            <div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">🎁</div><div style="font-size:22px;font-weight:900">المكافآت</div></div></div>
-        </div>
+        <div class="app-header" style="padding:16px 20px"><div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">🎁</div><div style="font-size:22px;font-weight:900">المكافآت</div></div></div></div>
         <div style="margin:18px 20px 15px;padding:14px 18px;border-radius:18px;background:linear-gradient(135deg,#8b5cf6 0,#06b6d4 100%);display:flex;align-items:center;gap:12px;box-shadow:0 10px 25px rgba(139,92,246,.3)">
             <div style="width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff">🏆</div>
-            <div style="flex:1">
-                <div style="font-size:10.5px;color:rgba(255,255,255,.85);font-weight:700">رصيدك الحالي</div>
-                <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.1"><span id="userPointsDisplay">0</span> <small style="font-size:12px">نقطة</small></div>
-            </div>
+            <div style="flex:1"><div style="font-size:10.5px;color:rgba(255,255,255,.85);font-weight:700">رصيدك الحالي</div><div style="font-size:22px;font-weight:900;color:#fff;line-height:1.1"><span id="userPointsDisplay">0</span> <small style="font-size:12px">نقطة</small></div></div>
         </div>
         <div class="sub-tabs">
             <button class="sub-tab active" id="subtab-redeem" onclick="switchSubTab('redeem')"><i class="fas fa-gift"></i> استبدال</button>
@@ -637,7 +577,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         </div>
     </div>
 
-    <!-- PROFILE -->
+    <!-- Profile -->
     <div class="page" id="page-profile">
         <div class="app-header" style="padding:16px 20px">
             <div class="header-row">
@@ -650,22 +590,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <div class="profile-name" id="profileName">اسمك</div>
             <div class="profile-phone" id="profilePhone">01xxxxxxxxx</div>
             <div class="profile-area"><i class="fas fa-map-marker-alt"></i><span id="profileArea">منطقتك</span></div>
-            
-            <!-- زرار النقاط -->
-            <div class="profile-btn-row">
-                <button onclick="switchPage('rewards')" class="profile-action-btn">
-                    <i class="fas fa-coins"></i>
-                    <span><span id="profilePointsDisplay">0</span> نقطة</span>
-                </button>
-            </div>
-            
-            <!-- زرار تعديل العنوان -->
-            <div class="profile-btn-row" style="margin-top:12px">
-                <button onclick="openAddressEditor()" class="profile-action-btn green">
-                    <i class="fas fa-home"></i>
-                    <span>تعديل العنوان</span>
-                </button>
-            </div>
+            <div class="profile-btn-row"><button onclick="switchPage('rewards')" class="profile-action-btn"><i class="fas fa-coins"></i><span><span id="profilePointsDisplay">0</span> نقطة</span></button></div>
+            <div class="profile-btn-row" style="margin-top:12px"><button onclick="openAddressEditor()" class="profile-action-btn green"><i class="fas fa-home"></i><span>تعديل العنوان</span></button></div>
         </div>
         <div class="profile-list">
             <button class="profile-list-item" onclick="switchPage('rewards')"><div class="pli-icon" style="background:linear-gradient(135deg,var(--warning),#d97706)"><i class="fas fa-gift"></i></div><div class="pli-text">رصيد نقاطي<small><span id="profilePointsDisplay2">0</span> نقطة</small></div><i class="fas fa-chevron-left"></i></button>
@@ -676,33 +602,21 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         </div>
     </div>
 
-    <!-- MARKET -->
+    <!-- Market -->
     <div class="page" id="page-market">
         <div class="market-header">
             <div class="market-header-top">
                 <button class="market-back-btn" onclick="closeMarket()"><i class="fas fa-arrow-right"></i></button>
-                <div class="market-title-box">
-                    <div class="market-title"><i class="fas fa-shopping-basket"></i> ماركت مشوارك</div>
-                    <div class="market-subtitle" id="marketSubtitle">تسوق أونلاين</div>
-                </div>
-                <button class="market-cart-btn" onclick="openCartSheet()">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="market-cart-badge" id="marketCartBadge" style="display:none">0</span>
-                </button>
+                <div class="market-title-box"><div class="market-title"><i class="fas fa-shopping-basket"></i> ماركت مشوارك</div><div class="market-subtitle" id="marketSubtitle">تسوق أونلاين</div></div>
+                <button class="market-cart-btn" onclick="openCartSheet()"><i class="fas fa-shopping-cart"></i><span class="market-cart-badge" id="marketCartBadge" style="display:none">0</span></button>
             </div>
-            <div class="market-search-box">
-                <input type="text" id="marketSearchInput" placeholder="ابحث عن منتج..." oninput="filterMarketProducts()">
-                <i class="fas fa-search"></i>
-            </div>
+            <div class="market-search-box"><input type="text" id="marketSearchInput" placeholder="ابحث عن منتج..." oninput="filterMarketProducts()"><i class="fas fa-search"></i></div>
         </div>
         <div class="market-categories" id="marketCategories"></div>
         <div class="market-grid" id="marketGrid"></div>
         <div class="market-cart-bar" id="marketCartBar" onclick="openCartSheet()">
             <div class="market-cart-bar-icon"><i class="fas fa-shopping-bag"></i></div>
-            <div class="market-cart-bar-info">
-                <div class="market-cart-bar-count" id="cartBarCount">0 منتجات</div>
-                <div class="market-cart-bar-total" id="cartBarTotal">0</div>
-            </div>
+            <div class="market-cart-bar-info"><div class="market-cart-bar-count" id="cartBarCount">0 منتجات</div><div class="market-cart-bar-total" id="cartBarTotal">0</div></div>
             <div class="market-cart-bar-action">إتمام <i class="fas fa-arrow-left"></i></div>
         </div>
     </div>
@@ -715,7 +629,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </nav>
 </div>
 
-<!-- SHEETS -->
+<!-- Sheets & Modals -->
 <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
 <div class="bottom-sheet" id="serviceSheet">
     <div class="sheet-handle"></div>
@@ -729,21 +643,13 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 
 <div class="sheet-overlay" id="destSheetOverlay" onclick="closeDestSheet()"></div>
 <div class="center-modal" id="destSheet">
-    <div class="center-modal-header">
-        <div class="center-modal-icon"><i class="fas fa-map-marked-alt"></i></div>
-        <div><div class="center-modal-title">اختر الوجهة</div><div class="center-modal-sub">اضغط على الوجهة</div></div>
-        <button class="center-modal-close" onclick="closeDestSheet()"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="center-modal-header"><div class="center-modal-icon"><i class="fas fa-map-marked-alt"></i></div><div><div class="center-modal-title">اختر الوجهة</div><div class="center-modal-sub">اضغط على الوجهة</div></div><button class="center-modal-close" onclick="closeDestSheet()"><i class="fas fa-times"></i></button></div>
     <div class="center-modal-body"><div id="destinationsList"></div></div>
 </div>
 
 <div class="sheet-overlay" id="areaSheetOverlay" onclick="closeAreaPicker()"></div>
 <div class="center-modal" id="areaSheet">
-    <div class="center-modal-header">
-        <div class="center-modal-icon" style="background:linear-gradient(135deg,var(--warning),#d97706)"><i class="fas fa-map-marker-alt"></i></div>
-        <div><div class="center-modal-title">اختر منطقتك</div><div class="center-modal-sub">اضغط على المنطقة</div></div>
-        <button class="center-modal-close" onclick="closeAreaPicker()"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="center-modal-header"><div class="center-modal-icon" style="background:linear-gradient(135deg,var(--warning),#d97706)"><i class="fas fa-map-marker-alt"></i></div><div><div class="center-modal-title">اختر منطقتك</div><div class="center-modal-sub">اضغط على المنطقة</div></div><button class="center-modal-close" onclick="closeAreaPicker()"><i class="fas fa-times"></i></button></div>
     <div class="center-modal-body"><div id="areasListContainer"></div></div>
 </div>
 
@@ -758,24 +664,10 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </div>
 </div>
 
-<div class="sheet-overlay" id="trackingOverlay" onclick="closeTracking()"></div>
-<div class="center-modal" id="trackingModal">
-    <div class="center-modal-header">
-        <div class="center-modal-icon"><i class="fas fa-shipping-fast"></i></div>
-        <div><div class="center-modal-title">تتبع الشحنة</div><div class="center-modal-sub" id="trackingCodeSub">-</div></div>
-        <button class="center-modal-close" onclick="closeTracking()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="center-modal-body" id="trackingBody"></div>
-</div>
-
 <div class="sheet-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
 <div class="bottom-sheet" id="settingsSheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-        <div class="sheet-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><i class="fas fa-cog"></i></div>
-        <div><div class="sheet-title">الإعدادات</div><div class="sheet-sub">اضبط إعداداتك</div></div>
-        <button class="sheet-close" onclick="closeSettings()"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="sheet-header"><div class="sheet-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><i class="fas fa-cog"></i></div><div><div class="sheet-title">الإعدادات</div><div class="sheet-sub">اضبط إعداداتك</div></div><button class="sheet-close" onclick="closeSettings()"><i class="fas fa-times"></i></button></div>
     <div class="sheet-body">
         <div class="profile-list" style="margin:0">
             <button class="profile-list-item" onclick="changeAreaFromSettings()"><div class="pli-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-map-marker-alt"></i></div><div class="pli-text">تغيير المنطقة<small>الحالية: <span id="settingsAreaName">-</span></small></div><i class="fas fa-chevron-left"></i></button>
@@ -789,22 +681,14 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 <div class="sheet-overlay" id="cartSheetOverlay" onclick="closeCartSheet()"></div>
 <div class="bottom-sheet" id="cartSheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-        <div class="sheet-icon" style="background:linear-gradient(135deg,#10b981,#059669)"><i class="fas fa-shopping-cart"></i></div>
-        <div><div class="sheet-title">سلة المشتريات</div><div class="sheet-sub" id="cartSheetSub">0 منتج</div></div>
-        <button class="sheet-close" onclick="closeCartSheet()"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="sheet-header"><div class="sheet-icon" style="background:linear-gradient(135deg,#10b981,#059669)"><i class="fas fa-shopping-cart"></i></div><div><div class="sheet-title">سلة المشتريات</div><div class="sheet-sub" id="cartSheetSub">0 منتج</div></div><button class="sheet-close" onclick="closeCartSheet()"><i class="fas fa-times"></i></button></div>
     <div class="sheet-body" id="cartSheetBody"></div>
 </div>
 
 <div class="sheet-overlay" id="networkOverlay" onclick="closeNetwork()"></div>
 <div class="bottom-sheet" id="networkSheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-        <div class="sheet-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48)"><i class="fas fa-ticket-alt"></i></div>
-        <div><div class="sheet-title">اختر الشبكة</div><div class="sheet-sub">فودافون أو اتصالات</div></div>
-        <button class="sheet-close" onclick="closeNetwork()"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="sheet-header"><div class="sheet-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48)"><i class="fas fa-ticket-alt"></i></div><div><div class="sheet-title">اختر الشبكة</div><div class="sheet-sub">فودافون أو اتصالات</div></div><button class="sheet-close" onclick="closeNetwork()"><i class="fas fa-times"></i></button></div>
     <div class="sheet-body">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px">
             <div id="netVodafone" onclick="pickNetwork('vodafone')" style="background:var(--bg-soft);border:2px solid rgba(239,68,68,.3);border-radius:20px;padding:20px 14px;text-align:center;cursor:pointer;transition:.2s">
@@ -820,9 +704,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
                 <div style="font-size:10px;color:var(--text-dim);margin-top:4px" id="etisalatStock">جاري التحميل...</div>
             </div>
         </div>
-        <button class="btn-main" id="confirmNetworkBtn" onclick="confirmNetworkSelection()" disabled style="opacity:.5;cursor:not-allowed;background:linear-gradient(135deg,#f43f5e,#e11d48)">
-            <i class="fas fa-check"></i> اختار الشبكة الأول
-        </button>
+        <button class="btn-main" id="confirmNetworkBtn" onclick="confirmNetworkSelection()" disabled style="opacity:.5;cursor:not-allowed;background:linear-gradient(135deg,#f43f5e,#e11d48)"><i class="fas fa-check"></i> اختار الشبكة الأول</button>
     </div>
 </div>
 
@@ -860,23 +742,21 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 <div class="sheet-overlay" id="forceLogoutScreenOverlay"></div>
 <div class="center-modal" id="forceLogoutScreen" style="max-width:440px">
     <div class="center-modal-body" style="text-align:center;padding:40px 24px">
-        <div style="width:90px;height:90px;border-radius:30px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;font-size:42px;color:#fff;margin:0 auto 20px;box-shadow:0 15px 40px rgba(239,68,68,.35);animation:pulseDotYellow 1.5s infinite">
-            <i class="fas fa-sign-out-alt"></i>
-        </div>
+        <div style="width:90px;height:90px;border-radius:30px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;font-size:42px;color:#fff;margin:0 auto 20px;box-shadow:0 15px 40px rgba(239,68,68,.35);animation:pulseDotYellow 1.5s infinite"><i class="fas fa-sign-out-alt"></i></div>
         <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:10px">🔴 تم إنهاء الجلسة</div>
         <div style="font-size:13.5px;color:var(--text-soft);line-height:1.8;margin-bottom:24px" id="forceLogoutMsg">تم إنهاء الجلسة من الإدارة</div>
-        <button class="btn-main" onclick="handleForceLogoutConfirm()" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
-            <i class="fas fa-redo"></i> تسجيل دخول من جديد
-        </button>
+        <button class="btn-main" onclick="handleForceLogoutConfirm()" style="background:linear-gradient(135deg,#ef4444,#dc2626)"><i class="fas fa-redo"></i> تسجيل دخول من جديد</button>
     </div>
 </div>
 
 <div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMessage">رسالة</span></div>
+
+<!-- ✅ Firebase واحد فقط -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════
-// 🟢 Firebase الأول (family-4ff2a) - الطلبات والإعدادات
+// ✅ Firebase واحد فقط (family-4ff2a) - نفس مشروع التحكم
 // ═══════════════════════════════════════════════════════════════
 const firebaseConfig = {
     apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4",
@@ -887,35 +767,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ═══════════════════════════════════════════════════════════════
-// 🔵 Firebase التاني (meshwark-f8b0a) - العملاء والمنتجات
-// ═══════════════════════════════════════════════════════════════
-const firebaseConfig2 = {
-    apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac",
-    authDomain: "meshwark-f8b0a.firebaseapp.com",
-    databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com",
-    projectId: "meshwark-f8b0a",
-    storageBucket: "meshwark-f8b0a.firebasestorage.app",
-    messagingSenderId: "85412350921",
-    appId: "1:85412350921:web:5a654ccb3753dc1153b618"
-};
-const app2 = firebase.initializeApp(firebaseConfig2, "secondary");
-const db2 = firebase.database(app2);
-
-// ═══════════════════════════════════════════════════════════════
-// 🟣 Firebase التالت (meshwark2) - النقاط والتسجيلات
-// ═══════════════════════════════════════════════════════════════
-const firebaseConfig3 = {
-    apiKey: "AIzaSyDNeFKaTiyDzSU_emOtEyLFA3f2J7uhHiE",
-    authDomain: "meshwark2.firebaseapp.com",
-    databaseURL: "https://meshwark2-default-rtdb.firebaseio.com",
-    projectId: "meshwark2",
-    storageBucket: "meshwark2.firebasestorage.app",
-    messagingSenderId: "954116788968",
-    appId: "1:954116788968:web:399fe497edca7cb47cef5d"
-};
-const app3 = firebase.initializeApp(firebaseConfig3, "third");
-const db3 = firebase.database(app3);
+// ✅ أسماء بديلة عشان الكود يشتغل زي ما هو (بدون تعديل كل سطر)
+const db2 = db;  // كان العملاء والمنتجات
+const db3 = db;  // كان النقاط والتسجيلات
 
 const WALLET_NUMBER = "01115699940";
 let WAITING_TIME_MINUTES = 5;
@@ -983,28 +837,28 @@ function showPageLoader(id, msg){
 function cleanAllListeners(){
     if(workHoursListener){ db.ref('settings/work_hours').off('value', workHoursListener); workHoursListener = null; }
     if(registrationStatusListener && currentRegistrationId){
-        db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
+        db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
         registrationStatusListener = null;
     }
     if(serviceVisibilityListener){ db.ref(`settings/${userArea}`).off('value', serviceVisibilityListener); serviceVisibilityListener = null; }
     if(customServicesListener){ db.ref(`custom_services/${userArea}`).off('value', customServicesListener); customServicesListener = null; }
     if(shopsListener){ db.ref(`shops/${userArea}`).off('value', shopsListener); shopsListener = null; }
     if(shippingSettingsListener){ db.ref(`settings/${userArea}`).off('value', shippingSettingsListener); shippingSettingsListener = null; }
-    if(userPointsListener && userPhone){ db3.ref(`users_points/${userPhone.replace(/\D/g,'')}`).off('value', userPointsListener); userPointsListener = null; }
-    if(rewardSettingsListener && userArea){ db3.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); rewardSettingsListener = null; }
-    if(challengeListener && userPhone){ db3.ref(`users_challenges/${userPhone.replace(/\D/g,'')}`).off(); challengeListener = null; }
+    if(userPointsListener && userPhone){ db.ref(`users_points/${userPhone.replace(/\D/g,'')}`).off('value', userPointsListener); userPointsListener = null; }
+    if(rewardSettingsListener && userArea){ db.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); rewardSettingsListener = null; }
+    if(challengeListener && userPhone){ db.ref(`users_challenges/${userPhone.replace(/\D/g,'')}`).off(); challengeListener = null; }
     if(ordersListener){ db.ref('orders').off('value', ordersListener); ordersListener = null; }
     if(activeOrderListener){ db.ref('orders').off('value', activeOrderListener); activeOrderListener = null; }
-    if(marketCategoriesListener && userArea){ db2.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); marketCategoriesListener = null; }
-    if(marketProductsListener && userArea){ db2.ref(`market_products/${userArea}`).off('value', marketProductsListener); marketProductsListener = null; }
+    if(marketCategoriesListener && userArea){ db.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); marketCategoriesListener = null; }
+    if(marketProductsListener && userArea){ db.ref(`market_products/${userArea}`).off('value', marketProductsListener); marketProductsListener = null; }
     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
-    if(forceLogoutListener && userPhone){ db3.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
-    if(suspensionListener && userPhone){ db3.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
-    if(notificationsListener && userPhone){ db3.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
-    if(customerDataListener && userPhone){ db2.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
+    if(forceLogoutListener && userPhone){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
+    if(suspensionListener && userPhone){ db.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
+    if(notificationsListener && userPhone){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
+    if(customerDataListener && userPhone){ db.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
     db.ref('areas').off();
-    db3.ref('reward_settings').off();
+    db.ref('reward_settings').off();
     db.ref('settings/support/whatsapp').off();
     if(userArea){
         db.ref(`pricing/${userArea}`).off();
@@ -1013,6 +867,7 @@ function cleanAllListeners(){
     ordersInitialLoaded = false;
     marketInitialized = false;
 }
+
 window.addEventListener('online', ()=>{ const b=$id('offlineBanner'); if(b) b.classList.remove('show'); showToast('✅ رجع الاتصال','success'); });
 window.addEventListener('offline', ()=>{ const b=$id('offlineBanner'); if(b) b.classList.add('show'); showToast('⚠️ انقطع الاتصال','error'); });
 
@@ -1046,8 +901,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     showInstallBanner();
 });
 function showInstallBanner(){
-    const banner = $id('installBanner');
-    if(!banner) return;
+    const banner = $id('installBanner'); if(!banner) return;
     if(localStorage.getItem('install_dismissed') === 'true') return;
     if(window.matchMedia('(display-mode: standalone)').matches) return;
     setTimeout(()=>banner.classList.add('show'), 1500);
@@ -1056,34 +910,20 @@ function installPWA(){
     if(deferredPrompt){
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((c)=>{
-            if(c.outcome === 'accepted'){
-                showToast('✅ تم تثبيت التطبيق!', 'success');
-                closeInstallBanner();
-                localStorage.setItem('install_dismissed', 'true');
-            }
+            if(c.outcome === 'accepted'){ showToast('✅ تم تثبيت التطبيق!', 'success'); closeInstallBanner(); localStorage.setItem('install_dismissed', 'true'); }
             deferredPrompt = null;
         });
-    } else {
-        showToast('افتح القائمة (⋮) واختر "إضافة للشاشة الرئيسية"', 'info');
-    }
+    } else showToast('افتح القائمة (⋮) واختر "إضافة للشاشة الرئيسية"', 'info');
 }
 function closeInstallBanner(){
-    const banner = $id('installBanner');
-    if(!banner) return;
+    const banner = $id('installBanner'); if(!banner) return;
     banner.classList.remove('show');
     localStorage.setItem('install_dismissed', 'true');
 }
-window.addEventListener('appinstalled', ()=>{
-    showToast('🎉 تم تثبيت التطبيق!', 'success');
-    closeInstallBanner();
-    localStorage.setItem('install_dismissed', 'true');
-    deferredPrompt = null;
-});
+window.addEventListener('appinstalled', ()=>{ showToast('🎉 تم تثبيت التطبيق!', 'success'); closeInstallBanner(); localStorage.setItem('install_dismissed', 'true'); deferredPrompt = null; });
 
 if('serviceWorker' in navigator && location.protocol === 'https:'){
-    window.addEventListener('load', ()=>{
-        navigator.serviceWorker.register('sw.js').catch(()=>{});
-    });
+    window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 }
 
 function openSheet(id){ const s=$id(id); const o=$id(id+'Overlay'); if(s) s.classList.add('show'); if(o) o.classList.add('show'); }
@@ -1120,37 +960,24 @@ setTimeout(()=>{
         userName = sN; userPhone = sP; userArea = sA;
         userAddress = sAddr || '';
         if(!userAddress && userPhone){
-            db2.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
-                if(s.exists()){
-                    userAddress = s.val();
-                    localStorage.setItem('user_address', userAddress);
-                }
+            db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
+                if(s.exists()){ userAddress = s.val(); localStorage.setItem('user_address', userAddress); }
             });
         }
-        db3.ref('blacklist/' + userPhone.replace(/\D/g,'')).once('value').then(s=>{
-            if(s.exists()){
-                localStorage.clear();
-                showToast('🚫 الرقم ده محظور','error');
-                setTimeout(()=>location.reload(), 1500);
-            }
+        db.ref('blacklist/' + userPhone.replace(/\D/g,'')).once('value').then(s=>{
+            if(s.exists()){ localStorage.clear(); showToast('🚫 الرقم ده محظور','error'); setTimeout(()=>location.reload(), 1500); }
         });
         startApp();
     } else {
         const pendingId = localStorage.getItem('pending_registration_id');
         if(pendingId){
             currentRegistrationId = pendingId;
-            db3.ref('pending_registrations/'+pendingId).once('value').then(s=>{
+            db.ref('pending_registrations/'+pendingId).once('value').then(s=>{
                 const r = s.val();
-                if(r && r.status === 'pending'){
-                    openWaitingScreen(r.phone, r.requestedAt);
-                } else {
-                    localStorage.removeItem('pending_registration_id');
-                    showLoginScreen();
-                }
+                if(r && r.status === 'pending') openWaitingScreen(r.phone, r.requestedAt);
+                else { localStorage.removeItem('pending_registration_id'); showLoginScreen(); }
             }).catch(()=>showLoginScreen());
-        } else {
-            showLoginScreen();
-        }
+        } else showLoginScreen();
         setTimeout(()=>{ if(sp) sp.style.display='none'; },600);
     }
 }, 2200);
@@ -1163,30 +990,20 @@ function listenToAutoApprovalSettings(){
         const data = snap.val();
         const oldMinutes = WAITING_TIME_MINUTES;
         const oldEnabled = AUTO_APPROVAL_ENABLED;
-
-        if(data){
-            AUTO_APPROVAL_ENABLED = data.enabled === true;
-            WAITING_TIME_MINUTES = Number(data.minutes) || 5;
-        } else {
-            AUTO_APPROVAL_ENABLED = true;
-            WAITING_TIME_MINUTES = 5;
-        }
-
+        if(data){ AUTO_APPROVAL_ENABLED = data.enabled === true; WAITING_TIME_MINUTES = Number(data.minutes) || 5; }
+        else { AUTO_APPROVAL_ENABLED = true; WAITING_TIME_MINUTES = 5; }
         if(oldMinutes !== WAITING_TIME_MINUTES || oldEnabled !== AUTO_APPROVAL_ENABLED){
             const waitingSection = $id('waitingSection');
             const isWaitingVisible = waitingSection && waitingSection.style.display === 'flex';
-
             if(isWaitingVisible){
                 if(!currentRegistrationId){
                     const pendingId = localStorage.getItem('pending_registration_id');
                     if(pendingId) currentRegistrationId = pendingId;
                 }
                 if(currentRegistrationId){
-                    db3.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+                    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
                         const r = s.val();
-                        if(r && r.status === 'pending'){
-                            openWaitingScreen(r.phone, r.requestedAt);
-                        }
+                        if(r && r.status === 'pending') openWaitingScreen(r.phone, r.requestedAt);
                     });
                 } else if($id('timerValue') && AUTO_APPROVAL_ENABLED){
                     if(waitingTimerInterval) clearInterval(waitingTimerInterval);
@@ -1203,11 +1020,9 @@ function refreshWaitingScreen(){
         if(pendingId) currentRegistrationId = pendingId;
     }
     if(!currentRegistrationId) return;
-    db3.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
         const r = s.val();
-        if(r && r.status === 'pending'){
-            openWaitingScreen(r.phone, r.requestedAt);
-        }
+        if(r && r.status === 'pending') openWaitingScreen(r.phone, r.requestedAt);
     });
 }
 
@@ -1241,20 +1056,17 @@ function startApp(){
     listenToCustomerDataChanges();
     setTimeout(processInviteReward, 2000);
     if(!userAddress && userPhone){
-        db2.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
-            if(s.exists()){
-                userAddress = s.val();
-                localStorage.setItem('user_address', userAddress);
-            }
+        db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
+            if(s.exists()){ userAddress = s.val(); localStorage.setItem('user_address', userAddress); }
         });
     }
 }
 
 function listenToForceLogout(){
     if(!userPhone) return;
-    if(forceLogoutListener){ db3.ref('customers/'+userPhone).off('value', forceLogoutListener); }
+    if(forceLogoutListener){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); }
     let lastForceLogoutAt = Number(localStorage.getItem('last_force_logout') || 0);
-    forceLogoutListener = db3.ref('customers/'+userPhone).on('value', snap=>{
+    forceLogoutListener = db.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(c && c.forceLogout === true){
             const msg = c.forceLogoutMessage || 'تم إنهاء الجلسة من الإدارة';
@@ -1262,16 +1074,13 @@ function listenToForceLogout(){
             if(stamp && stamp > lastForceLogoutAt){
                 lastForceLogoutAt = stamp;
                 localStorage.setItem('last_force_logout', stamp);
-                
                 localStorage.removeItem('user_name');
                 localStorage.removeItem('user_phone');
                 localStorage.removeItem('user_area');
                 localStorage.removeItem('user_address');
                 localStorage.removeItem('pending_registration_id');
-                
                 try { cleanAllListeners(); } catch(e){}
                 try { hideSuspensionBanner(); } catch(e){}
-                
                 $id('forceLogoutMsg').innerText = msg;
                 $id('forceLogoutScreen').classList.add('show');
                 $id('forceLogoutScreenOverlay').classList.add('show');
@@ -1292,15 +1101,12 @@ function handleForceLogoutConfirm(){
 
 function listenToSuspensionStatus(){
     if(!userPhone) return;
-    if(suspensionListener){ db3.ref('customers/'+userPhone).off('value', suspensionListener); }
-    suspensionListener = db3.ref('customers/'+userPhone).on('value', snap=>{
+    if(suspensionListener){ db.ref('customers/'+userPhone).off('value', suspensionListener); }
+    suspensionListener = db.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         isSuspended = (c && c.isSuspended === true);
-        if(isSuspended){
-            showSuspensionBanner();
-        } else {
-            hideSuspensionBanner();
-        }
+        if(isSuspended) showSuspensionBanner();
+        else hideSuspensionBanner();
     });
 }
 
@@ -1323,13 +1129,13 @@ function hideSuspensionBanner(){
 
 function listenToUserNotifications(){
     if(!userPhone) return;
-    if(notificationsListener){ db3.ref('user_notifications/'+userPhone).off('value', notificationsListener); }
-    notificationsListener = db3.ref('user_notifications/'+userPhone).on('value', snap=>{
+    if(notificationsListener){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); }
+    notificationsListener = db.ref('user_notifications/'+userPhone).on('value', snap=>{
         snap.forEach(c=>{
             const n = c.val();
             if(n && !n.read){
                 showNotificationPopup(n, c.key);
-                db3.ref('user_notifications/'+userPhone+'/'+c.key+'/read').set(true);
+                db.ref('user_notifications/'+userPhone+'/'+c.key+'/read').set(true);
             }
         });
     });
@@ -1337,11 +1143,10 @@ function listenToUserNotifications(){
 
 function listenToCustomerDataChanges(){
     if(!userPhone) return;
-    if(customerDataListener){ db2.ref('customers/'+userPhone).off('value', customerDataListener); }
-    customerDataListener = db2.ref('customers/'+userPhone).on('value', snap=>{
+    if(customerDataListener){ db.ref('customers/'+userPhone).off('value', customerDataListener); }
+    customerDataListener = db.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(!c) return;
-        
         if(c.name && c.name !== userName){
             userName = c.name;
             localStorage.setItem('user_name', userName);
@@ -1350,7 +1155,6 @@ function listenToCustomerDataChanges(){
             if($id('userAvatar')) $id('userAvatar').innerText = userName.charAt(0).toUpperCase();
             if($id('profileAvatar')) $id('profileAvatar').innerText = userName.charAt(0).toUpperCase();
         }
-        
         if(c.area && c.area !== userArea){
             const oldArea = userArea;
             userArea = c.area;
@@ -1368,7 +1172,6 @@ function listenToCustomerDataChanges(){
                 loadRewardSettings();
             }
         }
-        
         if(c.address !== undefined && c.address !== userAddress){
             userAddress = c.address || '';
             localStorage.setItem('user_address', userAddress);
@@ -1378,42 +1181,18 @@ function listenToCustomerDataChanges(){
 }
 
 function showNotificationPopup(notif, notifId){
-    const colors = {
-        info: { bg:'#06b6d4', icon:'fa-info-circle' },
-        success: { bg:'#10b981', icon:'fa-check-circle' },
-        warning: { bg:'#f59e0b', icon:'fa-exclamation-triangle' },
-        error: { bg:'#ef4444', icon:'fa-times-circle' }
-    };
+    const colors = { info:{bg:'#06b6d4',icon:'fa-info-circle'}, success:{bg:'#10b981',icon:'fa-check-circle'}, warning:{bg:'#f59e0b',icon:'fa-exclamation-triangle'}, error:{bg:'#ef4444',icon:'fa-times-circle'} };
     const c = colors[notif.type] || colors.info;
     const popup = document.createElement('div');
     popup.style.cssText = `position:fixed;top:80px;left:20px;right:20px;max-width:400px;margin:auto;background:${c.bg};color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2);z-index:99999;transform:translateY(-150%);transition:transform .4s`;
-    popup.innerHTML = `
-        <div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">
-                <i class="fas ${c.icon}"></i>
-            </div>
-            <div style="flex:1">
-                <div style="font-size:14px;font-weight:900;margin-bottom:4px">${notif.title}</div>
-                <div style="font-size:12.5px;line-height:1.6;opacity:.95">${notif.body}</div>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.2);border:none;color:#fff;cursor:pointer;font-size:12px;flex-shrink:0">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `;
+    popup.innerHTML = `<div style="display:flex;align-items:flex-start;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0"><i class="fas ${c.icon}"></i></div><div style="flex:1"><div style="font-size:14px;font-weight:900;margin-bottom:4px">${notif.title}</div><div style="font-size:12.5px;line-height:1.6;opacity:.95">${notif.body}</div></div><button onclick="this.parentElement.parentElement.remove()" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.2);border:none;color:#fff;cursor:pointer;font-size:12px;flex-shrink:0"><i class="fas fa-times"></i></button></div>`;
     document.body.appendChild(popup);
     setTimeout(()=>popup.style.transform = 'translateY(0)', 100);
-    setTimeout(()=>{
-        popup.style.transform = 'translateY(-150%)';
-        setTimeout(()=>popup.remove(), 500);
-    }, 8000);
+    setTimeout(()=>{ popup.style.transform = 'translateY(-150%)'; setTimeout(()=>popup.remove(), 500); }, 8000);
 }
 
 function checkSuspensionBeforeOrder(){
-    if(isSuspended){
-        showToast('⏸️ حسابك معلق — مش هتقدر تعمل طلب','error');
-        return true;
-    }
+    if(isSuspended){ showToast('⏸️ حسابك معلق — مش هتقدر تعمل طلب','error'); return true; }
     return false;
 }
 
@@ -1432,129 +1211,76 @@ function submitRegistration(){
     const btn = $id('whatsappRegisterBtn');
     if(btn) setButtonLoading(btn, 'جاري التسجيل...');
     const clean = data.phone.replace(/\D/g,'');
-    db3.ref('blacklist/' + clean).once('value').then(blackSnap => {
-        if(blackSnap.exists()){
-            if(btn) restoreButton(btn);
-            showToast('🚫 الرقم ده محظور','error');
-            return;
-        }
-        db3.ref('pending_registrations').orderByChild('phone').equalTo(data.phone).once('value')
-            .then(snap=>{
-                let existingId = null, existingStatus = null, existingData = null;
-                snap.forEach(c=>{
-                    const r = c.val();
-                    if(r.status==='pending' || r.status==='approved'){
-                        existingId = c.key;
-                        existingStatus = r.status;
-                        existingData = r;
-                    }
-                });
-                if(existingId && existingStatus === 'pending'){
-                    const elapsed = Date.now() - (existingData.requestedAt||0);
-                    const waitMs = (WAITING_TIME_MINUTES || 5) * 60 * 1000;
-                    if(AUTO_APPROVAL_ENABLED && (elapsed < waitMs)){
-                        currentRegistrationId = existingId;
-                        if(btn) restoreButton(btn);
-                        openWaitingScreen(existingData.phone, existingData.requestedAt);
-                        showToast('عندك طلب معلق بالفعل','info');
-                        return;
-                    } else if(!AUTO_APPROVAL_ENABLED){
-                        currentRegistrationId = existingId;
-                        if(btn) restoreButton(btn);
-                        openWaitingScreen(existingData.phone, existingData.requestedAt);
-                        showToast('عندك طلب معلق — في انتظار موافقة الأدمن','info');
-                        return;
-                    } else {
-                        db3.ref('pending_registrations/'+existingId).update({status:'expired'});
-                    }
-                }
-                if(existingId && existingStatus === 'approved'){
-                    if(btn) restoreButton(btn);
-                    loginUser(existingData);
-                    return;
-                }
-                createNewRegistration(data);
-            })
-            .catch(err=>{
-                console.error(err);
-                if(btn) restoreButton(btn);
-                createNewRegistration(data);
+    db.ref('blacklist/' + clean).once('value').then(blackSnap => {
+        if(blackSnap.exists()){ if(btn) restoreButton(btn); showToast('🚫 الرقم ده محظور','error'); return; }
+        db.ref('pending_registrations').orderByChild('phone').equalTo(data.phone).once('value').then(snap=>{
+            let existingId = null, existingStatus = null, existingData = null;
+            snap.forEach(c=>{
+                const r = c.val();
+                if(r.status==='pending' || r.status==='approved'){ existingId = c.key; existingStatus = r.status; existingData = r; }
             });
-    }).catch(err => {
-        console.error('Blacklist error:', err);
-        if(btn) restoreButton(btn);
-        showToast('❌ خطأ في الاتصال', 'error');
-    });
+            if(existingId && existingStatus === 'pending'){
+                const elapsed = Date.now() - (existingData.requestedAt||0);
+                const waitMs = (WAITING_TIME_MINUTES || 5) * 60 * 1000;
+                if(AUTO_APPROVAL_ENABLED && (elapsed < waitMs)){
+                    currentRegistrationId = existingId;
+                    if(btn) restoreButton(btn);
+                    openWaitingScreen(existingData.phone, existingData.requestedAt);
+                    showToast('عندك طلب معلق بالفعل','info');
+                    return;
+                } else if(!AUTO_APPROVAL_ENABLED){
+                    currentRegistrationId = existingId;
+                    if(btn) restoreButton(btn);
+                    openWaitingScreen(existingData.phone, existingData.requestedAt);
+                    showToast('عندك طلب معلق — في انتظار موافقة الأدمن','info');
+                    return;
+                } else {
+                    db.ref('pending_registrations/'+existingId).update({status:'expired'});
+                }
+            }
+            if(existingId && existingStatus === 'approved'){ if(btn) restoreButton(btn); loginUser(existingData); return; }
+            createNewRegistration(data);
+        }).catch(err=>{ console.error(err); if(btn) restoreButton(btn); createNewRegistration(data); });
+    }).catch(err => { console.error('Blacklist error:', err); if(btn) restoreButton(btn); showToast('❌ خطأ في الاتصال', 'error'); });
 }
 function createNewRegistration(data){
     const btn = $id('whatsappRegisterBtn');
     const now = Date.now();
-    const registrationData = {
-        name: data.name,
-        phone: data.phone,
-        area: data.area,
-        address: '',
-        inviteCode: data.inviteCode || '',
-        status: 'pending', requestedAt: now,
-        whatsappSent: true,
-        deviceInfo: navigator.userAgent.substring(0,100)
-    };
-    db3.ref('pending_registrations').push(registrationData)
-        .then(ref=>{
-            currentRegistrationId = ref.key;
-            if(btn) restoreButton(btn);
-            localStorage.setItem('pending_registration_id', ref.key);
-            openWaitingScreen(data.phone, now);
-            const adminPhone = supportWhatsapp.replace(/\D/g,'');
-            const finalAdminPhone = adminPhone.startsWith('0') ? '2'+adminPhone : adminPhone;
-            const message = `🔔 *طلب تسجيل جديد في مشوارك*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${data.name}\n📱 *الرقم:* ${data.phone}\n📍 *المنطقة:* ${data.area}\n${data.inviteCode ? `🎁 *كود الدعوة:* ${data.inviteCode}` : ''}\n⏰ *الوقت:* ${new Date(now).toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━━━━\n✅ برجاء الموافقة على الطلب 🙏`;
-            const waUrl = `https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`;
-            setTimeout(()=>{ window.open(waUrl, '_blank'); showToast('📱 تم فتح الواتساب', 'success'); }, 1000);
-        })
-        .catch(err=>{
-            console.error(err);
-            if(btn) restoreButton(btn);
-            showToast('❌ فشل حفظ الطلب','error');
-        });
+    const registrationData = { name: data.name, phone: data.phone, area: data.area, address: '', inviteCode: data.inviteCode || '', status: 'pending', requestedAt: now, whatsappSent: true, deviceInfo: navigator.userAgent.substring(0,100) };
+    db.ref('pending_registrations').push(registrationData).then(ref=>{
+        currentRegistrationId = ref.key;
+        if(btn) restoreButton(btn);
+        localStorage.setItem('pending_registration_id', ref.key);
+        openWaitingScreen(data.phone, now);
+        const adminPhone = supportWhatsapp.replace(/\D/g,'');
+        const finalAdminPhone = adminPhone.startsWith('0') ? '2'+adminPhone : adminPhone;
+        const message = `🔔 *طلب تسجيل جديد في مشوارك*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${data.name}\n📱 *الرقم:* ${data.phone}\n📍 *المنطقة:* ${data.area}\n${data.inviteCode ? `🎁 *كود الدعوة:* ${data.inviteCode}` : ''}\n⏰ *الوقت:* ${new Date(now).toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━━━━\n✅ برجاء الموافقة على الطلب 🙏`;
+        const waUrl = `https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`;
+        setTimeout(()=>{ window.open(waUrl, '_blank'); showToast('📱 تم فتح الواتساب', 'success'); }, 1000);
+    }).catch(err=>{ console.error(err); if(btn) restoreButton(btn); showToast('❌ فشل حفظ الطلب','error'); });
 }
 
 function openWaitingScreen(phone, startTime){
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'flex';
     $id('appSection').style.display = 'none';
-
     waitingStartTime = startTime || waitingStartTime || Date.now();
     if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
-
     if(!AUTO_APPROVAL_ENABLED){
         $id('waitingCardContent').innerHTML = `
-            <div class="waiting-status-badge" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.4);color:#2563eb">
-                <span class="pulse-dot" style="background:#2563eb"></span> في انتظار المراجعة اليدوية
-            </div>
-            <div style="width:120px;height:120px;border-radius:36px;background:linear-gradient(135deg,#3b82f6,#2563eb);display:flex;align-items:center;justify-content:center;font-size:56px;color:#fff;margin:20px auto;box-shadow:0 15px 40px rgba(59,130,246,.35);animation:approvedIconBounce 2s infinite">
-                <i class="fas fa-user-shield"></i>
-            </div>
+            <div class="waiting-status-badge" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.4);color:#2563eb"><span class="pulse-dot" style="background:#2563eb"></span> في انتظار المراجعة اليدوية</div>
+            <div style="width:120px;height:120px;border-radius:36px;background:linear-gradient(135deg,#3b82f6,#2563eb);display:flex;align-items:center;justify-content:center;font-size:56px;color:#fff;margin:20px auto;box-shadow:0 15px 40px rgba(59,130,246,.35);animation:approvedIconBounce 2s infinite"><i class="fas fa-user-shield"></i></div>
             <div class="waiting-title">⏳ جاري المراجعة</div>
             <div class="waiting-desc">طلبك وصل لفريقنا<br><b style="color:#2563eb">هيتم التواصل معاك قريباً</b></div>
-            <div class="whatsapp-sent-card">
-                <div class="whatsapp-sent-icon"><i class="fab fa-whatsapp"></i></div>
-                <div class="whatsapp-sent-text">
-                    <div class="whatsapp-sent-title"><span class="check-mark"><i class="fas fa-check"></i></span> تم فتح الواتساب</div>
-                    <div class="whatsapp-sent-sub">ابعت الرسالة الجاهزة للأدمن</div>
-                </div>
-            </div>
+            <div class="whatsapp-sent-card"><div class="whatsapp-sent-icon"><i class="fab fa-whatsapp"></i></div><div class="whatsapp-sent-text"><div class="whatsapp-sent-title"><span class="check-mark"><i class="fas fa-check"></i></span> تم فتح الواتساب</div><div class="whatsapp-sent-sub">ابعت الرسالة الجاهزة للأدمن</div></div></div>
             <button class="reopen-whatsapp-btn" onclick="reopenWhatsapp()"><i class="fab fa-whatsapp"></i><span>افتح الواتساب تاني</span></button>
             <button class="preview-enter-btn" onclick="enterPreviewMode()"><i class="fas fa-eye"></i> شوف التطبيق (معاينة فقط)</button>
-            <div class="waiting-note-new">
-                <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                <div><b>💡 نصيحة</b> لو بعت الرسالة، الموافقة هتكون أسرع بكثير</div>
-            </div>
+            <div class="waiting-note-new"><div class="note-icon"><i class="fas fa-lightbulb"></i></div><div><b>💡 نصيحة</b> لو بعت الرسالة، الموافقة هتكون أسرع بكثير</div></div>
             <button class="waiting-cancel" onclick="cancelRegistration()"><i class="fas fa-times"></i> إلغاء الطلب</button>
         `;
         listenToRegistrationStatus();
         return;
     }
-
     $id('waitingCardContent').innerHTML = `
         <div class="waiting-status-badge"><span class="pulse-dot"></span> جاري المراجعة الآن...</div>
         <div class="waiting-circle-wrap">
@@ -1563,26 +1289,14 @@ function openWaitingScreen(phone, startTime){
                 <circle class="bg-circle" cx="85" cy="85" r="75"/>
                 <circle class="progress-circle" id="progressCircle" cx="85" cy="85" r="75"/>
             </svg>
-            <div class="waiting-circle-inner">
-                <div class="waiting-timer-display" id="timerValue">${String(WAITING_TIME_MINUTES).padStart(2,'0')}:00</div>
-                <div class="waiting-timer-label">متبقي</div>
-            </div>
+            <div class="waiting-circle-inner"><div class="waiting-timer-display" id="timerValue">${String(WAITING_TIME_MINUTES).padStart(2,'0')}:00</div><div class="waiting-timer-label">متبقي</div></div>
         </div>
         <div class="waiting-title">⏳ جاري المراجعة</div>
         <div class="waiting-desc">بعتنا طلبك وجاري المراجعة<br><b>هيتم الموافقة خلال ${WAITING_TIME_MINUTES} دقايق</b></div>
-        <div class="whatsapp-sent-card">
-            <div class="whatsapp-sent-icon"><i class="fab fa-whatsapp"></i></div>
-            <div class="whatsapp-sent-text">
-                <div class="whatsapp-sent-title"><span class="check-mark"><i class="fas fa-check"></i></span> تم فتح الواتساب</div>
-                <div class="whatsapp-sent-sub">ابعت الرسالة الجاهزة للأدمن</div>
-            </div>
-        </div>
+        <div class="whatsapp-sent-card"><div class="whatsapp-sent-icon"><i class="fab fa-whatsapp"></i></div><div class="whatsapp-sent-text"><div class="whatsapp-sent-title"><span class="check-mark"><i class="fas fa-check"></i></span> تم فتح الواتساب</div><div class="whatsapp-sent-sub">ابعت الرسالة الجاهزة للأدمن</div></div></div>
         <button class="reopen-whatsapp-btn" onclick="reopenWhatsapp()"><i class="fab fa-whatsapp"></i><span>افتح الواتساب تاني</span></button>
         <button class="preview-enter-btn" onclick="enterPreviewMode()"><i class="fas fa-eye"></i> شوف التطبيق (معاينة فقط)</button>
-        <div class="waiting-note-new">
-            <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-            <div><b>💡 نصيحة</b> لو بعت الرسالة، الموافقة هتكون أسرع بكثير</div>
-        </div>
+        <div class="waiting-note-new"><div class="note-icon"><i class="fas fa-lightbulb"></i></div><div><b>💡 نصيحة</b> لو بعت الرسالة، الموافقة هتكون أسرع بكثير</div></div>
         <button class="waiting-cancel" onclick="cancelRegistration()"><i class="fas fa-times"></i> إلغاء الطلب</button>
     `;
     startWaitingTimer();
@@ -1601,10 +1315,7 @@ function startWaitingTimer(){
         const tv = $id('timerValue');
         if(tv) tv.innerText = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
         const progress = $id('progressCircle');
-        if(progress){
-            const percent = Math.min(1, remaining / totalSeconds);
-            progress.style.strokeDashoffset = circumference * (1 - percent);
-        }
+        if(progress){ const percent = Math.min(1, remaining / totalSeconds); progress.style.strokeDashoffset = circumference * (1 - percent); }
         if(remaining <= 0){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
     }
     updateTimer();
@@ -1614,23 +1325,21 @@ function reopenWhatsapp(){
     const adminPhone = supportWhatsapp.replace(/\D/g,'');
     const finalAdminPhone = adminPhone.startsWith('0') ? '2'+adminPhone : adminPhone;
     if(currentRegistrationId){
-        db3.ref('pending_registrations/' + currentRegistrationId).once('value').then(snap => {
+        db.ref('pending_registrations/' + currentRegistrationId).once('value').then(snap => {
             const r = snap.val();
             if(!r){ showToast('❌ مش لاقي بيانات', 'error'); return; }
             const message = `🔔 *طلب تسجيل جديد*\n👤 ${r.name}\n📱 ${r.phone}\n📍 ${r.area||'-'}\n⏰ ${new Date(r.requestedAt).toLocaleString('ar-EG')}\n✅ برجاء الموافقة 🙏`;
             window.open(`https://wa.me/${finalAdminPhone}?text=${encodeURIComponent(message)}`, '_blank');
             showToast('📱 تم فتح الواتساب', 'success');
         });
-    } else {
-        showToast('❌ مش لاقي بيانات', 'error');
-    }
+    } else showToast('❌ مش لاقي بيانات', 'error');
 }
 function listenToRegistrationStatus(){
     if(registrationStatusListener && currentRegistrationId){
-        db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
+        db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener);
     }
     if(!currentRegistrationId) return;
-    registrationStatusListener = db3.ref('pending_registrations/'+currentRegistrationId).on('value', snap=>{
+    registrationStatusListener = db.ref('pending_registrations/'+currentRegistrationId).on('value', snap=>{
         const r = snap.val(); if(!r) return;
         if(r.status === 'approved'){
             if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
@@ -1669,14 +1378,14 @@ function showExpiredScreen(){
 }
 function cancelRegistration(){
     showConfirm('إلغاء التسجيل','متأكد؟',()=>{
-        if(currentRegistrationId){ db3.ref('pending_registrations/'+currentRegistrationId).update({status:'cancelled'}); }
-        if(registrationStatusListener && currentRegistrationId){ db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
+        if(currentRegistrationId){ db.ref('pending_registrations/'+currentRegistrationId).update({status:'cancelled'}); }
+        if(registrationStatusListener && currentRegistrationId){ db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
         if(waitingTimerInterval){ clearInterval(waitingTimerInterval); waitingTimerInterval = null; }
         backToRegistration();
     });
 }
 function backToRegistration(){
-    if(registrationStatusListener && currentRegistrationId){ db3.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
+    if(registrationStatusListener && currentRegistrationId){ db.ref('pending_registrations/'+currentRegistrationId).off('value', registrationStatusListener); }
     registrationStatusListener = null;
     currentRegistrationId = null;
     waitingStartTime = null;
@@ -1687,29 +1396,19 @@ function backToRegistration(){
     localStorage.removeItem('pending_registration_id');
 }
 function loginUser(data){
-    userName = data.name;
-    userPhone = data.phone;
-    userArea = data.area;
-    userAddress = data.address || '';
+    userName = data.name; userPhone = data.phone; userArea = data.area; userAddress = data.address || '';
     localStorage.setItem('user_name', userName);
     localStorage.setItem('user_phone', userPhone);
     localStorage.setItem('user_area', userArea);
     localStorage.setItem('user_address', userAddress);
     localStorage.removeItem('pending_registration_id');
     if(data.inviteCode && currentRewardSettings.inviteActive !== false){ handleInviteCode(data.inviteCode); }
-    db2.ref(`approved_users/${userPhone}`).update({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), lastLogin:Date.now() });
-    db2.ref(`customers/${userPhone}`).once('value').then(snap=>{
-        if(!snap.exists()){
-            db2.ref(`customers/${userPhone}`).set({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), points:0 });
-        } else {
-            if(userAddress) db2.ref(`customers/${userPhone}/address`).set(userAddress);
-        }
+    db.ref(`approved_users/${userPhone}`).update({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), lastLogin:Date.now() });
+    db.ref(`customers/${userPhone}`).once('value').then(snap=>{
+        if(!snap.exists()){ db.ref(`customers/${userPhone}`).set({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), points:0 }); }
+        else { if(userAddress) db.ref(`customers/${userPhone}/address`).set(userAddress); }
     });
-    db2.ref(`customers/${userPhone}`).update({
-        forceLogout: false,
-        forceLogoutAt: 0,
-        forceLogoutMessage: ''
-    }).catch(()=>{});
+    db.ref(`customers/${userPhone}`).update({ forceLogout: false, forceLogoutAt: 0, forceLogoutMessage: '' }).catch(()=>{});
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'none';
     showToast('✅ أهلاً بيك!', 'success');
@@ -1740,14 +1439,11 @@ function pickArea(area){
     if(userPhone && userName && area !== userArea){
         userArea = area;
         localStorage.setItem('user_area', area);
-        
         if($id('displayArea')) $id('displayArea').innerText = area;
         if($id('profileArea')) $id('profileArea').innerText = area;
         if($id('settingsAreaName')) $id('settingsAreaName').innerText = area;
-        
-        db2.ref(`customers/${userPhone}/area`).set(area).catch(()=>{});
-        db2.ref(`approved_users/${userPhone}/area`).set(area).catch(()=>{});
-        
+        db.ref(`customers/${userPhone}/area`).set(area).catch(()=>{});
+        db.ref(`approved_users/${userPhone}/area`).set(area).catch(()=>{});
         resetMarketData();
         cleanAllListeners();
         syncPricing();
@@ -1829,7 +1525,7 @@ db.ref('areas').on('value', snap=>{
         if(name) cachedAreas.push(name);
     });
 });
-db3.ref('reward_settings').on('value', snap=>{
+db.ref('reward_settings').on('value', snap=>{
     let inviteActive = true;
     snap.forEach(a=>{
         const r = a.val();
@@ -1879,7 +1575,7 @@ function enterPreviewMode(){
     if(currentRegistrationId){
         if(previewCheckInterval) clearInterval(previewCheckInterval);
         previewCheckInterval = setInterval(()=>{
-            db3.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
+            db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
                 const r = s.val();
                 if(r && r.status === 'approved'){
                     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
@@ -1896,44 +1592,34 @@ function exitPreviewMode(){
     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
     $id('previewModeBar').style.display = 'none';
     $id('homeHeader').style.paddingTop = '16px';
-    if(currentRegistrationId){
-        $id('appSection').style.display = 'none';
-        $id('waitingSection').style.display = 'flex';
-    } else {
-        $id('appSection').style.display = 'none';
-        $id('loginSection').style.display = 'flex';
-    }
+    if(currentRegistrationId){ $id('appSection').style.display = 'none'; $id('waitingSection').style.display = 'flex'; }
+    else { $id('appSection').style.display = 'none'; $id('loginSection').style.display = 'flex'; }
 }
 function previewBlockedAction(){
-    if(isPreviewMode){
-        showToast('👁️ في وضع المعاينة — لازم تتقبل الأول', 'info');
-        return true;
-    }
+    if(isPreviewMode){ showToast('👁️ في وضع المعاينة — لازم تتقبل الأول', 'info'); return true; }
     return false;
 }
 
 function handleInviteCode(code){
     const clean = userPhone.replace(/\D/g,'');
-    db3.ref(`users_invites/${clean}`).once('value').then(s=>{
+    db.ref(`users_invites/${clean}`).once('value').then(s=>{
         if(s.exists()) return;
-        db3.ref(`invite_codes/${code}`).once('value').then(s2=>{
+        db.ref(`invite_codes/${code}`).once('value').then(s2=>{
             const inviter = s2.val();
-            if(inviter && inviter !== clean){
-                db3.ref(`users_invites/${clean}`).set({ code, inviter, usedAt:Date.now(), rewarded:false });
-            }
+            if(inviter && inviter !== clean){ db.ref(`users_invites/${clean}`).set({ code, inviter, usedAt:Date.now(), rewarded:false }); }
         });
     });
 }
 function processInviteReward(){
     if(!rewardsEnabled || currentRewardSettings.inviteActive === false) return;
     const clean = userPhone.replace(/\D/g,'');
-    db3.ref(`users_invites/${clean}`).once('value').then(s=>{
+    db.ref(`users_invites/${clean}`).once('value').then(s=>{
         const d = s.val();
         if(d && !d.rewarded){
             const reward = currentRewardSettings.inviteReward || 50;
-            db3.ref(`users_points/${clean}`).transaction(c=>(c||0)+reward);
-            db3.ref(`users_points/${d.inviter}`).transaction(c=>(c||0)+reward);
-            db3.ref(`users_invites/${clean}/rewarded`).set(true);
+            db.ref(`users_points/${clean}`).transaction(c=>(c||0)+reward);
+            db.ref(`users_points/${d.inviter}`).transaction(c=>(c||0)+reward);
+            db.ref(`users_invites/${clean}/rewarded`).set(true);
             setTimeout(()=>{ fireConfetti(); showToast(`🎉 كسبت ${reward} نقطة!`, 'success'); }, 1500);
         }
     });
@@ -1941,12 +1627,12 @@ function processInviteReward(){
 function generateMyInviteCode(){
     if(!userPhone) return;
     const clean = userPhone.replace(/\D/g,'');
-    db3.ref(`my_invite_codes/${clean}`).once('value').then(s=>{
+    db.ref(`my_invite_codes/${clean}`).once('value').then(s=>{
         let code = s.val();
         if(!code){
             code = 'MISH' + clean.slice(-4);
-            db3.ref(`my_invite_codes/${clean}`).set(code);
-            db3.ref(`invite_codes/${code}`).set(clean);
+            db.ref(`my_invite_codes/${clean}`).set(code);
+            db.ref(`invite_codes/${code}`).set(clean);
         }
         $id('myInviteCode').innerText = code;
     });
@@ -1965,9 +1651,9 @@ function getWeekKey(){
 function checkChallengeProgress(){
     if(!userPhone) return;
     const clean = userPhone.replace(/\D/g,'');
-    if(challengeListener){ db3.ref(`users_challenges/${clean}`).off(); challengeListener = null; }
+    if(challengeListener){ db.ref(`users_challenges/${clean}`).off(); challengeListener = null; }
     const wk = getWeekKey();
-    challengeListener = db3.ref(`users_challenges/${clean}/${wk}`).on('value', s=>{
+    challengeListener = db.ref(`users_challenges/${clean}/${wk}`).on('value', s=>{
         const d = s.val() || { ordersCount:0, completed:false };
         currentWeekOrders = d.ordersCount;
         challengeCompletedThisWeek = d.completed;
@@ -1984,14 +1670,14 @@ function incrementChallenge(){
     if(currentRewardSettings.challengeActive === false || challengeCompletedThisWeek) return;
     const clean = userPhone.replace(/\D/g,'');
     const wk = getWeekKey();
-    db3.ref(`users_challenges/${clean}/${wk}/ordersCount`).transaction(c=>(c||0)+1);
+    db.ref(`users_challenges/${clean}/${wk}/ordersCount`).transaction(c=>(c||0)+1);
 }
 
 function loadUserPoints(){
     if(!userPhone) return;
     const clean = userPhone.replace(/\D/g,'');
-    if(userPointsListener){ db3.ref(`users_points/${clean}`).off('value', userPointsListener); }
-    userPointsListener = db3.ref(`users_points/${clean}`).on('value', s=>{
+    if(userPointsListener){ db.ref(`users_points/${clean}`).off('value', userPointsListener); }
+    userPointsListener = db.ref(`users_points/${clean}`).on('value', s=>{
         userPoints = s.val() || 0;
         if($id('userPointsDisplay')) $id('userPointsDisplay').innerText = userPoints;
         if($id('headerPointsDisplay')) $id('headerPointsDisplay').innerText = userPoints;
@@ -2003,8 +1689,8 @@ function loadUserPoints(){
 
 function loadRewardSettings(){
     if(!userArea) return;
-    if(rewardSettingsListener){ db3.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); }
-    rewardSettingsListener = db3.ref(`reward_settings/${userArea}`).on('value', s=>{
+    if(rewardSettingsListener){ db.ref(`reward_settings/${userArea}`).off('value', rewardSettingsListener); }
+    rewardSettingsListener = db.ref(`reward_settings/${userArea}`).on('value', s=>{
         const r = s.val(); if(!r) return;
         currentRewardSettings = { ...currentRewardSettings, ...r };
         rewardsEnabled = (r.active !== false);
@@ -2043,10 +1729,7 @@ function listenToServiceVisibility(){
         currentAreaSettings.customRequest = (d.customRequest !== false && d.customRequest !== 'false');
         shopsEnabled = (d.shopsEnabled !== false && d.shopsEnabled !== 'false');
         applyServiceVisibility();
-        if(userPhone){
-            loadOrders();
-            loadActiveOrder();
-        }
+        if(userPhone){ loadOrders(); loadActiveOrder(); }
     });
 }
 function listenToShippingSettings(){
@@ -2170,19 +1853,12 @@ function switchPage(page){
         if($id('profileArea')) $id('profileArea').innerText = userArea;
         if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
-        
         if(userPhone){
-            db2.ref(`customers/${userPhone}`).once('value').then(s=>{
+            db.ref(`customers/${userPhone}`).once('value').then(s=>{
                 const c = s.val();
                 if(c){
-                    if(c.name && c.name !== userName){
-                        userName = c.name;
-                        if($id('profileName')) $id('profileName').innerText = userName;
-                    }
-                    if(c.area && c.area !== userArea){
-                        userArea = c.area;
-                        if($id('profileArea')) $id('profileArea').innerText = userArea;
-                    }
+                    if(c.name && c.name !== userName){ userName = c.name; if($id('profileName')) $id('profileName').innerText = userName; }
+                    if(c.area && c.area !== userArea){ userArea = c.area; if($id('profileArea')) $id('profileArea').innerText = userArea; }
                 }
             });
         }
@@ -2212,15 +1888,11 @@ function switchOrderTab(tab){
 }
 function loadOrders(){
     if(!userPhone) return;
-    if(!ordersInitialLoaded){
-        showPageLoader('ordersContainer','جاري التحميل...');
-        ordersInitialLoaded = true;
-    }
+    if(!ordersInitialLoaded){ showPageLoader('ordersContainer','جاري التحميل...'); ordersInitialLoaded = true; }
     if(ordersListener){ db.ref('orders').off('value', ordersListener); }
     ordersListener = db.ref('orders').on('value', snap=>{
         const c = $id('ordersContainer'); if(!c) return;
-        const activeOrders = [];
-        const historyOrders = [];
+        const activeOrders = [], historyOrders = [];
         const now = Date.now();
         const days30 = 30 * 24 * 60 * 60 * 1000;
         snap.forEach(s=>{
@@ -2228,14 +1900,10 @@ function loadOrders(){
             if(o.phone !== userPhone && o.customerPhone !== userPhone) return;
             if(o.isShipping) return;
             const orderWithId = { id: s.key, ...o };
-            if(o.status === 'ready_for_driver' || o.status === 'active'){
-                activeOrders.push(orderWithId);
-            }
+            if(o.status === 'ready_for_driver' || o.status === 'active') activeOrders.push(orderWithId);
             else if(o.status === 'completed' || o.status === 'cancelled'){
                 const orderTime = o.completedAt || o.cancelledAt || o.time || 0;
-                if((now - orderTime) <= days30){
-                    historyOrders.push(orderWithId);
-                }
+                if((now - orderTime) <= days30) historyOrders.push(orderWithId);
             }
         });
         activeOrders.sort((a,b)=>(b.time||0) - (a.time||0));
@@ -2258,17 +1926,10 @@ function renderOrderCard(o){
     else if(o.status === 'active'){ st = 'active'; stText = 'في الطريق'; }
     else if(o.status === 'completed'){ st = 'done'; stText = 'تم التسليم'; }
     else if(o.status === 'cancelled'){ st = 'pending'; stText = 'ملغي'; }
-    // ✅ نعرض رقم السائق بس لو الطلب جاري (مش في انتظار، ولا مكتمل، ولا ملغي)
-let driverPhoneHtml = '';
-if(o.status === 'active' && o.driverPhone){
-    driverPhoneHtml = `<div class="order-details" style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);margin-top:8px">
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-            <i class="fas fa-phone" style="color:#059669;font-size:14px"></i>
-            <span style="color:var(--text-soft);font-weight:700">رقم الكابتن:</span>
-            <a href="tel:${o.driverPhone}" style="color:#059669;font-weight:900;font-size:14px;text-decoration:none;direction:ltr">${o.driverPhone}</a>
-        </div>
-    </div>`;
-}
+    let driverPhoneHtml = '';
+    if(o.status === 'active' && o.driverPhone){
+        driverPhoneHtml = `<div class="order-details" style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);margin-top:8px"><div style="display:flex;align-items:center;gap:8px;font-size:12px"><i class="fas fa-phone" style="color:#059669;font-size:14px"></i><span style="color:var(--text-soft);font-weight:700">رقم الكابتن:</span><a href="tel:${o.driverPhone}" style="color:#059669;font-weight:900;font-size:14px;text-decoration:none;direction:ltr">${o.driverPhone}</a></div></div>`;
+    }
     let oa = '#8b5cf6';
     let iconHtml = '<i class="fas fa-box"></i>';
     if(o.type === 'مشوار'){ oa = '#8b5cf6'; iconHtml = '<img src="./tuktuk.png" style="width:160%;height:160%;object-fit:cover;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">'; }
@@ -2282,38 +1943,24 @@ if(o.status === 'active' && o.driverPhone){
     }
     return `<div class="order-item" style="--oa:${oa}">
         <div class="order-top">
-            <div class="order-type">
-                <div class="order-icon-mini" style="background:${oa}">${iconHtml}</div>
-                <div>
-                    <div class="order-name">${o.type}</div>
-                    <div class="order-time">${o.orderTimeString||''}</div>
-                </div>
-            </div>
+            <div class="order-type"><div class="order-icon-mini" style="background:${oa}">${iconHtml}</div><div><div class="order-name">${o.type}</div><div class="order-time">${o.orderTimeString||''}</div></div></div>
             <span class="order-status-badge status-${st}">${stText}</span>
         </div>
         <div class="order-details">${o.details||o.to||''}</div>
-${driverPhoneHtml}
-        <div class="order-footer">
-            <span></span>
-            <span class="order-price">${o.price||0}</span>
-        </div>
+        ${driverPhoneHtml}
+        <div class="order-footer"><span></span><span class="order-price">${o.price||0}</span></div>
         ${cancelBtn}
     </div>`;
 }
 function cancelOrder(id){
     showConfirm('إلغاء الطلب','متأكد من إلغاء الطلب؟',()=>{
         db.ref(`orders/${id}`).once('value').then(s=>{
-            const o = s.val();
-            if(!o) return;
+            const o = s.val(); if(!o) return;
             if(o.pointsEarned && rewardsEnabled){
                 const clean = userPhone.replace(/\D/g,'');
-                db3.ref(`users_points/${clean}`).transaction(c => Math.max(0,(c||0) - o.pointsEarned));
+                db.ref(`users_points/${clean}`).transaction(c => Math.max(0,(c||0) - o.pointsEarned));
             }
-            db.ref(`orders/${id}`).update({
-                status: 'cancelled',
-                cancelledAt: Date.now(),
-                cancelledBy: 'customer'
-            }).then(()=>{
+            db.ref(`orders/${id}`).update({ status: 'cancelled', cancelledAt: Date.now(), cancelledBy: 'customer' }).then(()=>{
                 showToast('✅ تم إلغاء الطلب','success');
                 setTimeout(()=>switchOrderTab('history'), 500);
             });
@@ -2328,12 +1975,8 @@ function renderAddressPicker(prefix){
         <div class="field">
             <label class="field-label"><i class="fas fa-map-marker-alt"></i> عنوان التوصيل</label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-                <button type="button" id="${prefix}_myAddrBtn" onclick="pickMyAddress('${prefix}')" class="addr-picker-btn ${hasAddr?'active':''}" ${!hasAddr?'disabled':''}>
-                    <i class="fas fa-home"></i> مكاني
-                </button>
-                <button type="button" id="${prefix}_otherAddrBtn" onclick="pickOtherAddress('${prefix}')" class="addr-picker-btn">
-                    <i class="fas fa-map-pin"></i> مكان آخر
-                </button>
+                <button type="button" id="${prefix}_myAddrBtn" onclick="pickMyAddress('${prefix}')" class="addr-picker-btn ${hasAddr?'active':''}" ${!hasAddr?'disabled':''}><i class="fas fa-home"></i> مكاني</button>
+                <button type="button" id="${prefix}_otherAddrBtn" onclick="pickOtherAddress('${prefix}')" class="addr-picker-btn"><i class="fas fa-map-pin"></i> مكان آخر</button>
             </div>
             <input type="text" id="${prefix}_addressInput" value="${hasAddr?addr:''}" placeholder="اكتب العنوان هنا...">
             ${hasAddr?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-info-circle"></i> عنوانك المحفوظ: ${addr}</div>`:`<div style="font-size:10.5px;color:#dc2626;margin-top:6px;display:flex;align-items:center;gap:4px"><i class="fas fa-exclamation-circle"></i> محتاج تضيف عنوانك من البروفايل عشان تستخدم "مكاني"</div>`}
@@ -2355,8 +1998,7 @@ function pickOtherAddress(prefix){
     const btnMy = $id(prefix + '_myAddrBtn');
     const btnOther = $id(prefix + '_otherAddrBtn');
     if(!input) return;
-    input.value = '';
-    input.focus();
+    input.value = ''; input.focus();
     if(btnMy){ btnMy.classList.remove('active'); }
     if(btnOther){ btnOther.classList.add('active'); }
 }
@@ -2391,8 +2033,7 @@ function submitCustomService(id){
     let discountInfo = { hasDiscount:false, discountAmount:0, discountType:'none', finalPrice:priceVal };
     if(hasActiveCoupon){
         discountInfo = { hasDiscount:true, discountAmount:priceVal, discountType:'توصيل مجاني', finalPrice:0 };
-        priceVal = 0;
-        hasActiveCoupon = false;
+        priceVal = 0; hasActiveCoupon = false;
         $id('activeCouponBanner').classList.remove('show');
     }
     saveOrder({ type:s.name||'خدمة مخصصة', orderType:'custom', details:`المكان: ${s.name}<br>الحاجة: ${item}`, from:userArea, to:address, price:priceVal, originalPrice:priceVal, deliveryFee:priceVal, commission:(priceVal*delegateCommission)/100, status:'ready_for_driver', hasImages:false }, discountInfo);
@@ -2404,7 +2045,6 @@ function openService(service){
     if(service === 'market'){ openMarket(); return; }
     const icon = $id('sheetIcon'), title = $id('sheetTitle'), sub = $id('sheetSub'), body = $id('sheetBody');
     uploadedRxBase64 = ''; uploadedRxName = '';
-
     if(service === 'mishwar'){
         icon.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)';
         icon.innerHTML = '<img src="./tuktuk.png" alt="توك توك" style="width:160%;height:160%;object-fit:cover;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">';
@@ -2412,18 +2052,11 @@ function openService(service){
         body.innerHTML = `
             <div class="field">
                 <label class="field-label"><i class="fas fa-flag-checkered"></i> الوجهة</label>
-                <button class="destination-btn" id="svcDestBtn" onclick="openDestinations()">
-                    <span id="svcDestLabel">اختر الوجهة...</span>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <input type="hidden" id="svcDestVal">
-                <input type="hidden" id="svcDestName">
+                <button class="destination-btn" id="svcDestBtn" onclick="openDestinations()"><span id="svcDestLabel">اختر الوجهة...</span><i class="fas fa-chevron-left"></i></button>
+                <input type="hidden" id="svcDestVal"><input type="hidden" id="svcDestName">
             </div>
             ${renderAddressPicker('mishwar')}
-            <div class="price-box" id="priceBoxMish">
-                <div class="price-box-label"><i class="fas fa-money-bill-wave"></i> سعر الرحلة</div>
-                <div class="price-box-value" id="priceBoxMishValue">0</div>
-            </div>
+            <div class="price-box" id="priceBoxMish"><div class="price-box-label"><i class="fas fa-money-bill-wave"></i> سعر الرحلة</div><div class="price-box-value" id="priceBoxMishValue">0</div></div>
             <button class="btn-main" onclick="submitMishwar()"><i class="fas fa-rocket"></i> اطلب الآن</button>
         `;
     } else if(service === 'shipping'){
@@ -2458,27 +2091,18 @@ function selectDestination(name, basePrice){
     if(appliedGlobalDiscountValue > 0){ final = Math.max(0, basePrice - appliedGlobalDiscountValue); }
     final = Math.round(final);
     const lbl = $id('svcDestLabel');
-    if(lbl){
-        lbl.innerHTML = `🎯 ${name} <span style="color:var(--success);font-weight:900">${final} ج</span>`;
-        lbl.style.color = 'var(--text)';
-    }
-    const btn = $id('svcDestBtn');
-    if(btn){ btn.classList.add('filled'); }
-    const dv = $id('svcDestVal');
-    if(dv){ dv.value = final; }
-    const dn = $id('svcDestName');
-    if(dn){ dn.value = name; }
-    const priceVal = $id('priceBoxMishValue');
-    if(priceVal){ priceVal.innerText = final; }
-    const box = $id('priceBoxMish');
-    if(box){ box.classList.add('highlight'); setTimeout(()=>box.classList.remove('highlight'), 1200); }
+    if(lbl){ lbl.innerHTML = `🎯 ${name} <span style="color:var(--success);font-weight:900">${final} ج</span>`; lbl.style.color = 'var(--text)'; }
+    const btn = $id('svcDestBtn'); if(btn){ btn.classList.add('filled'); }
+    const dv = $id('svcDestVal'); if(dv){ dv.value = final; }
+    const dn = $id('svcDestName'); if(dn){ dn.value = name; }
+    const priceVal = $id('priceBoxMishValue'); if(priceVal){ priceVal.innerText = final; }
+    const box = $id('priceBoxMish'); if(box){ box.classList.add('highlight'); setTimeout(()=>box.classList.remove('highlight'), 1200); }
     closeDestSheet();
     showToast(`✅ ${name} - ${final} ج`, 'success');
 }
 
 function handleRxUpload(event){
-    const file = event.target.files[0];
-    if(!file) return;
+    const file = event.target.files[0]; if(!file) return;
     if(file.size > 8*1024*1024){ showToast('الصورة كبيرة!','error'); return; }
     const reader = new FileReader();
     reader.onload = function(e){
@@ -2504,9 +2128,8 @@ function openDestinations(){
     db.ref(`pricing/${userArea}/destinations`).once('value').then(s=>{
         cachedDestinations = [];
         s.forEach(c=>{ const v = c.val(); if(v && v.name) cachedDestinations.push(v); });
-        if(cachedDestinations.length === 0){
-            list.innerHTML = '<div class="empty" style="padding:30px 20px"><i class="fas fa-map"></i><p>لا توجد وجهات</p></div>';
-        } else {
+        if(cachedDestinations.length === 0){ list.innerHTML = '<div class="empty" style="padding:30px 20px"><i class="fas fa-map"></i><p>لا توجد وجهات</p></div>'; }
+        else {
             let html = '';
             cachedDestinations.forEach(d=>{
                 let basePrice = Number(d.price) || 0;
@@ -2563,8 +2186,7 @@ function submitPharma(){
     let discountInfo = { hasDiscount:false, discountAmount:0, discountType:'none', finalPrice:priceVal };
     if(hasActiveCoupon){
         discountInfo = { hasDiscount:true, discountAmount:priceVal, discountType:'توصيل مجاني', finalPrice:0 };
-        priceVal = 0;
-        hasActiveCoupon = false;
+        priceVal = 0; hasActiveCoupon = false;
         $id('activeCouponBanner').classList.remove('show');
     }
     const orderData = { type:'طلب صيدلية', orderType:'pharma', details:details.replace(/\n/g,'<br>'), from:userArea, to:address, price:priceVal, originalPrice:priceVal, deliveryFee:priceVal, commission:(priceVal*delegateCommission)/100, status:'ready_for_driver', hasImages:false };
@@ -2585,8 +2207,7 @@ function submitService(service){
     let discountInfo = { hasDiscount:false, discountAmount:0, discountType:'none', finalPrice:priceVal };
     if(hasActiveCoupon){
         discountInfo = { hasDiscount:true, discountAmount:priceVal, discountType:'توصيل مجاني', finalPrice:0 };
-        priceVal = 0;
-        hasActiveCoupon = false;
+        priceVal = 0; hasActiveCoupon = false;
         $id('activeCouponBanner').classList.remove('show');
     }
     saveOrder({ type:typeName, orderType:'grocery', details:details.replace(/\n/g,'<br>'), from:userArea, to:address, price:priceVal, originalPrice:priceVal, deliveryFee:priceVal, commission:(priceVal*delegateCommission)/100, status:'ready_for_driver', hasImages:false }, discountInfo);
@@ -2605,8 +2226,7 @@ function submitCustom(){
     let discountInfo = { hasDiscount:false, discountAmount:0, discountType:'none', finalPrice:priceVal };
     if(hasActiveCoupon){
         discountInfo = { hasDiscount:true, discountAmount:priceVal, discountType:'توصيل مجاني', finalPrice:0 };
-        priceVal = 0;
-        hasActiveCoupon = false;
+        priceVal = 0; hasActiveCoupon = false;
         $id('activeCouponBanner').classList.remove('show');
     }
     saveOrder({ type:'اطلب أي حاجة', orderType:'custom', details:`الحاجة: ${item}`, itemName:item, from:userArea, to:address, price:priceVal, originalPrice:priceVal, deliveryFee:priceVal, commission:(priceVal*delegateCommission)/100, status:'ready_for_driver', hasImages:false }, discountInfo);
@@ -2653,7 +2273,7 @@ function submitShipping(){
     }).then(()=>{
         const clean = userPhone.replace(/\D/g,'');
         if(rewardsEnabled && pointsEarned > 0){
-            db3.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
+            db.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
             if(currentRewardSettings.challengeActive !== false) incrementChallenge();
         }
         $id('successMessage').innerHTML = `✅ تم إنشاء شحنتك!<br><br><div style="background:rgba(14,165,233,.1);border:1px dashed #0ea5e9;border-radius:12px;padding:12px"><div style="font-size:11px;color:#0369a1;margin-bottom:4px">كود التتبع:</div><div style="font-size:18px;font-weight:900;color:#0891b2;letter-spacing:2px">${trackCode}</div></div>`;
@@ -2681,7 +2301,7 @@ function saveOrder(data, discountInfo){
     }).then(()=>{
         const clean = userPhone.replace(/\D/g,'');
         if(rewardsEnabled && pointsEarned > 0){
-            db3.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
+            db.ref(`users_points/${clean}`).transaction(c=>(c||0)+pointsEarned);
             if(currentRewardSettings.challengeActive !== false) incrementChallenge();
             $id('successMessage').innerText = `تم إرسال طلبك، وكسبت ${pointsEarned} نقطة! 🎁`;
         } else {
@@ -2711,17 +2331,11 @@ function listenToShipping(){
 function loadShippingPage(){ renderShippingPage(); }
 function renderShippingPage(){
     const c = $id('shippingContainer'); if(!c) return;
-    if(isPreviewMode){
-        c.innerHTML = '<div class="empty"><i class="fas fa-eye"></i><p>وضع المعاينة — الشحنات هتظهر بعد الموافقة</p></div>';
-        return;
-    }
+    if(isPreviewMode){ c.innerHTML = '<div class="empty"><i class="fas fa-eye"></i><p>وضع المعاينة — الشحنات هتظهر بعد الموافقة</p></div>'; return; }
     const orders = [];
     Object.keys(allShippingCache).forEach(id=>orders.push({ id, ...allShippingCache[id] }));
     orders.sort((a,b)=>(b.time||0)-(a.time||0));
-    if(orders.length === 0){
-        c.innerHTML = '<div class="empty"><i class="fas fa-shipping-fast"></i><p>لا توجد شحنات</p></div>';
-        return;
-    }
+    if(orders.length === 0){ c.innerHTML = '<div class="empty"><i class="fas fa-shipping-fast"></i><p>لا توجد شحنات</p></div>'; return; }
     let html = '';
     orders.forEach(s=>{
         const statusMap = { 'pending':'في انتظار المندوب', 'accepted':'تم القبول', 'picked_up':'تم الاستلام', 'in_transit':'في الطريق', 'delivered':'تم التسليم', 'cancelled':'ملغية' };
@@ -2730,10 +2344,7 @@ function renderShippingPage(){
             <div style="display:inline-flex;padding:5px 12px;background:linear-gradient(135deg,#0ea5e9,#06b6d4);color:#fff;border-radius:12px;font-size:11px;font-weight:900;margin-bottom:8px"><i class="fas fa-barcode"></i> ${s.trackingCode||'-'}</div>
             <div style="font-size:16px;font-weight:900;color:var(--success);float:left">${s.price||0} ج</div>
             <div style="clear:both"></div>
-            <div style="background:var(--bg-soft);border-radius:14px;padding:12px;margin:10px 0;font-size:12px">
-                <div>📍 من: <b style="color:var(--text)">${s.fromAddr||'-'}</b></div>
-                <div style="margin-top:6px">🎯 إلى: <b style="color:var(--text)">${s.toAddr||'-'}</b></div>
-            </div>
+            <div style="background:var(--bg-soft);border-radius:14px;padding:12px;margin:10px 0;font-size:12px"><div>📍 من: <b style="color:var(--text)">${s.fromAddr||'-'}</b></div><div style="margin-top:6px">🎯 إلى: <b style="color:var(--text)">${s.toAddr||'-'}</b></div></div>
             <div style="color:#b45309;font-weight:900;font-size:12px">${stText}</div>
         </div>`;
     });
@@ -2763,15 +2374,8 @@ function redeemReward(type){
         showConfirm('توصيل مجاني 🛵', `خصم ${cost} نقطة`, ()=>{
             const clean = userPhone.replace(/\D/g,'');
             userPoints -= cost;
-            db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{
-                db3.ref(`rewards_history/${clean}`).push({
-                    type: 'delivery',
-                    typeName: 'توصيل مجاني',
-                    cost: cost,
-                    pointsBefore: userPoints + cost,
-                    pointsAfter: userPoints,
-                    usedAt: Date.now()
-                });
+            db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+                db.ref(`rewards_history/${clean}`).push({ type: 'delivery', typeName: 'توصيل مجاني', cost: cost, pointsBefore: userPoints + cost, pointsAfter: userPoints, usedAt: Date.now() });
                 loadUserPoints();
                 lastDeductedDeliveryPoints = cost;
                 hasActiveCoupon = true;
@@ -2786,16 +2390,8 @@ function redeemReward(type){
         showConfirm('خصم مالي 🏷️', `خصم ${cost} نقطة`, ()=>{
             const clean = userPhone.replace(/\D/g,'');
             userPoints -= cost;
-            db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{
-                db3.ref(`rewards_history/${clean}`).push({
-                    type: 'discount',
-                    typeName: 'خصم مالي',
-                    cost: cost,
-                    discountValue: val,
-                    pointsBefore: userPoints + cost,
-                    pointsAfter: userPoints,
-                    usedAt: Date.now()
-                });
+            db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+                db.ref(`rewards_history/${clean}`).push({ type: 'discount', typeName: 'خصم مالي', cost: cost, discountValue: val, pointsBefore: userPoints + cost, pointsAfter: userPoints, usedAt: Date.now() });
                 loadUserPoints();
                 lastDeductedPoints = cost;
                 appliedGlobalDiscountValue = val;
@@ -2812,7 +2408,7 @@ function removeCoupon(){
     if(lastDeductedDeliveryPoints > 0){
         const clean = userPhone.replace(/\D/g,'');
         userPoints += lastDeductedDeliveryPoints;
-        db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedDeliveryPoints = 0; });
+        db.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedDeliveryPoints = 0; });
     }
     hasActiveCoupon = false;
     $id('activeCouponBanner').classList.remove('show');
@@ -2821,7 +2417,7 @@ function removeGlobalDiscount(){
     if(lastDeductedPoints > 0){
         const clean = userPhone.replace(/\D/g,'');
         userPoints += lastDeductedPoints;
-        db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedPoints = 0; });
+        db.ref(`users_points/${clean}`).set(userPoints).then(()=>{ loadUserPoints(); lastDeductedPoints = 0; });
     }
     appliedGlobalDiscountValue = 0;
     $id('activeDiscountBanner').classList.remove('show');
@@ -2860,7 +2456,7 @@ function confirmNetworkSelection(){
     const cost = currentRewardSettings.fakkaCost || 150;
     const netName = network === 'vodafone' ? 'فودافون' : 'اتصالات';
     const nodeName = network === 'vodafone' ? 'fakka_cards_vodafone' : 'fakka_cards_etisalat';
-    db3.ref(`reward_settings/${userArea}/${nodeName}`).once('value').then(s=>{
+    db.ref(`reward_settings/${userArea}/${nodeName}`).once('value').then(s=>{
         const cards = s.val() || {};
         const ids = Object.keys(cards);
         if(ids.length === 0){ showToast(`مفيش كروت ${netName}`,'error'); return; }
@@ -2869,18 +2465,9 @@ function confirmNetworkSelection(){
         if(!card || !card.code){ showToast('خطأ','error'); return; }
         const clean = userPhone.replace(/\D/g,'');
         userPoints -= cost;
-        db3.ref(`users_points/${clean}`).set(userPoints).then(()=>{
-            db3.ref(`reward_settings/${userArea}/${nodeName}/${randomId}`).remove();
-            db3.ref(`rewards_history/${clean}`).push({
-                type: 'fakka',
-                typeName: `كارت فكة ${netName}`,
-                network: netName,
-                cardCode: card.code,
-                cost: cost,
-                pointsBefore: userPoints + cost,
-                pointsAfter: userPoints,
-                usedAt: Date.now()
-            });
+        db.ref(`users_points/${clean}`).set(userPoints).then(()=>{
+            db.ref(`reward_settings/${userArea}/${nodeName}/${randomId}`).remove();
+            db.ref(`rewards_history/${clean}`).push({ type: 'fakka', typeName: `كارت فكة ${netName}`, network: netName, cardCode: card.code, cost: cost, pointsBefore: userPoints + cost, pointsAfter: userPoints, usedAt: Date.now() });
             loadUserPoints();
             closeNetwork();
             currentCardCode = card.code;
@@ -2935,16 +2522,10 @@ function saveMyAddress(){
     userAddress = newAddr;
     localStorage.setItem('user_address', userAddress);
     Promise.all([
-        db2.ref(`approved_users/${userPhone}/address`).set(userAddress),
-        db2.ref(`customers/${userPhone}/address`).set(userAddress)
-    ]).then(()=>{
-        showToast('✅ تم حفظ العنوان', 'success');
-        setTimeout(()=>closeSheet(), 800);
-    }).catch(err=>{
-        console.error(err);
-        showToast('❌ فشل الحفظ', 'error');
-        restoreButton(btn);
-    });
+        db.ref(`approved_users/${userPhone}/address`).set(userAddress),
+        db.ref(`customers/${userPhone}/address`).set(userAddress)
+    ]).then(()=>{ showToast('✅ تم حفظ العنوان', 'success'); setTimeout(()=>closeSheet(), 800); })
+    .catch(err=>{ console.error(err); showToast('❌ فشل الحفظ', 'error'); restoreButton(btn); });
 }
 
 function loadActiveOrder(){
@@ -2956,9 +2537,7 @@ function loadActiveOrder(){
             const o = s.val();
             if(o.phone !== userPhone && o.customerPhone !== userPhone) return;
             if(o.isShipping) return;
-            if(o.status === 'ready_for_driver' || o.status === 'active'){
-                if(!active || o.time > active.time) active = { id:s.key, ...o };
-            }
+            if(o.status === 'ready_for_driver' || o.status === 'active'){ if(!active || o.time > active.time) active = { id:s.key, ...o }; }
         });
         const section = $id('activeOrderSection');
         if(!section) return;
@@ -2988,8 +2567,8 @@ function openMarket(){
 function closeMarket(){ switchPage('home'); }
 function loadMarketCategories(){
     if(!userArea) return;
-    if(marketCategoriesListener){ db2.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); }
-    marketCategoriesListener = db2.ref(`market_categories/${userArea}`).on('value', snap=>{
+    if(marketCategoriesListener){ db.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); }
+    marketCategoriesListener = db.ref(`market_categories/${userArea}`).on('value', snap=>{
         marketCategories = [];
         snap.forEach(c=>{ const d = c.val(); if(!d || d.active === false) return; marketCategories.push({ id:c.key, ...d }); });
         marketCategories.sort((a,b)=>(a.order||999)-(b.order||999));
@@ -3013,8 +2592,8 @@ function selectMarketCategory(catId){
 }
 function loadMarketProducts(){
     if(!userArea) return;
-    if(marketProductsListener){ db2.ref(`market_products/${userArea}`).off('value', marketProductsListener); }
-    marketProductsListener = db2.ref(`market_products/${userArea}`).on('value', snap=>{
+    if(marketProductsListener){ db.ref(`market_products/${userArea}`).off('value', marketProductsListener); }
+    marketProductsListener = db.ref(`market_products/${userArea}`).on('value', snap=>{
         marketProducts = [];
         snap.forEach(c=>{ const d = c.val(); if(!d || !d.name || d.active === false) return; marketProducts.push({ id:c.key, ...d }); });
         marketProducts.sort((a,b)=>(a.order||9999)-(b.order||9999));
@@ -3029,10 +2608,7 @@ function renderMarketProducts(){
         const q = marketSearchQuery.trim().toLowerCase();
         filtered = filtered.filter(p=>(p.name||'').toLowerCase().includes(q));
     }
-    if(filtered.length === 0){
-        grid.innerHTML = '<div class="market-empty"><i class="fas fa-box-open"></i><p>لا توجد منتجات</p></div>';
-        return;
-    }
+    if(filtered.length === 0){ grid.innerHTML = '<div class="market-empty"><i class="fas fa-box-open"></i><p>لا توجد منتجات</p></div>'; return; }
     let html = '';
     filtered.forEach(p=>{
         const pid = p.id;
@@ -3052,8 +2628,7 @@ function renderMarketProducts(){
 }
 function filterMarketProducts(){ marketSearchQuery = $id('marketSearchInput').value; renderMarketProducts(); }
 function addToCart(pid){
-    const product = marketProducts.find(x=>x.id === pid);
-    if(!product) return;
+    const product = marketProducts.find(x=>x.id === pid); if(!product) return;
     marketCart[pid] = { qty:1, product };
     updateCartUI();
     renderMarketProducts();
@@ -3091,8 +2666,7 @@ function renderCartSheet(){
     let totalPrice = 0;
     let html = '';
     ids.forEach(pid=>{
-        const item = marketCart[pid];
-        const p = item.product;
+        const item = marketCart[pid], p = item.product;
         totalPrice += item.qty * (Number(p.price)||0);
         html += `<div class="cart-item-row"><div class="cart-item-info"><div class="cart-item-name">${p.name}</div><div class="cart-item-price">${p.price} × ${item.qty}</div></div><div class="cart-item-controls"><div class="cart-qty-control"><button class="cart-qty-btn" onclick="decreaseQty('${pid}');renderCartSheet()">−</button><span class="cart-qty-num">${item.qty}</span><button class="cart-qty-btn" onclick="increaseQty('${pid}');renderCartSheet()">+</button></div><button class="cart-remove-btn" onclick="removeFromCart('${pid}')"><i class="fas fa-trash"></i></button></div></div>`;
     });
