@@ -756,7 +756,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════
-// ✅ Firebase واحد فقط (family-4ff2a) - نفس مشروع التحكم
+// 🟢 Firebase #1: family-4ff2a — الطلبات والسائقين والمناطق
 // ═══════════════════════════════════════════════════════════════
 const firebaseConfig = {
     apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4",
@@ -767,9 +767,35 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ✅ أسماء بديلة عشان الكود يشتغل زي ما هو (بدون تعديل كل سطر)
-const db2 = db;  // كان العملاء والمنتجات
-const db3 = db;  // كان النقاط والتسجيلات
+// ═══════════════════════════════════════════════════════════════
+// 🔵 Firebase #2: meshwark-f8b0a — العملاء والمنتجات والمتاجر
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig2 = {
+    apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac",
+    authDomain: "meshwark-f8b0a.firebaseapp.com",
+    databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com",
+    projectId: "meshwark-f8b0a",
+    storageBucket: "meshwark-f8b0a.firebasestorage.app",
+    messagingSenderId: "85412350921",
+    appId: "1:85412350921:web:5a654ccb3753dc1153b618"
+};
+const app2 = firebase.initializeApp(firebaseConfig2, "secondary");
+const db2 = firebase.database(app2);
+
+// ═══════════════════════════════════════════════════════════════
+// 🟣 Firebase #3: meshwark2 — التسجيلات والنقاط والحظر
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig3 = {
+    apiKey: "AIzaSyDNeFKaTiyDzSU_emOtEyLFA3f2J7uhHiE",
+    authDomain: "meshwark2.firebaseapp.com",
+    databaseURL: "https://meshwark2-default-rtdb.firebaseio.com",
+    projectId: "meshwark2",
+    storageBucket: "meshwark2.firebasestorage.app",
+    messagingSenderId: "954116788968",
+    appId: "1:954116788968:web:399fe497edca7cb47cef5d"
+};
+const app3 = firebase.initializeApp(firebaseConfig3, "third");
+const db3 = firebase.database(app3);
 
 const WALLET_NUMBER = "01115699940";
 let WAITING_TIME_MINUTES = 5;
