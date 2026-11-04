@@ -376,7 +376,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
-<body><!-- Splash -->
+<body>
 <div class="splash" id="splashScreen">
     <img src="./logo.png" alt="مشوارك" class="splash-logo">
     <div class="splash-title">مشوارك</div>
@@ -399,7 +399,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </div>
 </div>
 
-<!-- Login -->
 <div class="login-screen" id="loginSection" style="display:none">
     <div class="login-bg-decor"><div class="login-bg-orb orb-1"></div><div class="login-bg-orb orb-2"></div></div>
     <div class="login-card">
@@ -418,10 +417,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
     </div>
 </div>
 
-<!-- Waiting -->
 <div class="waiting-screen" id="waitingSection" style="display:none"><div class="waiting-card" id="waitingCardContent"></div></div>
 
-<!-- Closed -->
 <div class="closed-screen" id="closedScreen">
     <div class="closed-icon">🌙</div>
     <div class="closed-title">الصفحة مقفولة مؤقتاً</div>
@@ -432,14 +429,12 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 
 <div class="cart-toast-notif" id="cartToastNotif"><i class="fas fa-check-circle"></i> أضفت!</div>
 
-<!-- App -->
 <div id="appSection" style="display:none">
     <div class="preview-mode-bar" id="previewModeBar" style="display:none">
         <i class="fas fa-eye"></i> وضع المعاينة — في انتظار موافقة الأدمن
         <button onclick="exitPreviewMode()" style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;margin-right:auto">خروج</button>
     </div>
 
-    <!-- Home -->
     <div class="page active" id="page-home">
         <div class="app-header" id="homeHeader">
             <div class="header-row">
@@ -505,7 +500,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         </div>
     </div>
 
-    <!-- Orders -->
     <div class="page" id="page-orders">
         <div class="app-header" style="padding:16px 20px"><div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">📦</div><div style="font-size:22px;font-weight:900">طلباتي</div></div></div></div>
         <div class="sub-tabs" style="margin-top:15px">
@@ -515,13 +509,11 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         <div id="ordersContainer"></div>
     </div>
 
-    <!-- Shipping -->
     <div class="page" id="page-shipping">
         <div class="app-header" style="padding:16px 20px"><div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">🚚</div><div style="font-size:22px;font-weight:900">طلبات الشحن</div></div></div></div>
         <div id="shippingContainer" style="padding-top:15px"></div>
     </div>
 
-    <!-- Rewards -->
     <div class="page" id="page-rewards">
         <div class="app-header" style="padding:16px 20px"><div class="header-row"><div style="flex:1"><div style="font-size:11px;color:var(--text-muted)">🎁</div><div style="font-size:22px;font-weight:900">المكافآت</div></div></div></div>
         <div style="margin:18px 20px 15px;padding:14px 18px;border-radius:18px;background:linear-gradient(135deg,#8b5cf6 0,#06b6d4 100%);display:flex;align-items:center;gap:12px;box-shadow:0 10px 25px rgba(139,92,246,.3)">
@@ -557,7 +549,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         </div>
     </div>
 
-    <!-- Profile -->
     <div class="page" id="page-profile">
         <div class="app-header" style="padding:16px 20px">
             <div class="header-row">
@@ -582,7 +573,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         </div>
     </div>
 
-    <!-- Market -->
     <div class="page" id="page-market">
         <div class="market-header">
             <div class="market-header-top">
@@ -607,7 +597,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         <button class="nav-btn" id="nav-shipping" data-color="shipping" onclick="switchPage('shipping')"><i class="fas fa-shipping-fast"></i><span>الشحن</span></button>
         <button class="nav-btn" id="nav-rewards" data-color="rewards" onclick="switchPage('rewards')"><i class="fas fa-gift"></i><span>المكافآت</span></button>
     </nav>
-</div><!-- Sheets & Modals -->
+</div>
+
 <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
 <div class="bottom-sheet" id="serviceSheet">
     <div class="sheet-handle"></div>
@@ -732,17 +723,34 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
-// 🚀 التعديل السحري (كسر الكاش - عشان نضمن إن البيانات تروح للفايربيس الصح)
-const firebaseConfig = { apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4", authDomain: "family-4ff2a.firebaseapp.com", databaseURL: "https://family-4ff2a-default-rtdb.firebaseio.com", projectId: "family-4ff2a" };
-const app1 = firebase.initializeApp(firebaseConfig, "main_app_v2");
-const db = firebase.database(app1);
+// ═══════════════════════════════════════════════════════════════
+// 🟢 Firebase #1: family-4ff2a
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig = {
+    apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4",
+    authDomain: "family-4ff2a.firebaseapp.com",
+    databaseURL: "https://family-4ff2a-default-rtdb.firebaseio.com",
+    projectId: "family-4ff2a"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-const firebaseConfig2 = { apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac", authDomain: "meshwark-f8b0a.firebaseapp.com", databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com", projectId: "meshwark-f8b0a" };
-const app2 = firebase.initializeApp(firebaseConfig2, "secondary_v2_" + Date.now()); 
+// ═══════════════════════════════════════════════════════════════
+// 🔵 Firebase #2: meshwark-f8b0a
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig2 = {
+    apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac",
+    authDomain: "meshwark-f8b0a.firebaseapp.com",
+    databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com",
+    projectId: "meshwark-f8b0a",
+    storageBucket: "meshwark-f8b0a.firebasestorage.app",
+    messagingSenderId: "85412350921",
+    appId: "1:85412350921:web:5a654ccb3753dc1153b618"
+};
+const app2 = firebase.initializeApp(firebaseConfig2, "secondary_" + Date.now());
 const db2 = firebase.database(app2);
-
-const db3 = db; // بنخلي db3 يشاور على فايربيس 1 بدل التالت الملغي
-</script><script>
+</script>
+<script>
 const WALLET_NUMBER = "01115699940";
 let WAITING_TIME_MINUTES = 5;
 let AUTO_APPROVAL_ENABLED = true;
