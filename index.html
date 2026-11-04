@@ -5,27 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>مشوارك | خدمات ذكية</title>
 <meta name="theme-color" content="#8b5cf6">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="مشوارك">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="./logo.png">
-<link rel="icon" type="image/png" href="./logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-/* نفس الـ CSS الأصلي بالظبط — منسوخ كما هو */
-:root{
-  --primary:#8b5cf6;--primary-dark:#7c3aed;--primary-glow:rgba(139,92,246,.35);
-  --secondary:#06b6d4;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--pink:#ec4899;
-  --bg-main:#f8fafc;--bg-soft:#f1f5f9;--card:#ffffff;--border:#e2e8f0;
-  --border-active:rgba(139,92,246,.4);--text:#1e293b;--text-soft:#475569;
-  --text-muted:#64748b;--text-dim:#94a3b8;
-  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
-  --shadow-md:0 4px 12px rgba(0,0,0,.08);
-  --shadow-lg:0 10px 30px rgba(0,0,0,.1);
-}
+:root{--primary:#8b5cf6;--primary-dark:#7c3aed;--primary-glow:rgba(139,92,246,.35);--secondary:#06b6d4;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--pink:#ec4899;--bg-main:#f8fafc;--bg-soft:#f1f5f9;--card:#ffffff;--border:#e2e8f0;--border-active:rgba(139,92,246,.4);--text:#1e293b;--text-soft:#475569;--text-muted:#64748b;--text-dim:#94a3b8;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 10px 30px rgba(0,0,0,.1)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow-x:hidden}
 body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom:120px}
@@ -392,11 +376,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
-<body>
-
-<!-- كل الـ HTML زي ما هو بالظبط — أنسخ من كودك الأصلي -->
-
-<!-- Splash -->
+<body><!-- Splash -->
 <div class="splash" id="splashScreen">
     <img src="./logo.png" alt="مشوارك" class="splash-logo">
     <div class="splash-title">مشوارك</div>
@@ -627,9 +607,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         <button class="nav-btn" id="nav-shipping" data-color="shipping" onclick="switchPage('shipping')"><i class="fas fa-shipping-fast"></i><span>الشحن</span></button>
         <button class="nav-btn" id="nav-rewards" data-color="rewards" onclick="switchPage('rewards')"><i class="fas fa-gift"></i><span>المكافآت</span></button>
     </nav>
-</div>
-
-<!-- Sheets & Modals -->
+</div><!-- Sheets & Modals -->
 <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
 <div class="bottom-sheet" id="serviceSheet">
     <div class="sheet-handle"></div>
@@ -751,52 +729,20 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 
 <div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMessage">رسالة</span></div>
 
-<!-- ✅ Firebase واحد فقط -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
-// ═══════════════════════════════════════════════════════════════
-// 🟢 Firebase #1: family-4ff2a — الطلبات والسائقين والمناطق
-// ═══════════════════════════════════════════════════════════════
-const firebaseConfig = {
-    apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4",
-    authDomain: "family-4ff2a.firebaseapp.com",
-    databaseURL: "https://family-4ff2a-default-rtdb.firebaseio.com",
-    projectId: "family-4ff2a"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// 🚀 التعديل السحري (كسر الكاش - عشان نضمن إن البيانات تروح للفايربيس الصح)
+const firebaseConfig = { apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4", authDomain: "family-4ff2a.firebaseapp.com", databaseURL: "https://family-4ff2a-default-rtdb.firebaseio.com", projectId: "family-4ff2a" };
+const app1 = firebase.initializeApp(firebaseConfig, "main_app_v2");
+const db = firebase.database(app1);
 
-// ═══════════════════════════════════════════════════════════════
-// 🔵 Firebase #2: meshwark-f8b0a — العملاء والمنتجات والمتاجر
-// ═══════════════════════════════════════════════════════════════
-const firebaseConfig2 = {
-    apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac",
-    authDomain: "meshwark-f8b0a.firebaseapp.com",
-    databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com",
-    projectId: "meshwark-f8b0a",
-    storageBucket: "meshwark-f8b0a.firebasestorage.app",
-    messagingSenderId: "85412350921",
-    appId: "1:85412350921:web:5a654ccb3753dc1153b618"
-};
-const app2 = firebase.initializeApp(firebaseConfig2, "secondary");
+const firebaseConfig2 = { apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac", authDomain: "meshwark-f8b0a.firebaseapp.com", databaseURL: "https://meshwark-f8b0a-default-rtdb.firebaseio.com", projectId: "meshwark-f8b0a" };
+const app2 = firebase.initializeApp(firebaseConfig2, "secondary_v2_" + Date.now()); 
 const db2 = firebase.database(app2);
 
-// ═══════════════════════════════════════════════════════════════
-// 🟣 Firebase #3: meshwark2 — التسجيلات والنقاط والحظر
-// ═══════════════════════════════════════════════════════════════
-const firebaseConfig3 = {
-    apiKey: "AIzaSyDNeFKaTiyDzSU_emOtEyLFA3f2J7uhHiE",
-    authDomain: "meshwark2.firebaseapp.com",
-    databaseURL: "https://meshwark2-default-rtdb.firebaseio.com",
-    projectId: "meshwark2",
-    storageBucket: "meshwark2.firebasestorage.app",
-    messagingSenderId: "954116788968",
-    appId: "1:954116788968:web:399fe497edca7cb47cef5d"
-};
-const app3 = firebase.initializeApp(firebaseConfig3, "third");
-const db3 = firebase.database(app3);
-
+const db3 = db; // بنخلي db3 يشاور على فايربيس 1 بدل التالت الملغي
+</script><script>
 const WALLET_NUMBER = "01115699940";
 let WAITING_TIME_MINUTES = 5;
 let AUTO_APPROVAL_ENABLED = true;
