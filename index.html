@@ -831,6 +831,9 @@ let socialSettings = { whatsappEnabled:true, whatsappNumber:'', facebookEnabled:
 let socialListener = null;
 let supportWhatsappListener = null;
 
+// Auto-save للعنوان
+let addressAutoSaveTimer = null;
+
 function $id(id){ return document.getElementById(id); }
 function setButtonLoading(btn, text){
     if(!btn) return;
@@ -875,6 +878,7 @@ function cleanAllListeners(){
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
     if(socialListener){ db.ref('settings/social').off('value', socialListener); socialListener = null; }
     if(supportWhatsappListener){ db.ref('settings/support/whatsapp').off('value', supportWhatsappListener); supportWhatsappListener = null; }
+    if(addressAutoSaveTimer){ clearTimeout(addressAutoSaveTimer); addressAutoSaveTimer = null; }
     db.ref('areas').off();
     db.ref('reward_settings').off();
     if(userArea){
@@ -946,8 +950,22 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 }
 
+// ═══════════════════════════════════════════════════════════════
+// Open/Close Sheets
+// ═══════════════════════════════════════════════════════════════
 function openSheet(id){ const s=$id(id); const o=$id(id+'Overlay'); if(s) s.classList.add('show'); if(o) o.classList.add('show'); }
-function closeSheet(){ const s=$id('serviceSheet'); const o=$id('sheetOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
+
+function closeSheet(){
+    // ✅ لو فيه حفظ معلق للعنوان، نفّذه قبل الإغلاق
+    if(addressAutoSaveTimer){
+        clearTimeout(addressAutoSaveTimer);
+        addressAutoSaveTimer = null;
+        try { autoSaveAddress(); } catch(e){}
+    }
+    const s=$id('serviceSheet'); const o=$id('sheetOverlay');
+    if(s) s.classList.remove('show');
+    if(o) o.classList.remove('show');
+}
 function closeDestSheet(){ const s=$id('destSheet'); const o=$id('destSheetOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
 function closeSuccess(){ const s=$id('successSheet'); const o=$id('successOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
 function closeAreaPicker(){ const s=$id('areaSheet'); const o=$id('areaSheetOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
@@ -2684,7 +2702,7 @@ function openSettings(){
 function changeAreaFromSettings(){ closeSettings(); setTimeout(()=>openAreaPicker(), 400); }
 
 // ═══════════════════════════════════════════════════════════════
-// Address Editor مع إمكانية تعديل المنطقة
+// Address Editor — Auto-save (مفيش زر حفظ)
 // ═══════════════════════════════════════════════════════════════
 function openAddressEditor(){
     if(previewBlockedAction()) return;
@@ -2697,9 +2715,13 @@ function openAddressEditor(){
         icon.style.background = 'linear-gradient(135deg,#10b981,#059669)';
         icon.innerHTML = '<i class="fas fa-home"></i>';
         title.innerText = '🏠 عنواني';
-        sub.innerText = 'العنوان الافتراضي للتوصيل';
+        sub.innerText = 'بيتحفظ تلقائياً';
+
         body.innerHTML = `
-            <div class="info-card">💡 <b>ده عنوانك الافتراضي</b> اللي هيظهر في كل طلباتك. تقدر تغير المنطقة والعنوان في أي وقت.</div>
+            <div class="info-card" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)">
+                <i class="fas fa-magic" style="color:#059669"></i> <b>حفظ تلقائي:</b> أي تغيير بتعمله بيتحفظ لوحده — مش محتاج تدوس على أي زر
+            </div>
+
             <div class="field">
                 <label class="field-label"><i class="fas fa-map-marker-alt"></i> المنطقة</label>
                 <button type="button" class="destination-btn" id="editAreaBtn" onclick="openAreaPickerForEdit()">
@@ -2707,17 +2729,25 @@ function openAddressEditor(){
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <input type="hidden" id="editAreaValue" value="${userArea || ''}">
-                <div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px">
-                    <i class="fas fa-info-circle"></i> لو غيّرت المنطقة، هيتم تحديث كل طلباتك وسجلاتك تلقائياً
+            </div>
+
+            <div class="field">
+                <label class="field-label">
+                    <i class="fas fa-home"></i> العنوان بالتفصيل
+                    <span id="addressSaveStatus" style="margin-right:auto;font-size:10.5px;font-weight:700;color:var(--text-muted);display:flex;align-items:center;gap:4px">
+                        <i class="fas fa-check-circle" style="color:#94a3b8;font-size:10px"></i>
+                        <span>جاهز</span>
+                    </span>
+                </label>
+                <textarea id="editAddressInput" placeholder="الشارع، رقم العمارة، الدور، علامة مميزة..." style="min-height:100px" oninput="onAddressInputChange()">${userAddress||''}</textarea>
+            </div>
+
+            <div style="text-align:center;padding:14px 0 4px">
+                <div style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:6px">
+                    <i class="fas fa-shield-alt" style="color:#10b981"></i>
+                    بياناتك بتتحفظ تلقائياً في مكان آمن
                 </div>
             </div>
-            <div class="field">
-                <label class="field-label"><i class="fas fa-home"></i> العنوان بالتفصيل</label>
-                <textarea id="editAddressInput" placeholder="الشارع، رقم العمارة، الدور، علامة مميزة..." style="min-height:100px">${userAddress||''}</textarea>
-            </div>
-            <button class="btn-main" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="saveMyAddressAndArea()">
-                <i class="fas fa-save"></i> حفظ
-            </button>
         `;
         openSheet('serviceSheet');
     }, 400);
@@ -2742,7 +2772,7 @@ function openAreaPickerForEdit(){
     $id('areaSheetOverlay').classList.add('show');
 }
 
-// اختيار منطقة من داخل شاشة تعديل العنوان
+// اختيار منطقة → حفظ فوري
 function selectAreaForEdit(area){
     const label = $id('editAreaLabel');
     const val = $id('editAreaValue');
@@ -2751,75 +2781,42 @@ function selectAreaForEdit(area){
     if(val) val.value = area;
     if(btn) btn.classList.add('filled');
     closeAreaPicker();
-    showToast('✅ تم اختيار: ' + area, 'success');
-}
 
-// حفظ العنوان + المنطقة معاً
-function saveMyAddressAndArea(){
-    const input = $id('editAddressInput');
-    if(!input) return;
-    const newAddr = input.value.trim();
-    const newArea = ($id('editAreaValue')||{}).value || userArea;
-    if(!newAddr || newAddr.length < 5){ showToast('اكتب عنوان صحيح (5 أحرف على الأقل)','error'); return; }
-    if(!newArea){ showToast('اختر منطقتك','error'); return; }
-
-    const btn = document.querySelector('#serviceSheet .btn-main');
-    setButtonLoading(btn, 'جاري الحفظ...');
-
+    // ✅ حفظ فوري للمنطقة
     const oldArea = userArea;
-    const areaChanged = (newArea !== oldArea);
-
-    userArea = newArea;
-    userAddress = newAddr;
+    const areaChanged = (area !== oldArea);
+    userArea = area;
     localStorage.setItem('user_area', userArea);
-    localStorage.setItem('user_address', userAddress);
 
     // تحديث الواجهة
     if($id('displayArea')) $id('displayArea').innerText = userArea;
     if($id('profileArea')) $id('profileArea').innerText = userArea;
     if($id('settingsAreaName')) $id('settingsAreaName').innerText = userArea;
-    if($id('settingsAddressName')) $id('settingsAddressName').innerText = userAddress.length > 30 ? userAddress.substring(0,30)+'...' : userAddress;
 
+    // حفظ في Firebase فوراً
     const clean = userPhone.replace(/\D/g,'');
+    const currentAddr = ($id('editAddressInput')||{}).value?.trim() || userAddress || '';
 
     Promise.all([
-        // ✅ حفظ في db2
-        db2.ref(`approved_users/${clean}`).update({
-            address: userAddress,
-            area: userArea
-        }),
-        db2.ref(`customers/${clean}`).update({
-            address: userAddress,
-            area: userArea
-        }),
-        // ✅ حفظ في db1 (احتياطي)
-        db.ref(`approved_users/${clean}`).update({
-            address: userAddress,
-            area: userArea
-        }).catch(()=>{}),
-        db.ref(`customers/${clean}`).update({
-            address: userAddress,
-            area: userArea
-        }).catch(()=>{}),
-        // ✅ تحديث كل سجلات pending_registrations
+        db2.ref(`approved_users/${clean}`).update({ area: userArea, address: currentAddr }),
+        db2.ref(`customers/${clean}`).update({ area: userArea, address: currentAddr }),
+        db.ref(`approved_users/${clean}`).update({ area: userArea, address: currentAddr }).catch(()=>{}),
+        db.ref(`customers/${clean}`).update({ area: userArea, address: currentAddr }).catch(()=>{}),
         db.ref('pending_registrations').orderByChild('phone').equalTo(clean).once('value').then(snap=>{
             const ps = [];
             snap.forEach(c=>{
-                const patch = { address: userAddress };
-                if(areaChanged){
-                    patch.area = userArea;
-                    patch.areaUpdatedAt = Date.now();
-                    patch.areaUpdatedBy = 'customer';
-                }
-                ps.push(db.ref(`pending_registrations/${c.key}`).update(patch).catch(()=>{}));
+                ps.push(db.ref(`pending_registrations/${c.key}`).update({
+                    area: userArea,
+                    address: currentAddr,
+                    areaUpdatedAt: Date.now(),
+                    areaUpdatedBy: 'customer'
+                }).catch(()=>{}));
             });
             return Promise.all(ps);
         }).catch(()=>{})
     ]).then(()=>{
-        showToast('✅ تم حفظ العنوان' + (areaChanged ? ' والمنطقة' : ''), 'success');
-        setTimeout(()=>closeSheet(), 900);
-
-        // لو المنطقة اتغيرت → أعد تحميل كل الإعدادات المرتبطة بالمنطقة
+        showToast(`✅ تم حفظ: ${area}`, 'success');
+        // لو المنطقة اتغيرت → أعد تحميل الإعدادات المرتبطة
         if(areaChanged){
             setTimeout(()=>{
                 resetMarketData();
@@ -2835,13 +2832,81 @@ function saveMyAddressAndArea(){
                 listenToUserNotifications();
                 listenToCustomerDataChanges();
                 loadSocialSettings();
-                showToast('🔄 تم تحديث الخدمات للمنطقة الجديدة', 'info');
-            }, 800);
+            }, 500);
         }
     }).catch(err=>{
-        console.error(err);
+        console.error('save area error:', err);
         showToast('❌ فشل الحفظ', 'error');
-        restoreButton(btn);
+    });
+}
+
+// حفظ تلقائي للعنوان مع debounce
+function onAddressInputChange(){
+    const statusEl = $id('addressSaveStatus');
+    if(statusEl){
+        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color:#f59e0b;font-size:10px"></i><span style="color:#f59e0b">بيتحفظ...</span>';
+    }
+    if(addressAutoSaveTimer) clearTimeout(addressAutoSaveTimer);
+    addressAutoSaveTimer = setTimeout(()=>{
+        autoSaveAddress();
+    }, 1200);
+}
+
+// الدالة الفعلية للحفظ التلقائي للعنوان
+function autoSaveAddress(){
+    const input = $id('editAddressInput');
+    if(!input) return;
+    const newAddr = input.value.trim();
+
+    // لو أقل من 3 أحرف → ما نتحفظش
+    if(newAddr.length < 3){
+        const statusEl = $id('addressSaveStatus');
+        if(statusEl){
+            statusEl.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#f59e0b;font-size:10px"></i><span style="color:#f59e0b">قصير جداً</span>';
+        }
+        return;
+    }
+
+    // لو نفس العنوان الحالي → ما نعملش write
+    if(newAddr === userAddress){
+        const statusEl = $id('addressSaveStatus');
+        if(statusEl){
+            statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;font-size:10px"></i><span style="color:#10b981">محفوظ</span>';
+        }
+        return;
+    }
+
+    userAddress = newAddr;
+    localStorage.setItem('user_address', userAddress);
+
+    // تحديث الواجهة
+    if($id('settingsAddressName')) $id('settingsAddressName').innerText = userAddress.length > 30 ? userAddress.substring(0,30)+'...' : userAddress;
+
+    const clean = userPhone.replace(/\D/g,'');
+
+    Promise.all([
+        db2.ref(`approved_users/${clean}`).update({ address: userAddress }),
+        db2.ref(`customers/${clean}`).update({ address: userAddress }),
+        db.ref(`approved_users/${clean}`).update({ address: userAddress }).catch(()=>{}),
+        db.ref(`customers/${clean}`).update({ address: userAddress }).catch(()=>{}),
+        db.ref('pending_registrations').orderByChild('phone').equalTo(clean).once('value').then(snap=>{
+            const ps = [];
+            snap.forEach(c=>{
+                ps.push(db.ref(`pending_registrations/${c.key}/address`).set(userAddress).catch(()=>{}));
+            });
+            return Promise.all(ps);
+        }).catch(()=>{})
+    ]).then(()=>{
+        const statusEl = $id('addressSaveStatus');
+        if(statusEl){
+            statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;font-size:10px"></i><span style="color:#10b981">تم الحفظ ✓</span>';
+        }
+    }).catch(err=>{
+        console.error('autoSaveAddress error:', err);
+        const statusEl = $id('addressSaveStatus');
+        if(statusEl){
+            statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:#ef4444;font-size:10px"></i><span style="color:#ef4444">فشل الحفظ</span>';
+        }
     });
 }
 
