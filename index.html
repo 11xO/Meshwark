@@ -373,9 +373,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .addr-picker-btn:disabled{opacity:.4;cursor:not-allowed}
 .preview-mode-bar{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:10px 16px;text-align:center;font-size:12.5px;font-weight:900;z-index:99997;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(245,158,11,.35)}
 
-/* ═══════════════════════════════════════════════════════════════
-   Social Contact
-   ═══════════════════════════════════════════════════════════════ */
+/* Social Contact */
 .social-contact-card{margin:0 20px 20px;background:linear-gradient(160deg,rgba(37,211,102,.08),rgba(24,119,242,.06));border:1px solid rgba(37,211,102,.25);border-radius:22px;padding:18px 18px 20px;box-shadow:var(--shadow-sm)}
 .social-contact-title{font-size:14px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .social-contact-title i{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#25D366,#1877F2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0}
@@ -832,7 +830,6 @@ let marketProductsListener = null;
 let socialSettings = { whatsappEnabled:true, whatsappNumber:'', facebookEnabled:true, facebookUrl:'' };
 let socialListener = null;
 let supportWhatsappListener = null;
-let socialInSettingsListener = null;
 
 function $id(id){ return document.getElementById(id); }
 function setButtonLoading(btn, text){
@@ -878,7 +875,6 @@ function cleanAllListeners(){
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
     if(socialListener){ db.ref('settings/social').off('value', socialListener); socialListener = null; }
     if(supportWhatsappListener){ db.ref('settings/support/whatsapp').off('value', supportWhatsappListener); supportWhatsappListener = null; }
-    if(socialInSettingsListener){ db.ref('settings/social').off('value', socialInSettingsListener); socialInSettingsListener = null; }
     db.ref('areas').off();
     db.ref('reward_settings').off();
     if(userArea){
@@ -1081,7 +1077,7 @@ function startApp(){
     listenToSuspensionStatus();
     listenToUserNotifications();
     listenToCustomerDataChanges();
-    loadSocialSettings();  // ✅ Social
+    loadSocialSettings();
     setTimeout(processInviteReward, 2000);
 }
 
@@ -2686,6 +2682,10 @@ function openSettings(){
     openSheet('settingsSheet');
 }
 function changeAreaFromSettings(){ closeSettings(); setTimeout(()=>openAreaPicker(), 400); }
+
+// ═══════════════════════════════════════════════════════════════
+// Address Editor مع إمكانية تعديل المنطقة
+// ═══════════════════════════════════════════════════════════════
 function openAddressEditor(){
     if(previewBlockedAction()) return;
     closeSettings();
@@ -2699,39 +2699,145 @@ function openAddressEditor(){
         title.innerText = '🏠 عنواني';
         sub.innerText = 'العنوان الافتراضي للتوصيل';
         body.innerHTML = `
-            <div class="info-card">💡 <b>ده عنوانك الافتراضي</b> اللي هيظهر في كل طلباتك. تقدر تغيره في أي وقت.</div>
-            <div class="field"><label class="field-label"><i class="fas fa-map-marker-alt"></i> المنطقة</label><input type="text" value="${userArea||''}" readonly style="opacity:.7"></div>
-            <div class="field"><label class="field-label"><i class="fas fa-home"></i> العنوان بالتفصيل</label><textarea id="editAddressInput" placeholder="الشارع، رقم العمارة، الدور، علامة مميزة..." style="min-height:100px">${userAddress||''}</textarea></div>
-            <button class="btn-main" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="saveMyAddress()"><i class="fas fa-save"></i> حفظ العنوان</button>
+            <div class="info-card">💡 <b>ده عنوانك الافتراضي</b> اللي هيظهر في كل طلباتك. تقدر تغير المنطقة والعنوان في أي وقت.</div>
+            <div class="field">
+                <label class="field-label"><i class="fas fa-map-marker-alt"></i> المنطقة</label>
+                <button type="button" class="destination-btn" id="editAreaBtn" onclick="openAreaPickerForEdit()">
+                    <span id="editAreaLabel">📍 ${userArea || 'اختر منطقتك...'}</span>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <input type="hidden" id="editAreaValue" value="${userArea || ''}">
+                <div style="font-size:10.5px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px">
+                    <i class="fas fa-info-circle"></i> لو غيّرت المنطقة، هيتم تحديث كل طلباتك وسجلاتك تلقائياً
+                </div>
+            </div>
+            <div class="field">
+                <label class="field-label"><i class="fas fa-home"></i> العنوان بالتفصيل</label>
+                <textarea id="editAddressInput" placeholder="الشارع، رقم العمارة، الدور، علامة مميزة..." style="min-height:100px">${userAddress||''}</textarea>
+            </div>
+            <button class="btn-main" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="saveMyAddressAndArea()">
+                <i class="fas fa-save"></i> حفظ
+            </button>
         `;
         openSheet('serviceSheet');
     }, 400);
 }
-function saveMyAddress(){
+
+// فتح شاشة اختيار المنطقة من داخل تعديل العنوان
+function openAreaPickerForEdit(){
+    const list = $id('areasListContainer');
+    if(!list) return;
+    const currentSelected = ($id('editAreaValue')||{}).value || userArea || '';
+    if(cachedAreas.length === 0){
+        list.innerHTML = '<div class="empty" style="padding:30px 20px"><i class="fas fa-map"></i><p>لا توجد مناطق</p></div>';
+    } else {
+        let html = '';
+        cachedAreas.forEach(a=>{
+            const isSel = (a === currentSelected);
+            html += `<div class="dest-option area-option" onclick="selectAreaForEdit('${a.replace(/'/g,"\\'")}')" style="${isSel?'border-color:var(--primary);background:rgba(139,92,246,.1)':''}"><i class="fas fa-map-marker-alt"></i><span class="name" style="flex:1">${a}</span>${isSel?'<i class="fas fa-check-circle" style="color:var(--success)"></i>':''}</div>`;
+        });
+        list.innerHTML = html;
+    }
+    $id('areaSheet').classList.add('show');
+    $id('areaSheetOverlay').classList.add('show');
+}
+
+// اختيار منطقة من داخل شاشة تعديل العنوان
+function selectAreaForEdit(area){
+    const label = $id('editAreaLabel');
+    const val = $id('editAreaValue');
+    const btn = $id('editAreaBtn');
+    if(label) label.innerText = '📍 ' + area;
+    if(val) val.value = area;
+    if(btn) btn.classList.add('filled');
+    closeAreaPicker();
+    showToast('✅ تم اختيار: ' + area, 'success');
+}
+
+// حفظ العنوان + المنطقة معاً
+function saveMyAddressAndArea(){
     const input = $id('editAddressInput');
     if(!input) return;
     const newAddr = input.value.trim();
+    const newArea = ($id('editAreaValue')||{}).value || userArea;
     if(!newAddr || newAddr.length < 5){ showToast('اكتب عنوان صحيح (5 أحرف على الأقل)','error'); return; }
+    if(!newArea){ showToast('اختر منطقتك','error'); return; }
+
     const btn = document.querySelector('#serviceSheet .btn-main');
     setButtonLoading(btn, 'جاري الحفظ...');
+
+    const oldArea = userArea;
+    const areaChanged = (newArea !== oldArea);
+
+    userArea = newArea;
     userAddress = newAddr;
+    localStorage.setItem('user_area', userArea);
     localStorage.setItem('user_address', userAddress);
+
+    // تحديث الواجهة
+    if($id('displayArea')) $id('displayArea').innerText = userArea;
+    if($id('profileArea')) $id('profileArea').innerText = userArea;
+    if($id('settingsAreaName')) $id('settingsAreaName').innerText = userArea;
+    if($id('settingsAddressName')) $id('settingsAddressName').innerText = userAddress.length > 30 ? userAddress.substring(0,30)+'...' : userAddress;
+
     const clean = userPhone.replace(/\D/g,'');
+
     Promise.all([
-        db2.ref(`approved_users/${clean}/address`).set(userAddress),
-        db2.ref(`customers/${clean}/address`).set(userAddress),
-        db.ref(`approved_users/${clean}/address`).set(userAddress).catch(()=>{}),
-        db.ref(`customers/${clean}/address`).set(userAddress).catch(()=>{}),
+        // ✅ حفظ في db2
+        db2.ref(`approved_users/${clean}`).update({
+            address: userAddress,
+            area: userArea
+        }),
+        db2.ref(`customers/${clean}`).update({
+            address: userAddress,
+            area: userArea
+        }),
+        // ✅ حفظ في db1 (احتياطي)
+        db.ref(`approved_users/${clean}`).update({
+            address: userAddress,
+            area: userArea
+        }).catch(()=>{}),
+        db.ref(`customers/${clean}`).update({
+            address: userAddress,
+            area: userArea
+        }).catch(()=>{}),
+        // ✅ تحديث كل سجلات pending_registrations
         db.ref('pending_registrations').orderByChild('phone').equalTo(clean).once('value').then(snap=>{
             const ps = [];
             snap.forEach(c=>{
-                ps.push(db.ref(`pending_registrations/${c.key}/address`).set(userAddress).catch(()=>{}));
+                const patch = { address: userAddress };
+                if(areaChanged){
+                    patch.area = userArea;
+                    patch.areaUpdatedAt = Date.now();
+                    patch.areaUpdatedBy = 'customer';
+                }
+                ps.push(db.ref(`pending_registrations/${c.key}`).update(patch).catch(()=>{}));
             });
             return Promise.all(ps);
         }).catch(()=>{})
     ]).then(()=>{
-        showToast('✅ تم حفظ العنوان', 'success');
-        setTimeout(()=>closeSheet(), 800);
+        showToast('✅ تم حفظ العنوان' + (areaChanged ? ' والمنطقة' : ''), 'success');
+        setTimeout(()=>closeSheet(), 900);
+
+        // لو المنطقة اتغيرت → أعد تحميل كل الإعدادات المرتبطة بالمنطقة
+        if(areaChanged){
+            setTimeout(()=>{
+                resetMarketData();
+                cleanAllListeners();
+                syncPricing();
+                listenToServiceVisibility();
+                listenToCustomServices();
+                listenToShops();
+                listenToShippingSettings();
+                loadRewardSettings();
+                listenToForceLogout();
+                listenToSuspensionStatus();
+                listenToUserNotifications();
+                listenToCustomerDataChanges();
+                loadSocialSettings();
+                showToast('🔄 تم تحديث الخدمات للمنطقة الجديدة', 'info');
+            }, 800);
+        }
     }).catch(err=>{
         console.error(err);
         showToast('❌ فشل الحفظ', 'error');
