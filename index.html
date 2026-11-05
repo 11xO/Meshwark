@@ -747,7 +747,9 @@ const firebaseConfig2 = {
     messagingSenderId: "85412350921",
     appId: "1:85412350921:web:5a654ccb3753dc1153b618"
 };
-const app2 = firebase.initializeApp(firebaseConfig2, "secondary_" + Date.now());
+let app2;
+try { app2 = firebase.app("secondary"); }
+catch(e){ app2 = firebase.initializeApp(firebaseConfig2, "secondary"); }
 const db2 = firebase.database(app2);
 </script>
 <script>
@@ -832,10 +834,10 @@ function cleanAllListeners(){
     if(marketCategoriesListener && userArea){ db.ref(`market_categories/${userArea}`).off('value', marketCategoriesListener); marketCategoriesListener = null; }
     if(marketProductsListener && userArea){ db.ref(`market_products/${userArea}`).off('value', marketProductsListener); marketProductsListener = null; }
     if(previewCheckInterval){ clearInterval(previewCheckInterval); previewCheckInterval = null; }
-    if(forceLogoutListener && userPhone){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
-    if(suspensionListener && userPhone){ db.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
+    if(forceLogoutListener && userPhone){ db2.ref('customers/'+userPhone).off('value', forceLogoutListener); forceLogoutListener = null; }
+    if(suspensionListener && userPhone){ db2.ref('customers/'+userPhone).off('value', suspensionListener); suspensionListener = null; }
     if(notificationsListener && userPhone){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
-    if(customerDataListener && userPhone){ db.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
+    if(customerDataListener && userPhone){ db2.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
     db.ref('areas').off();
     db.ref('reward_settings').off();
@@ -870,9 +872,12 @@ function fireConfetti(){
         setTimeout(()=>c.remove(), 4000);
     }
 }
-const cS = document.createElement('style');
-cS.textContent = '@keyframes confettiFall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}';
-document.head.appendChild(cS);
+if(!document.getElementById('confettiFallStyle')){
+    const cS = document.createElement('style');
+    cS.id = 'confettiFallStyle';
+    cS.textContent = '@keyframes confettiFall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}';
+    document.head.appendChild(cS);
+}
 
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -911,7 +916,6 @@ function closeSheet(){ const s=$id('serviceSheet'); const o=$id('sheetOverlay');
 function closeDestSheet(){ const s=$id('destSheet'); const o=$id('destSheetOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
 function closeSuccess(){ const s=$id('successSheet'); const o=$id('successOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
 function closeAreaPicker(){ const s=$id('areaSheet'); const o=$id('areaSheetOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
-function closeTracking(){ const s=$id('trackingModal'); const o=$id('trackingOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
 function closeNetwork(){ const s=$id('networkSheet'); const o=$id('networkOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); selectedFakkaNetwork=null; resetNetworkButtons(); }
 function closeCardModal(){ const s=$id('cardSheet'); const o=$id('cardOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
 function closeSettings(){ const s=$id('settingsSheet'); const o=$id('settingsOverlay'); if(s) s.classList.remove('show'); if(o) o.classList.remove('show'); }
@@ -939,12 +943,14 @@ setTimeout(()=>{
     if(sN && sP && sA){
         userName = sN; userPhone = sP; userArea = sA;
         userAddress = sAddr || '';
-        if(!userAddress && userPhone){
-            db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
+        const clean = sP.replace(/\D/g,'');
+        // سحب العنوان من db2 لو مش موجود محلياً
+        if(!userAddress && clean){
+            db2.ref(`approved_users/${clean}/address`).once('value').then(s=>{
                 if(s.exists()){ userAddress = s.val(); localStorage.setItem('user_address', userAddress); }
-            });
+            }).catch(()=>{});
         }
-        db.ref('blacklist/' + userPhone.replace(/\D/g,'')).once('value').then(s=>{
+        db.ref('blacklist/' + clean).once('value').then(s=>{
             if(s.exists()){ localStorage.clear(); showToast('🚫 الرقم ده محظور','error'); setTimeout(()=>location.reload(), 1500); }
         });
         startApp();
@@ -994,22 +1000,27 @@ function listenToAutoApprovalSettings(){
     });
 }
 
-function refreshWaitingScreen(){
-    if(!currentRegistrationId){
-        const pendingId = localStorage.getItem('pending_registration_id');
-        if(pendingId) currentRegistrationId = pendingId;
-    }
-    if(!currentRegistrationId) return;
-    db.ref('pending_registrations/'+currentRegistrationId).once('value').then(s=>{
-        const r = s.val();
-        if(r && r.status === 'pending') openWaitingScreen(r.phone, r.requestedAt);
-    });
-}
-
 function startApp(){
     cleanAllListeners();
     checkWorkHours();
     listenToAutoApprovalSettings();
+
+    const clean = userPhone.replace(/\D/g,'');
+    const now = Date.now();
+
+    // ✅ سجّل آخر دخول في db2 (اللي الأدمن بيقرا منه)
+    db2.ref(`approved_users/${clean}/lastLogin`).set(now).catch(()=>{});
+    db2.ref(`customers/${clean}/lastLogin`).set(now).catch(()=>{});
+
+    // ✅ اسحب العنوان من db2 لو مش موجود محلياً
+    db2.ref(`approved_users/${clean}/address`).once('value').then(s=>{
+        const addr = s.val();
+        if(addr && addr !== userAddress){
+            userAddress = addr;
+            localStorage.setItem('user_address', userAddress);
+        }
+    }).catch(()=>{});
+
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'none';
     $id('appSection').style.display = 'block';
@@ -1035,18 +1046,13 @@ function startApp(){
     listenToUserNotifications();
     listenToCustomerDataChanges();
     setTimeout(processInviteReward, 2000);
-    if(!userAddress && userPhone){
-        db.ref(`approved_users/${userPhone}/address`).once('value').then(s=>{
-            if(s.exists()){ userAddress = s.val(); localStorage.setItem('user_address', userAddress); }
-        });
-    }
 }
 
 function listenToForceLogout(){
     if(!userPhone) return;
-    if(forceLogoutListener){ db.ref('customers/'+userPhone).off('value', forceLogoutListener); }
+    if(forceLogoutListener){ db2.ref('customers/'+userPhone).off('value', forceLogoutListener); }
     let lastForceLogoutAt = Number(localStorage.getItem('last_force_logout') || 0);
-    forceLogoutListener = db.ref('customers/'+userPhone).on('value', snap=>{
+    forceLogoutListener = db2.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(c && c.forceLogout === true){
             const msg = c.forceLogoutMessage || 'تم إنهاء الجلسة من الإدارة';
@@ -1081,8 +1087,8 @@ function handleForceLogoutConfirm(){
 
 function listenToSuspensionStatus(){
     if(!userPhone) return;
-    if(suspensionListener){ db.ref('customers/'+userPhone).off('value', suspensionListener); }
-    suspensionListener = db.ref('customers/'+userPhone).on('value', snap=>{
+    if(suspensionListener){ db2.ref('customers/'+userPhone).off('value', suspensionListener); }
+    suspensionListener = db2.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         isSuspended = (c && c.isSuspended === true);
         if(isSuspended) showSuspensionBanner();
@@ -1123,8 +1129,8 @@ function listenToUserNotifications(){
 
 function listenToCustomerDataChanges(){
     if(!userPhone) return;
-    if(customerDataListener){ db.ref('customers/'+userPhone).off('value', customerDataListener); }
-    customerDataListener = db.ref('customers/'+userPhone).on('value', snap=>{
+    if(customerDataListener){ db2.ref('customers/'+userPhone).off('value', customerDataListener); }
+    customerDataListener = db2.ref('customers/'+userPhone).on('value', snap=>{
         const c = snap.val();
         if(!c) return;
         if(c.name && c.name !== userName){
@@ -1383,12 +1389,23 @@ function loginUser(data){
     localStorage.setItem('user_address', userAddress);
     localStorage.removeItem('pending_registration_id');
     if(data.inviteCode && currentRewardSettings.inviteActive !== false){ handleInviteCode(data.inviteCode); }
-    db.ref(`approved_users/${userPhone}`).update({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), lastLogin:Date.now() });
-    db.ref(`customers/${userPhone}`).once('value').then(snap=>{
-        if(!snap.exists()){ db.ref(`customers/${userPhone}`).set({ name:userName, phone:userPhone, area:userArea, address:userAddress, registeredAt:Date.now(), points:0 }); }
-        else { if(userAddress) db.ref(`customers/${userPhone}/address`).set(userAddress); }
-    });
-    db.ref(`customers/${userPhone}`).update({ forceLogout: false, forceLogoutAt: 0, forceLogoutMessage: '' }).catch(()=>{});
+    const clean = userPhone.replace(/\D/g,'');
+    const now = Date.now();
+    // ✅ حفظ في db2 (المصدر اللي الأدمن بيقرا منه)
+    db2.ref(`approved_users/${clean}`).update({
+        name:userName, phone:userPhone, area:userArea, address:userAddress,
+        registeredAt: now, lastLogin: now
+    }).catch(()=>{});
+    db2.ref(`customers/${clean}`).update({
+        name:userName, phone:userPhone, area:userArea, address:userAddress,
+        lastLogin: now
+    }).catch(()=>{});
+    // احتياطي في db1
+    db.ref(`approved_users/${clean}`).update({
+        name:userName, phone:userPhone, area:userArea, address:userAddress,
+        registeredAt: now, lastLogin: now
+    }).catch(()=>{});
+    db.ref(`customers/${clean}`).update({ forceLogout: false, forceLogoutAt: 0, forceLogoutMessage: '' }).catch(()=>{});
     $id('loginSection').style.display = 'none';
     $id('waitingSection').style.display = 'none';
     showToast('✅ أهلاً بيك!', 'success');
@@ -1416,14 +1433,42 @@ function pickArea(area){
     if(label) label.innerText = '📍 ' + area;
     if(btn) btn.classList.add('filled');
     closeAreaPicker();
-    if(userPhone && userName && area !== userArea){
-        userArea = area;
-        localStorage.setItem('user_area', area);
-        if($id('displayArea')) $id('displayArea').innerText = area;
-        if($id('profileArea')) $id('profileArea').innerText = area;
-        if($id('settingsAreaName')) $id('settingsAreaName').innerText = area;
-        db.ref(`customers/${userPhone}/area`).set(area).catch(()=>{});
-        db.ref(`approved_users/${userPhone}/area`).set(area).catch(()=>{});
+
+    // لو في شاشة الانتظار — حدّث التسجيل مباشرة
+    if(!userPhone && currentRegistrationId){
+        db.ref(`pending_registrations/${currentRegistrationId}`).update({
+            area: area,
+            areaUpdatedAt: Date.now(),
+            areaUpdatedBy: 'customer'
+        }).then(()=>showToast('✅ تم تحديث المنطقة في طلبك', 'success'))
+          .catch(()=>showToast('❌ فشل التحديث', 'error'));
+        return;
+    }
+
+    if(!userPhone || !userName) return;
+
+    const clean = userPhone.replace(/\D/g,'');
+    const areaChanged = (area !== userArea);
+
+    userArea = area;
+    localStorage.setItem('user_area', area);
+    if($id('displayArea')) $id('displayArea').innerText = area;
+    if($id('profileArea')) $id('profileArea').innerText = area;
+    if($id('settingsAreaName')) $id('settingsAreaName').innerText = area;
+
+    // ✅ 1) حدّث في db2 (customers + approved_users)
+    db2.ref(`customers/${clean}/area`).set(area).catch(()=>{});
+    db2.ref(`approved_users/${clean}/area`).set(area).catch(()=>{});
+
+    // ✅ 2) حدّث في db1 (احتياطي)
+    db.ref(`customers/${clean}/area`).set(area).catch(()=>{});
+    db.ref(`approved_users/${clean}/area`).set(area).catch(()=>{});
+
+    // ✅ 3) حدّث في pending_registrations — ده اللي صفحة التسجيلات بتقرا منه
+    syncAreaToRegistrations(clean, area);
+
+    // ✅ 4) لو المنطقة اتغيرت فعلاً، أعد تحميل الإعدادات والخدمات
+    if(areaChanged){
         resetMarketData();
         cleanAllListeners();
         syncPricing();
@@ -1440,13 +1485,45 @@ function pickArea(area){
     }
 }
 
+// ✅ دالة جديدة — تزامن المنطقة مع كل سجلات التسجيل للعميل
+function syncAreaToRegistrations(cleanPhone, newArea){
+    const updateById = (regId) => {
+        if(!regId) return Promise.resolve();
+        return db.ref(`pending_registrations/${regId}`).update({
+            area: newArea,
+            areaUpdatedAt: Date.now(),
+            areaUpdatedBy: 'customer'
+        }).catch(err => console.warn('area sync failed for', regId, err));
+    };
+
+    const localRegId = localStorage.getItem('pending_registration_id');
+    if(localRegId) updateById(localRegId);
+
+    db.ref('pending_registrations').orderByChild('phone').equalTo(cleanPhone).once('value')
+        .then(snap => {
+            const updates = [];
+            snap.forEach(c => {
+                const r = c.val();
+                if(!r) return;
+                if(r.area !== newArea){
+                    updates.push(updateById(c.key));
+                }
+            });
+            return Promise.all(updates);
+        })
+        .catch(err => console.warn('syncAreaToRegistrations error:', err));
+}
+
 function isWithinWorkHours(open, close){
     if(!open || !close) return true;
     const now = new Date();
     const current = now.getHours()*60 + now.getMinutes();
     const [oh,om] = open.split(':').map(Number);
-    const [ch,cm] = close.split(':').map(Number);
-    const openMins = oh*60+om, closeMins = ch*60+cm;
+    let [ch,cm] = close.split(':').map(Number);
+    const openMins = oh*60+om;
+    let closeMins = ch*60+cm;
+    // لو close = 00:00 اعتبرها 24:00
+    if(closeMins === 0) closeMins = 24*60;
     if(closeMins > openMins) return current >= openMins && current < closeMins;
     return current >= openMins || current < closeMins;
 }
@@ -1664,6 +1741,8 @@ function loadUserPoints(){
         if($id('headerPointsDisplay2')) $id('headerPointsDisplay2').innerText = userPoints;
         if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
+        // ✅ mirror للـ customers.points في db2 عشان الأدمن يشوفه صح
+        db2.ref(`customers/${clean}/points`).set(userPoints).catch(()=>{});
     });
 }
 
@@ -1834,7 +1913,7 @@ function switchPage(page){
         if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
         if(userPhone){
-            db.ref(`customers/${userPhone}`).once('value').then(s=>{
+            db2.ref(`customers/${userPhone}`).once('value').then(s=>{
                 const c = s.val();
                 if(c){
                     if(c.name && c.name !== userName){ userName = c.name; if($id('profileName')) $id('profileName').innerText = userName; }
@@ -2501,11 +2580,29 @@ function saveMyAddress(){
     setButtonLoading(btn, 'جاري الحفظ...');
     userAddress = newAddr;
     localStorage.setItem('user_address', userAddress);
+    const clean = userPhone.replace(/\D/g,'');
+    // ✅ الحفظ في db2 (اللي الأدمن بيقرا منه) + db1 (احتياطي)
     Promise.all([
-        db.ref(`approved_users/${userPhone}/address`).set(userAddress),
-        db.ref(`customers/${userPhone}/address`).set(userAddress)
-    ]).then(()=>{ showToast('✅ تم حفظ العنوان', 'success'); setTimeout(()=>closeSheet(), 800); })
-    .catch(err=>{ console.error(err); showToast('❌ فشل الحفظ', 'error'); restoreButton(btn); });
+        db2.ref(`approved_users/${clean}/address`).set(userAddress),
+        db2.ref(`customers/${clean}/address`).set(userAddress),
+        db.ref(`approved_users/${clean}/address`).set(userAddress).catch(()=>{}),
+        db.ref(`customers/${clean}/address`).set(userAddress).catch(()=>{}),
+        // ✅ كمان نزامن العنوان مع سجلات التسجيل
+        db.ref('pending_registrations').orderByChild('phone').equalTo(clean).once('value').then(snap=>{
+            const ps = [];
+            snap.forEach(c=>{
+                ps.push(db.ref(`pending_registrations/${c.key}/address`).set(userAddress).catch(()=>{}));
+            });
+            return Promise.all(ps);
+        }).catch(()=>{})
+    ]).then(()=>{
+        showToast('✅ تم حفظ العنوان', 'success');
+        setTimeout(()=>closeSheet(), 800);
+    }).catch(err=>{
+        console.error(err);
+        showToast('❌ فشل الحفظ', 'error');
+        restoreButton(btn);
+    });
 }
 
 function loadActiveOrder(){
