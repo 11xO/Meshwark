@@ -372,6 +372,30 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 .addr-picker-btn.active{border-color:var(--primary);background:rgba(139,92,246,.1);color:var(--primary)}
 .addr-picker-btn:disabled{opacity:.4;cursor:not-allowed}
 .preview-mode-bar{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:10px 16px;text-align:center;font-size:12.5px;font-weight:900;z-index:99997;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(245,158,11,.35)}
+
+/* ═══════════════════════════════════════════════════════════════
+   Social Contact
+   ═══════════════════════════════════════════════════════════════ */
+.social-contact-card{margin:0 20px 20px;background:linear-gradient(160deg,rgba(37,211,102,.08),rgba(24,119,242,.06));border:1px solid rgba(37,211,102,.25);border-radius:22px;padding:18px 18px 20px;box-shadow:var(--shadow-sm)}
+.social-contact-title{font-size:14px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.social-contact-title i{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#25D366,#1877F2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0}
+.social-contact-sub{font-size:11.5px;color:var(--text-muted);margin-bottom:14px;line-height:1.6}
+.social-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.social-grid.two-cols{grid-template-columns:repeat(2,1fr)}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 12px;border-radius:14px;text-decoration:none;color:#fff;font-family:'Cairo',sans-serif;font-weight:900;font-size:13px;cursor:pointer;border:none;position:relative;overflow:hidden;transition:transform .15s;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.social-btn:active{transform:scale(.97)}
+.social-btn i{font-size:20px;flex-shrink:0}
+.social-btn.whatsapp{background:linear-gradient(135deg,#25D366,#128C7E)}
+.social-btn.facebook{background:linear-gradient(135deg,#1877F2,#0C5FC4)}
+.social-btn.whatsapp::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.3);border-radius:50%;transform:translate(-50%,-50%);animation:socialPulse 2.5s infinite}
+@keyframes socialPulse{0%{width:0;height:0;opacity:1}100%{width:200px;height:200px;opacity:0}}
+.social-fab{position:fixed;bottom:100px;left:16px;display:flex;flex-direction:column;gap:10px;z-index:950}
+.social-fab a{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,.25);transition:transform .2s}
+.social-fab a:active{transform:scale(.9)}
+.social-fab a.whatsapp{background:linear-gradient(135deg,#25D366,#128C7E);animation:fabBounce 3s infinite}
+.social-fab a.facebook{background:linear-gradient(135deg,#1877F2,#0C5FC4)}
+@keyframes fabBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
 @media(min-width:640px){.market-grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.market-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
@@ -564,6 +588,16 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <div class="profile-btn-row"><button onclick="switchPage('rewards')" class="profile-action-btn"><i class="fas fa-coins"></i><span><span id="profilePointsDisplay">0</span> نقطة</span></button></div>
             <div class="profile-btn-row" style="margin-top:12px"><button onclick="openAddressEditor()" class="profile-action-btn green"><i class="fas fa-home"></i><span>تعديل العنوان</span></button></div>
         </div>
+
+        <div class="social-contact-card" id="socialContactCard" style="display:none">
+            <div class="social-contact-title">
+                <i class="fas fa-headset"></i>
+                <span>تواصل معانا</span>
+            </div>
+            <div class="social-contact-sub">إحنا هنا لو محتاج أي مساعدة 💬</div>
+            <div class="social-grid" id="socialGrid"></div>
+        </div>
+
         <div class="profile-list">
             <button class="profile-list-item" onclick="switchPage('rewards')"><div class="pli-icon" style="background:linear-gradient(135deg,var(--warning),#d97706)"><i class="fas fa-gift"></i></div><div class="pli-text">رصيد نقاطي<small><span id="profilePointsDisplay2">0</span> نقطة</small></div><i class="fas fa-chevron-left"></i></button>
             <button class="profile-list-item" onclick="switchPage('orders')"><div class="pli-icon" style="background:linear-gradient(135deg,var(--primary),var(--primary-dark))"><i class="fas fa-receipt"></i></div><div class="pli-text">طلباتي</div><i class="fas fa-chevron-left"></i></button>
@@ -597,6 +631,8 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
         <button class="nav-btn" id="nav-shipping" data-color="shipping" onclick="switchPage('shipping')"><i class="fas fa-shipping-fast"></i><span>الشحن</span></button>
         <button class="nav-btn" id="nav-rewards" data-color="rewards" onclick="switchPage('rewards')"><i class="fas fa-gift"></i><span>المكافآت</span></button>
     </nav>
+
+    <div class="social-fab" id="socialFab" style="display:none"></div>
 </div>
 
 <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
@@ -644,6 +680,7 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
             <button class="profile-list-item" onclick="openWhatsappSupport()"><div class="pli-icon" style="background:linear-gradient(135deg,#25D366,#128C7E)"><i class="fab fa-whatsapp"></i></div><div class="pli-text">الدعم الفني</div><i class="fas fa-chevron-left"></i></button>
             <button class="profile-list-item" onclick="logout()"><div class="pli-icon" style="background:linear-gradient(135deg,#ef4444,#b91c1c)"><i class="fas fa-sign-out-alt"></i></div><div class="pli-text">تسجيل الخروج</div><i class="fas fa-chevron-left"></i></button>
         </div>
+        <div id="socialInSettingsContainer"></div>
     </div>
 </div>
 
@@ -723,9 +760,6 @@ body{background:var(--bg-main);color:var(--text);min-height:100vh;padding-bottom
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
-// ═══════════════════════════════════════════════════════════════
-// 🟢 Firebase #1: family-4ff2a
-// ═══════════════════════════════════════════════════════════════
 const firebaseConfig = {
     apiKey: "AIzaSyAR98tJfqxO0_LZT7GRn-peOqQB1PgP6D4",
     authDomain: "family-4ff2a.firebaseapp.com",
@@ -735,9 +769,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ═══════════════════════════════════════════════════════════════
-// 🔵 Firebase #2: meshwark-f8b0a
-// ═══════════════════════════════════════════════════════════════
 const firebaseConfig2 = {
     apiKey: "AIzaSyBb61hwCwDMJrV7mhkMWJOA3RhUtu1nYac",
     authDomain: "meshwark-f8b0a.firebaseapp.com",
@@ -797,6 +828,12 @@ let activeOrderListener = null;
 let marketCategoriesListener = null;
 let marketProductsListener = null;
 
+// Social
+let socialSettings = { whatsappEnabled:true, whatsappNumber:'', facebookEnabled:true, facebookUrl:'' };
+let socialListener = null;
+let supportWhatsappListener = null;
+let socialInSettingsListener = null;
+
 function $id(id){ return document.getElementById(id); }
 function setButtonLoading(btn, text){
     if(!btn) return;
@@ -839,9 +876,11 @@ function cleanAllListeners(){
     if(notificationsListener && userPhone){ db.ref('user_notifications/'+userPhone).off('value', notificationsListener); notificationsListener = null; }
     if(customerDataListener && userPhone){ db2.ref('customers/'+userPhone).off('value', customerDataListener); customerDataListener = null; }
     if(autoApprovalSettingsListener){ db.ref('admin_settings/auto_approval').off('value', autoApprovalSettingsListener); autoApprovalSettingsListener = null; }
+    if(socialListener){ db.ref('settings/social').off('value', socialListener); socialListener = null; }
+    if(supportWhatsappListener){ db.ref('settings/support/whatsapp').off('value', supportWhatsappListener); supportWhatsappListener = null; }
+    if(socialInSettingsListener){ db.ref('settings/social').off('value', socialInSettingsListener); socialInSettingsListener = null; }
     db.ref('areas').off();
     db.ref('reward_settings').off();
-    db.ref('settings/support/whatsapp').off();
     if(userArea){
         db.ref(`pricing/${userArea}`).off();
         db.ref(`pricing/${userArea}/destinations`).off();
@@ -944,7 +983,6 @@ setTimeout(()=>{
         userName = sN; userPhone = sP; userArea = sA;
         userAddress = sAddr || '';
         const clean = sP.replace(/\D/g,'');
-        // سحب العنوان من db2 لو مش موجود محلياً
         if(!userAddress && clean){
             db2.ref(`approved_users/${clean}/address`).once('value').then(s=>{
                 if(s.exists()){ userAddress = s.val(); localStorage.setItem('user_address', userAddress); }
@@ -1008,11 +1046,9 @@ function startApp(){
     const clean = userPhone.replace(/\D/g,'');
     const now = Date.now();
 
-    // ✅ سجّل آخر دخول في db2 (اللي الأدمن بيقرا منه)
     db2.ref(`approved_users/${clean}/lastLogin`).set(now).catch(()=>{});
     db2.ref(`customers/${clean}/lastLogin`).set(now).catch(()=>{});
 
-    // ✅ اسحب العنوان من db2 لو مش موجود محلياً
     db2.ref(`approved_users/${clean}/address`).once('value').then(s=>{
         const addr = s.val();
         if(addr && addr !== userAddress){
@@ -1045,6 +1081,7 @@ function startApp(){
     listenToSuspensionStatus();
     listenToUserNotifications();
     listenToCustomerDataChanges();
+    loadSocialSettings();  // ✅ Social
     setTimeout(processInviteReward, 2000);
 }
 
@@ -1180,6 +1217,117 @@ function showNotificationPopup(notif, notifId){
 function checkSuspensionBeforeOrder(){
     if(isSuspended){ showToast('⏸️ حسابك معلق — مش هتقدر تعمل طلب','error'); return true; }
     return false;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Social Contact
+// ═══════════════════════════════════════════════════════════════
+function normalizePhone(num){
+    if(!num) return '';
+    const digits = String(num).replace(/\D/g,'');
+    if(!digits) return '';
+    if(digits.startsWith('20')) return digits;
+    if(digits.startsWith('0')) return '2' + digits;
+    return digits;
+}
+function isFullUrl(v){
+    return typeof v === 'string' && /^https?:\/\//i.test(v.trim());
+}
+
+function loadSocialSettings(){
+    if(supportWhatsappListener){ db.ref('settings/support/whatsapp').off('value', supportWhatsappListener); }
+    supportWhatsappListener = db.ref('settings/support/whatsapp').on('value', s=>{
+        supportWhatsapp = s.val() || WALLET_NUMBER;
+        renderSocialLinks();
+    });
+
+    if(socialListener){ db.ref('settings/social').off('value', socialListener); }
+    socialListener = db.ref('settings/social').on('value', snap=>{
+        const v = snap.val() || {};
+        socialSettings = {
+            whatsappEnabled: v.whatsappEnabled !== false,
+            whatsappNumber: v.whatsappNumber || '',
+            facebookEnabled: v.facebookEnabled !== false,
+            facebookUrl: v.facebookUrl || ''
+        };
+        renderSocialLinks();
+    });
+}
+
+function getFinalWhatsappNumber(){
+    const custom = socialSettings.whatsappNumber && socialSettings.whatsappNumber.trim();
+    if(custom) return normalizePhone(custom);
+    return normalizePhone(supportWhatsapp);
+}
+
+function renderSocialLinks(){
+    const card = $id('socialContactCard');
+    const grid = $id('socialGrid');
+    const settingsBox = $id('socialInSettingsContainer');
+    const fab = $id('socialFab');
+    if(!card || !grid) return;
+
+    const items = [];
+
+    if(socialSettings.whatsappEnabled){
+        const waNum = getFinalWhatsappNumber();
+        if(waNum){
+            items.push({
+                key: 'whatsapp',
+                icon: 'fab fa-whatsapp',
+                label: 'واتساب',
+                href: `https://wa.me/${waNum}?text=${encodeURIComponent('السلام عليكم 🙏')}`
+            });
+        }
+    }
+
+    if(socialSettings.facebookEnabled && isFullUrl(socialSettings.facebookUrl)){
+        items.push({
+            key: 'facebook',
+            icon: 'fab fa-facebook-f',
+            label: 'فيسبوك',
+            href: socialSettings.facebookUrl.trim()
+        });
+    }
+
+    if(items.length === 0){
+        card.style.display = 'none';
+        if(settingsBox) settingsBox.innerHTML = '';
+        if(fab) fab.style.display = 'none';
+        return;
+    }
+
+    card.style.display = 'block';
+    grid.className = 'social-grid' + (items.length > 1 ? ' two-cols' : '');
+    grid.innerHTML = items.map(it =>
+        `<a href="${it.href}" target="_blank" rel="noopener noreferrer" class="social-btn ${it.key}">
+            <i class="${it.icon}"></i><span>${it.label}</span>
+        </a>`
+    ).join('');
+
+    if(settingsBox){
+        settingsBox.innerHTML = `
+            <div style="font-size:11px;color:var(--text-muted);margin:14px 0 8px;font-weight:700;display:flex;align-items:center;gap:6px">
+                <i class="fas fa-share-alt" style="color:var(--primary)"></i> تابعنا
+            </div>
+            <div class="social-grid${items.length > 1 ? ' two-cols' : ''}">
+                ${items.map(it =>
+                    `<a href="${it.href}" target="_blank" rel="noopener noreferrer" class="social-btn ${it.key}">
+                        <i class="${it.icon}"></i><span>${it.label}</span>
+                    </a>`
+                ).join('')}
+            </div>
+        `;
+    }
+
+    if(fab){
+        fab.style.display = 'flex';
+        fab.innerHTML = items.map(it =>
+            `<a href="${it.href}" target="_blank" rel="noopener noreferrer" class="${it.key}" aria-label="${it.label}">
+                <i class="${it.icon}"></i>
+            </a>`
+        ).join('');
+    }
 }
 
 function validateRegistrationData(){
@@ -1391,7 +1539,6 @@ function loginUser(data){
     if(data.inviteCode && currentRewardSettings.inviteActive !== false){ handleInviteCode(data.inviteCode); }
     const clean = userPhone.replace(/\D/g,'');
     const now = Date.now();
-    // ✅ حفظ في db2 (المصدر اللي الأدمن بيقرا منه)
     db2.ref(`approved_users/${clean}`).update({
         name:userName, phone:userPhone, area:userArea, address:userAddress,
         registeredAt: now, lastLogin: now
@@ -1400,7 +1547,6 @@ function loginUser(data){
         name:userName, phone:userPhone, area:userArea, address:userAddress,
         lastLogin: now
     }).catch(()=>{});
-    // احتياطي في db1
     db.ref(`approved_users/${clean}`).update({
         name:userName, phone:userPhone, area:userArea, address:userAddress,
         registeredAt: now, lastLogin: now
@@ -1434,7 +1580,6 @@ function pickArea(area){
     if(btn) btn.classList.add('filled');
     closeAreaPicker();
 
-    // لو في شاشة الانتظار — حدّث التسجيل مباشرة
     if(!userPhone && currentRegistrationId){
         db.ref(`pending_registrations/${currentRegistrationId}`).update({
             area: area,
@@ -1456,18 +1601,13 @@ function pickArea(area){
     if($id('profileArea')) $id('profileArea').innerText = area;
     if($id('settingsAreaName')) $id('settingsAreaName').innerText = area;
 
-    // ✅ 1) حدّث في db2 (customers + approved_users)
     db2.ref(`customers/${clean}/area`).set(area).catch(()=>{});
     db2.ref(`approved_users/${clean}/area`).set(area).catch(()=>{});
-
-    // ✅ 2) حدّث في db1 (احتياطي)
     db.ref(`customers/${clean}/area`).set(area).catch(()=>{});
     db.ref(`approved_users/${clean}/area`).set(area).catch(()=>{});
 
-    // ✅ 3) حدّث في pending_registrations — ده اللي صفحة التسجيلات بتقرا منه
     syncAreaToRegistrations(clean, area);
 
-    // ✅ 4) لو المنطقة اتغيرت فعلاً، أعد تحميل الإعدادات والخدمات
     if(areaChanged){
         resetMarketData();
         cleanAllListeners();
@@ -1481,11 +1621,11 @@ function pickArea(area){
         listenToSuspensionStatus();
         listenToUserNotifications();
         listenToCustomerDataChanges();
+        loadSocialSettings();
         showToast('✅ تم تغيير المنطقة', 'success');
     }
 }
 
-// ✅ دالة جديدة — تزامن المنطقة مع كل سجلات التسجيل للعميل
 function syncAreaToRegistrations(cleanPhone, newArea){
     const updateById = (regId) => {
         if(!regId) return Promise.resolve();
@@ -1522,7 +1662,6 @@ function isWithinWorkHours(open, close){
     let [ch,cm] = close.split(':').map(Number);
     const openMins = oh*60+om;
     let closeMins = ch*60+cm;
-    // لو close = 00:00 اعتبرها 24:00
     if(closeMins === 0) closeMins = 24*60;
     if(closeMins > openMins) return current >= openMins && current < closeMins;
     return current >= openMins || current < closeMins;
@@ -1593,9 +1732,6 @@ db.ref('reward_settings').on('value', snap=>{
     const el = $id('inviteField');
     if(el) el.style.display = inviteActive ? 'block' : 'none';
 });
-db.ref('settings/support/whatsapp').on('value', s=>{
-    supportWhatsapp = s.val() || WALLET_NUMBER;
-});
 function openWhatsappSupport(){
     const num = supportWhatsapp.replace(/\D/g,'');
     const finalNum = num.startsWith('0') ? '2'+num : num;
@@ -1627,6 +1763,7 @@ function enterPreviewMode(){
         listenToShops();
         listenToShippingSettings();
         loadRewardSettings();
+        loadSocialSettings();
     }
     showToast('👁️ وضع المعاينة — مش هتقدر تطلب لحد ما يتم قبولك', 'info');
     if(currentRegistrationId){
@@ -1741,7 +1878,6 @@ function loadUserPoints(){
         if($id('headerPointsDisplay2')) $id('headerPointsDisplay2').innerText = userPoints;
         if($id('profilePointsDisplay')) $id('profilePointsDisplay').innerText = userPoints;
         if($id('profilePointsDisplay2')) $id('profilePointsDisplay2').innerText = userPoints;
-        // ✅ mirror للـ customers.points في db2 عشان الأدمن يشوفه صح
         db2.ref(`customers/${clean}/points`).set(userPoints).catch(()=>{});
     });
 }
@@ -2581,13 +2717,11 @@ function saveMyAddress(){
     userAddress = newAddr;
     localStorage.setItem('user_address', userAddress);
     const clean = userPhone.replace(/\D/g,'');
-    // ✅ الحفظ في db2 (اللي الأدمن بيقرا منه) + db1 (احتياطي)
     Promise.all([
         db2.ref(`approved_users/${clean}/address`).set(userAddress),
         db2.ref(`customers/${clean}/address`).set(userAddress),
         db.ref(`approved_users/${clean}/address`).set(userAddress).catch(()=>{}),
         db.ref(`customers/${clean}/address`).set(userAddress).catch(()=>{}),
-        // ✅ كمان نزامن العنوان مع سجلات التسجيل
         db.ref('pending_registrations').orderByChild('phone').equalTo(clean).once('value').then(snap=>{
             const ps = [];
             snap.forEach(c=>{
